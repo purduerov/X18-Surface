@@ -6,6 +6,7 @@
 import sys
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
+import command as command
 
 import camera_stream as stream
 import readouts as readouts
