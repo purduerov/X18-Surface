@@ -5,8 +5,10 @@
 
 import sys
 from PyQt5.QtCore import *
+from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-import command as command
+#import command as command
+import subprocess
 
 import camera_stream as stream
 import readouts as readouts
@@ -297,7 +299,12 @@ class MainWindow(QMainWindow):
             self.controls_widget.tool4.repaint()
 
 if __name__ == "__main__":
-    app = QApplication(sys.argv) 
-    window = MainWindow()
-    window.show() 
-    app.exec()
+    try:
+        python_executable = sys.executable
+        subprocess.Popen([python_executable, 'UI/ssh_startup.py'])
+        app = QApplication(sys.argv) 
+        window = MainWindow()
+        window.show() 
+        app.exec()
+    except Exception as e:
+        print(f"Error: {e}")
