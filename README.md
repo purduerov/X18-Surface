@@ -1,10 +1,11 @@
 # <Purdue ROV X16 README>
+<img src="https://github.com/purduerov/X16-Surface/assets/115110018/fddcf4fb-4822-48c0-8f07-e30a6efc2f94" width="160" height="200" alt="rov_logo">
 
 ## Table of Contents
 - [About ROV](#about-rov)
 - [Project Description](#project-description)
   - [System Architecture](#system-architecture)
-  - [Key Features](#key-features)
+  - [Dependencies](#dependencies)
 - [Installation](#installation)
 - [Usage](#usage)
   - [Startup](#startup)
@@ -38,11 +39,24 @@ Shown below is a diagram showing the X16 system architecture. Each white box rep
   <i>X16 System Architecture</i>
 </div>
 
-### Key Features 
+### Dependencies
 
-- **Efficient Startup:** X16 is designed for the entire system to be initialized on startup, including launching the frontend, starting the ROS nodes for the frontend and backend, and connecting to the gamepad.
-- **Seamless Integration:** X16 Surface serves to connect the full stack of software for the ROV.
-- **Enchanced User Interface:** The user interface is built using Python Qt5, which allows for flexibility and modularity with all of the components (widgets) needed for piloting the ROV. The user interface displays four camera streams from the ROV, thruster outputs, velocity and depth sensor readouts, and tool controls. 
+#### ROS2 (Robot Operating System 2)
+- **Description:** ROS2, or Robot Operating System 2, is an open-source framework designed for developing and controlling robotic systems. It provides a comprehensive suite of libraries, tools, and middleware for communication, hardware abstraction, and real-time control.
+- **Nodes:** A node is a fundamental computational unit in ROS. It is an individual process that performs a specific task.
+- **Master:** The ROS Master is the centralized coordination service that helps nodes discover and communicate with each other. Nodes register with the ROS Master, which maintains a registry of all active nodes.
+- **Topics:** Topics are named communication channels that allow nodes to send and receive data. Nodes can publish data to a topic or subscribe to receive data from a topic.
+- **Communication:** Nodes in a ROS system communicate asynchronously. This means that they can operate independently, sending nad receiving messages at their own pace. Multiple nodes can public data to the same topic, and multiple nodes can subscribe to the same topic.
+
+#### Python Qt5
+- **Description:** Python Qt5 is a Python binding for the Qt framework. Qt is a cross-platform application development framework that provides tools and libraries for creating graphical user interfaces and other software components.
+- **Widgets:** Widgets are graphical components such as buttons, labels, textboxes, etc. The can be used to create the various components of a graphical user interface.
+- **Layouts:** Layouts can be used to organize and arrange widgets within your window. You can also place widgets in a dock, on the tool bar, or set a central widget.
+- **Signals and Slots:** Widgets emit signals in response to user action or system events (e.g., key press, key release, etc.). These signals can be connected to slots, which are functions that get called in response to signals.
+
+#### GStreamer 
+
+#### OpenCV
 
 ## Installation
 
@@ -59,6 +73,22 @@ All of the information needed for use of the X16 ROV can be found below.
 
 ### Startup
 
+#### Connecting the ROV
+
+- Plug in the deathbox, ensuring that the switch is off first.
+- Connect the ROV to the deathbox via the power cable in the tether.
+- Connect the ROV to the router via the ethernet cable in the tether.
+- Turn on the deathbox.
+
+#### Launching the ROS2 Network
+
+- For the locally run nodes, the launching the frontend should launch the frontend ROS nodes
+- To launch the pi nodes, run the following command:
+  
+  ```bash
+  ros2 launch rov_launch run_rov_launch.xml
+  ``` 
+
 ### User Interface
 
 ### Camera Streams
@@ -67,10 +97,10 @@ To launch and receive the camera streams externally, follow these instructions:
 
 #### Launch Streams
 
-- Make sure the ROV is plugged in and turned on. The ethernet cable should be plugged into the router.
-- Connect to the ROV wifi
+- Plug in the ROV and connect the ethernet cable from the tether to the router. Power on the ROV.
+- Connect your computer to the ROV wifi
 - In your browser, search up '10.0.0.1'. This will pull up the internet configuration setting for the router.
-- In *Attatched Devices*, you can see the IP address for the ROV under *Wired Devices*, and you can see the IP address for your computer under *Wireless Devices*.
+- In *Attatched Devices*, you can see the IP address assigned to the Raspberry Pi and the IP address assigned to your computer.
 - In a terminal, ssh into the pi using the following command:
   ```bash
   ssh pi@<rov_ip_address>
@@ -96,6 +126,7 @@ To launch and receive the camera streams externally, follow these instructions:
 #### Receive Streams
 
 - To receive the camera streams, run the corresponding command in a new terminal (this terminal should not be ssh'd into the pi)
+  NOTE: The port for a receiving command should match the port from the corresponding launch command.
 
   Stream 1 (Front-facing camera)
   ```bash
@@ -118,7 +149,7 @@ https://chat.openai.com/
 
 ### Documentation
 
-
+For more documentation on using X16 Surface, visit the Purdue ROV BookStack.
 
 ## Credits
 
@@ -129,6 +160,17 @@ X16 Software has been a collaborative effort involving the dedication and contri
 - **Design and UI:** Ethan Burmane, Caden Brennan
 - **Hardware Specialist:** Xavier Callait
 
+### Special Thanks
+- **Purdue IEEE:** For their ongoing support and collaboration.
+- **MATE ROV:** For hosting the annual MATE ROV Competition.
+
 ## Contact Information
 
+For any inquires about Purdue ROV, please send an email to rov@purdueieee.org
+
+For more information on MATE ROV, visit https://materovcompetition.org/
+
+To see updates about Purdue ROV, follow us on social media!
+Instagram: @purduerov
+Linkedin: https://www.linkedin.com/company/purdue-rov
 
