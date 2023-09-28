@@ -31,26 +31,10 @@ class MainWindow(QMainWindow):
         # adding the readout dock to the main window 
         self.readout_widget = readouts.ReadoutsWidget()
         self.addDockWidget(Qt.RightDockWidgetArea, self.readout_widget)
-
-        # trying to fix all of this stuff
-        self.video_widget1 = stream.CameraStreamWidget()
-        self.setCentralWidget(self.video_widget1)
-
-
-        # pipeline = "appsrc ! videoconvert ! videoscale ! video/x-raw,format=I420,width=1080,height=240,framerate=5/1 !  videoconvert ! x264enc tune=zerolatency bitrate=500 speed-preset=superfast ! rtph264pay ! udpsink host=192.168.86.26 port=5000"
-
-
-        # self.video_widget1 = stream.CameraStreamWidget(pipeline)
-        # self.video_widget2 = stream.CameraStreamWidget("udpsrc port=5601 ! application/x-rtp ! rtpjitterbuffer ! rtph264depay ! avdec_h264 ! videoconvert ! appsink sync=false")
-
+        
         # adding the stream widget to the main window
-        self.central_widget = QWidget()
-        central_layout = QGridLayout()
-        central_layout.addWidget(self.video_widget1, 0, 0)
-        # central_layout.addWidget(self.video_widget2, 0, 1)
-
-        self.central_widget.setLayout(central_layout)
-        self.setCentralWidget(self.central_widget)
+        self.camera_stream_widget = stream.CameraStreamWidget()
+        self.setCentralWidget(self.camera_stream_widget)
 
     # This is the event handlers for key press and key release events.
     # This contains the directional control keys and the tool keys.

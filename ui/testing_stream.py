@@ -1,9 +1,15 @@
+#!/usr/bin/env python3.10
+
 import sys, time, threading, cv2
 from PyQt5.QtCore import Qt, QTimer, QPoint, pyqtSignal
 from PyQt5.QtWidgets import QApplication, QMainWindow, QTextEdit, QLabel
 from PyQt5.QtWidgets import QWidget, QAction, QVBoxLayout, QHBoxLayout
 from PyQt5.QtGui import QFont, QPainter, QImage, QTextCursor
 import queue as Queue
+import os
+import sys
+for key, value in os.environ.items():
+    print(f"{key}: {value}")
 
 EXTERNAL_CAMERA_PIPELINE = "udpsrc port=5600 ! application/x-rtp ! rtpjitterbuffer ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink sync=false"
 
@@ -13,7 +19,7 @@ DISP_SCALE  = 2
 DISP_MSEC   = 50
 CAP_API     = cv2.CAP_GSTREAMER 
 EXPOSURE    = 0
-TEXT_FONT   = QFont("Courier", 10)
+TEXT_FONT   = QFont("Arial", 10)
 
 camera_num  = 1
 image_queue = Queue.Queue()
@@ -21,16 +27,17 @@ capturing   = True
 
 # Grab images from the external camera (separate thread)
 def grab_images(cam_pipeline, queue):
-    cap = cv2.VideoCapture(cam_pipeline, cv2.CAP_GSTREAMER)
+    cap = cv2.VideoCapture(EXTERNAL_CAMERA_PIPELINE, cv2.CAP_GSTREAMER)
     while capturing:
         if cap.isOpened():
             retval, image = cap.read()
             if retval and image is not None and queue.qsize() < 2:
                 queue.put(image)
             else:
+                print("Error: Could not capture frame. Retval:", retval, "Image is None:", image is None)
                 time.sleep(DISP_MSEC / 1000.0)
         else:
-            print("Error: can't grab camera image")
+            print("Error: Can't open camera.")
             break
     cap.release()
 
@@ -143,21 +150,13 @@ class MyWindow(QMainWindow):
         self.capture_thread.join()
 
 if __name__ == '__main__':
-    if len(sys.argv) > 1:
-        try:
-            camera_num = int(sys.argv[1])
-        except:
-            camera_num = 0
-    if camera_num < 1:
-        print("Invalid camera number '%s'" % sys.argv[1])
-    else:
-        app = QApplication(sys.argv)
-        win = MyWindow()
-        win.show()
-        
-        # Start capturing from the external camera
-        win.start()
-        
-        sys.exit(app.exec_())
+    app = QApplication(sys.argv)
+    win = MyWindow()
+    win.show()
+    
+    # Start capturing from the external camera
+    win.start()
+    
+    sys.exit(app.exec_())
 
 #EOF
