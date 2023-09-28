@@ -170,7 +170,7 @@ For any inquires about Purdue ROV, please send an email to rov@purdueieee.org
 
 For more information on MATE ROV, visit https://materovcompetition.org/
 
-To see updates about Purdue ROV, follow us on social media!
-Instagram: @purduerov
-Linkedin: https://www.linkedin.com/company/purdue-rov
+To see updates about Purdue ROV, follow us on social media:
+- **Instagram:** @purduerov
+- **Linkedin:** https://www.linkedin.com/company/purdue-rov
 
