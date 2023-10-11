@@ -1,23 +1,19 @@
 # Frontend UI for ROV X16
 # Written and edited by the X16 Software Team 
-# Ethan Burmane (eburmane@purdue.edu), Caden Brennan (brenna51@purdue.edu)
-# Last updated: 08/27/2023
+# Last updated: 09/27/2023
 
 import sys
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 import command as command
 
-import camera_stream as stream
+import streams as stream
 import readouts as readouts
 import controls as controls 
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.initMainWindow()
-
-    def initMainWindow(self):
 
         # setting the main window properties
         self.showMaximized()
@@ -35,7 +31,7 @@ class MainWindow(QMainWindow):
         # adding the readout dock to the main window 
         self.readout_widget = readouts.ReadoutsWidget()
         self.addDockWidget(Qt.RightDockWidgetArea, self.readout_widget)
-
+        
         # adding the stream widget to the main window
         self.camera_stream_widget = stream.CameraStreamWidget()
         self.setCentralWidget(self.camera_stream_widget)
