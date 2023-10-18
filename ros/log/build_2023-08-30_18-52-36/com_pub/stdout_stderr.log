@@ -1,0 +1,35 @@
+Built target ament_cmake_python_copy_com_pub
+running egg_info
+writing com_pub.egg-info/PKG-INFO
+writing dependency_links to com_pub.egg-info/dependency_links.txt
+writing top-level names to com_pub.egg-info/top_level.txt
+reading manifest file 'com_pub.egg-info/SOURCES.txt'
+writing manifest file 'com_pub.egg-info/SOURCES.txt'
+Built target ament_cmake_python_build_com_pub_egg
+-- Install configuration: ""
+-- Up-to-date: /home/benboardley/src/ROV/X16-Surface/ros/install/com_pub/share/com_pub/environment/pythonpath.sh
+-- Up-to-date: /home/benboardley/src/ROV/X16-Surface/ros/install/com_pub/share/com_pub/environment/pythonpath.dsv
+-- Up-to-date: /home/benboardley/src/ROV/X16-Surface/ros/install/com_pub/local/lib/python3.10/dist-packages/com_pub-0.0.0-py3.10.egg-info
+-- Installing: /home/benboardley/src/ROV/X16-Surface/ros/install/com_pub/local/lib/python3.10/dist-packages/com_pub-0.0.0-py3.10.egg-info/dependency_links.txt
+-- Installing: /home/benboardley/src/ROV/X16-Surface/ros/install/com_pub/local/lib/python3.10/dist-packages/com_pub-0.0.0-py3.10.egg-info/PKG-INFO
+-- Installing: /home/benboardley/src/ROV/X16-Surface/ros/install/com_pub/local/lib/python3.10/dist-packages/com_pub-0.0.0-py3.10.egg-info/top_level.txt
+-- Installing: /home/benboardley/src/ROV/X16-Surface/ros/install/com_pub/local/lib/python3.10/dist-packages/com_pub-0.0.0-py3.10.egg-info/SOURCES.txt
+-- Up-to-date: /home/benboardley/src/ROV/X16-Surface/ros/install/com_pub/local/lib/python3.10/dist-packages/com_pub
+-- Up-to-date: /home/benboardley/src/ROV/X16-Surface/ros/install/com_pub/local/lib/python3.10/dist-packages/com_pub/__init__.py
+Listing '/home/benboardley/src/ROV/X16-Surface/ros/install/com_pub/local/lib/python3.10/dist-packages/com_pub'...
+-- Up-to-date: /home/benboardley/src/ROV/X16-Surface/ros/install/com_pub/lib/com_pub/sender.py
+-- Up-to-date: /home/benboardley/src/ROV/X16-Surface/ros/install/com_pub/share/ament_index/resource_index/package_run_dependencies/com_pub
+-- Up-to-date: /home/benboardley/src/ROV/X16-Surface/ros/install/com_pub/share/ament_index/resource_index/parent_prefix_path/com_pub
+-- Up-to-date: /home/benboardley/src/ROV/X16-Surface/ros/install/com_pub/share/com_pub/environment/ament_prefix_path.sh
+-- Up-to-date: /home/benboardley/src/ROV/X16-Surface/ros/install/com_pub/share/com_pub/environment/ament_prefix_path.dsv
+-- Up-to-date: /home/benboardley/src/ROV/X16-Surface/ros/install/com_pub/share/com_pub/environment/path.sh
+-- Up-to-date: /home/benboardley/src/ROV/X16-Surface/ros/install/com_pub/share/com_pub/environment/path.dsv
+-- Up-to-date: /home/benboardley/src/ROV/X16-Surface/ros/install/com_pub/share/com_pub/local_setup.bash
+-- Up-to-date: /home/benboardley/src/ROV/X16-Surface/ros/install/com_pub/share/com_pub/local_setup.sh
+-- Up-to-date: /home/benboardley/src/ROV/X16-Surface/ros/install/com_pub/share/com_pub/local_setup.zsh
+-- Up-to-date: /home/benboardley/src/ROV/X16-Surface/ros/install/com_pub/share/com_pub/local_setup.dsv
+-- Up-to-date: /home/benboardley/src/ROV/X16-Surface/ros/install/com_pub/share/com_pub/package.dsv
+-- Up-to-date: /home/benboardley/src/ROV/X16-Surface/ros/install/com_pub/share/ament_index/resource_index/packages/com_pub
+-- Up-to-date: /home/benboardley/src/ROV/X16-Surface/ros/install/com_pub/share/com_pub/cmake/com_pubConfig.cmake
+-- Up-to-date: /home/benboardley/src/ROV/X16-Surface/ros/install/com_pub/share/com_pub/cmake/com_pubConfig-version.cmake
+-- Up-to-date: /home/benboardley/src/ROV/X16-Surface/ros/install/com_pub/share/com_pub/package.xml

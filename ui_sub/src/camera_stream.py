@@ -11,7 +11,7 @@ from PyQt5.QtGui import *
 import subprocess
 import cv2
 import numpy as np
-import command as command
+#import command as command
 
 class CameraStreamWidget(QWidget):
     def __init__(self):
@@ -55,7 +55,7 @@ class CameraStreamWidget(QWidget):
         # gstreamer commands for starting stream on the pi
         launch_stream1 = "gst-launch-1.0 -v v4l2src device=/dev/video8 ! video/x-h264, width=1920,height=1080! h264parse ! queue ! rtph264pay config-interval=10 pt=96 ! udpsink host=10.0.0.101 port=5600 sync=false buffer-size=1048576"
         launch_stream2 = "gst-launch-1.0 -v v4l2src device=/dev/video4 ! video/x-h264, width=1920,height=1080! h264parse ! queue ! rtph264pay config-interval=10 pt=96 ! udpsink host=10.0.0.101 port=5601 sync=false buffer-size=1048576"
-        launch_stream3 = "gst-launch-1.0 -v v4l2src device=/dev/video0 ! image/jpeg, width=1920,height=1080, framerate=30/1 ! jpegparse ! queue max-size-buffers=100 ! rtpjpegpay ! udpsink host=10.0.0.101 port=5602 sync=false buffer-size=1048576"
+        launch_stream3 = "gst-launch-1.0 -v v4l2src device=/dev/video0 ! image/jpeg, width=1920,height=1080, framerate=30/1 ! jpegparse ! queue max-size-buffers=100 ! rtpjpegpay ! udpsink host=10.0.0.4 port=5602 sync=false buffer-size=1048576"
 
         # starting subprocesses for each stream
         # subprocess.Popen(launch_stream1, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, bufsize=1, universal_newlines=True)

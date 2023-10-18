@@ -7,8 +7,9 @@ from PyQt5.QtWidgets import QApplication
 from GUI import MainWindow
 from ThrustersSurface import ThrustersSurfaceNode
 from DepthSurface import DepthSurfaceNode
-def run_ros_node(window, node):
-    node = node(window=window)
+import multiprocessing
+def run_ros_node(node):
+    #node = node(window=window)
     rclpy.spin(node)
     rclpy.shutdown()
 
@@ -16,6 +17,7 @@ def run_multiple_nodes(nodes):
     while True:
         for node in nodes:
             rclpy.spin_once(node)
+
 
 
 def main():

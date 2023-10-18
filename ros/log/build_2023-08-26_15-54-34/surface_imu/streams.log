@@ -1,0 +1,67 @@
+[0.054s] Invoking command in '/home/benboardley/src/ROV/X16-Surface/ros/build/surface_imu': CMAKE_PREFIX_PATH=/opt/ros/humble WSLENV=ELECTRON_RUN_AS_NODE/w: /home/benboardley/.local/bin/cmake /home/benboardley/src/ROV/X16-Surface/ros/surface_imu -DCMAKE_INSTALL_PREFIX=/home/benboardley/src/ROV/X16-Surface/ros/install/surface_imu
+[0.556s] -- The C compiler identification is GNU 11.4.0
+[2.224s] -- The CXX compiler identification is GNU 11.4.0
+[3.996s] -- Detecting C compiler ABI info
+[4.399s] -- Detecting C compiler ABI info - done
+[4.418s] -- Check for working C compiler: /usr/bin/cc - skipped
+[4.418s] -- Detecting C compile features
+[4.419s] -- Detecting C compile features - done
+[4.641s] -- Detecting CXX compiler ABI info
+[5.113s] -- Detecting CXX compiler ABI info - done
+[5.135s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[5.135s] -- Detecting CXX compile features
+[5.136s] -- Detecting CXX compile features - done
+[5.139s] -- Found ament_cmake: 1.3.5 (/opt/ros/humble/share/ament_cmake/cmake)
+[10.269s] -- Found Python3: /usr/bin/python3.10 (found version "3.10.12") found components: Interpreter 
+[10.418s] -- Found rclpy: 3.3.9 (/opt/ros/humble/share/rclpy/cmake)
+[10.526s] -- Found ament_lint_auto: 0.12.7 (/opt/ros/humble/share/ament_lint_auto/cmake)
+[10.626s] -- Added test 'flake8' to check Python code syntax and style conventions
+[10.627s] -- Added test 'lint_cmake' to check CMake code style
+[10.628s] -- Added test 'pep257' to check Python code against some of the docstring style conventions in PEP 257
+[10.629s] -- Added test 'xmllint' to check XML markup files
+[10.630s] -- Configuring done (10.5s)
+[10.636s] -- Generating done (0.0s)
+[10.639s] -- Build files have been written to: /home/benboardley/src/ROV/X16-Surface/ros/build/surface_imu
+[10.652s] Invoked command in '/home/benboardley/src/ROV/X16-Surface/ros/build/surface_imu' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble WSLENV=ELECTRON_RUN_AS_NODE/w: /home/benboardley/.local/bin/cmake /home/benboardley/src/ROV/X16-Surface/ros/surface_imu -DCMAKE_INSTALL_PREFIX=/home/benboardley/src/ROV/X16-Surface/ros/install/surface_imu
+[10.655s] Invoking command in '/home/benboardley/src/ROV/X16-Surface/ros/build/surface_imu': CMAKE_PREFIX_PATH=/opt/ros/humble WSLENV=ELECTRON_RUN_AS_NODE/w: /home/benboardley/.local/bin/cmake --build /home/benboardley/src/ROV/X16-Surface/ros/build/surface_imu -- -j8 -l8
+[10.702s] Built target ament_cmake_python_copy_surface_imu
+[10.969s] running egg_info
+[10.971s] creating surface_imu.egg-info
+[10.990s] writing surface_imu.egg-info/PKG-INFO
+[10.990s] writing dependency_links to surface_imu.egg-info/dependency_links.txt
+[10.990s] writing top-level names to surface_imu.egg-info/top_level.txt
+[10.990s] writing manifest file 'surface_imu.egg-info/SOURCES.txt'
+[11.040s] reading manifest file 'surface_imu.egg-info/SOURCES.txt'
+[11.042s] writing manifest file 'surface_imu.egg-info/SOURCES.txt'
+[11.073s] Built target ament_cmake_python_build_surface_imu_egg
+[11.082s] Invoked command in '/home/benboardley/src/ROV/X16-Surface/ros/build/surface_imu' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble WSLENV=ELECTRON_RUN_AS_NODE/w: /home/benboardley/.local/bin/cmake --build /home/benboardley/src/ROV/X16-Surface/ros/build/surface_imu -- -j8 -l8
+[11.127s] Invoking command in '/home/benboardley/src/ROV/X16-Surface/ros/build/surface_imu': CMAKE_PREFIX_PATH=/opt/ros/humble WSLENV=ELECTRON_RUN_AS_NODE/w: /home/benboardley/.local/bin/cmake --install /home/benboardley/src/ROV/X16-Surface/ros/build/surface_imu
+[11.164s] -- Install configuration: ""
+[11.164s] -- Installing: /home/benboardley/src/ROV/X16-Surface/ros/install/surface_imu/share/surface_imu/environment/pythonpath.sh
+[11.164s] -- Installing: /home/benboardley/src/ROV/X16-Surface/ros/install/surface_imu/share/surface_imu/environment/pythonpath.dsv
+[11.164s] -- Installing: /home/benboardley/src/ROV/X16-Surface/ros/install/surface_imu/local/lib/python3.10/dist-packages/surface_imu-0.0.0-py3.10.egg-info
+[11.165s] -- Installing: /home/benboardley/src/ROV/X16-Surface/ros/install/surface_imu/local/lib/python3.10/dist-packages/surface_imu-0.0.0-py3.10.egg-info/dependency_links.txt
+[11.165s] -- Installing: /home/benboardley/src/ROV/X16-Surface/ros/install/surface_imu/local/lib/python3.10/dist-packages/surface_imu-0.0.0-py3.10.egg-info/PKG-INFO
+[11.165s] -- Installing: /home/benboardley/src/ROV/X16-Surface/ros/install/surface_imu/local/lib/python3.10/dist-packages/surface_imu-0.0.0-py3.10.egg-info/top_level.txt
+[11.165s] -- Installing: /home/benboardley/src/ROV/X16-Surface/ros/install/surface_imu/local/lib/python3.10/dist-packages/surface_imu-0.0.0-py3.10.egg-info/SOURCES.txt
+[11.166s] -- Installing: /home/benboardley/src/ROV/X16-Surface/ros/install/surface_imu/local/lib/python3.10/dist-packages/surface_imu
+[11.166s] -- Installing: /home/benboardley/src/ROV/X16-Surface/ros/install/surface_imu/local/lib/python3.10/dist-packages/surface_imu/__init__.py
+[11.195s] Listing '/home/benboardley/src/ROV/X16-Surface/ros/install/surface_imu/local/lib/python3.10/dist-packages/surface_imu'...
+[11.195s] Compiling '/home/benboardley/src/ROV/X16-Surface/ros/install/surface_imu/local/lib/python3.10/dist-packages/surface_imu/__init__.py'...
+[11.200s] -- Installing: /home/benboardley/src/ROV/X16-Surface/ros/install/surface_imu/lib/surface_imu/surface_imu.py
+[11.201s] -- Installing: /home/benboardley/src/ROV/X16-Surface/ros/install/surface_imu/share/ament_index/resource_index/package_run_dependencies/surface_imu
+[11.201s] -- Installing: /home/benboardley/src/ROV/X16-Surface/ros/install/surface_imu/share/ament_index/resource_index/parent_prefix_path/surface_imu
+[11.201s] -- Installing: /home/benboardley/src/ROV/X16-Surface/ros/install/surface_imu/share/surface_imu/environment/ament_prefix_path.sh
+[11.202s] -- Installing: /home/benboardley/src/ROV/X16-Surface/ros/install/surface_imu/share/surface_imu/environment/ament_prefix_path.dsv
+[11.202s] -- Installing: /home/benboardley/src/ROV/X16-Surface/ros/install/surface_imu/share/surface_imu/environment/path.sh
+[11.202s] -- Installing: /home/benboardley/src/ROV/X16-Surface/ros/install/surface_imu/share/surface_imu/environment/path.dsv
+[11.203s] -- Installing: /home/benboardley/src/ROV/X16-Surface/ros/install/surface_imu/share/surface_imu/local_setup.bash
+[11.203s] -- Installing: /home/benboardley/src/ROV/X16-Surface/ros/install/surface_imu/share/surface_imu/local_setup.sh
+[11.203s] -- Installing: /home/benboardley/src/ROV/X16-Surface/ros/install/surface_imu/share/surface_imu/local_setup.zsh
+[11.203s] -- Installing: /home/benboardley/src/ROV/X16-Surface/ros/install/surface_imu/share/surface_imu/local_setup.dsv
+[11.203s] -- Installing: /home/benboardley/src/ROV/X16-Surface/ros/install/surface_imu/share/surface_imu/package.dsv
+[11.203s] -- Installing: /home/benboardley/src/ROV/X16-Surface/ros/install/surface_imu/share/ament_index/resource_index/packages/surface_imu
+[11.203s] -- Installing: /home/benboardley/src/ROV/X16-Surface/ros/install/surface_imu/share/surface_imu/cmake/surface_imuConfig.cmake
+[11.204s] -- Installing: /home/benboardley/src/ROV/X16-Surface/ros/install/surface_imu/share/surface_imu/cmake/surface_imuConfig-version.cmake
+[11.204s] -- Installing: /home/benboardley/src/ROV/X16-Surface/ros/install/surface_imu/share/surface_imu/package.xml
+[11.210s] Invoked command in '/home/benboardley/src/ROV/X16-Surface/ros/build/surface_imu' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble WSLENV=ELECTRON_RUN_AS_NODE/w: /home/benboardley/.local/bin/cmake --install /home/benboardley/src/ROV/X16-Surface/ros/build/surface_imu
