@@ -302,6 +302,7 @@ if __name__ == "__main__":
     try:
         python_executable = sys.executable
         subprocess.Popen([python_executable, 'UI/ssh_startup.py'])
+        
         app = QApplication(sys.argv) 
         window = MainWindow()
         window.show() 
