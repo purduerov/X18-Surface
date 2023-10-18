@@ -1,10 +1,6 @@
 # This is the controls widget class containing the directional tilt buttons, directional yaw buttons, 
 # ascent and descent buttons, and tool buttons.
 
-# (if using avahi, ignore below statement)
-# To port the camera streams, you will need to configure your IP address to remain static.
-
-import sys
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
@@ -15,7 +11,6 @@ class ControlsWidget(QDockWidget):
 
     def initControls(self):
 
-        # setting the controls dock properties
         self.setMaximumSize(300, 300)
         self.setFeatures(QDockWidget.DockWidgetMovable | QDockWidget.DockWidgetFloatable)
         self.setAllowedAreas(Qt.LeftDockWidgetArea)
@@ -28,7 +23,6 @@ class ControlsWidget(QDockWidget):
         self.controls = QWidget()
         self.controls_layout = QGridLayout(self.controls)
 
-        # creating directional tilt buttons
         self.tilt_forward = QPushButton("W\nPitch\nForward")
         self.tilt_forward.setStyleSheet('''
             QPushButton { 
@@ -69,7 +63,6 @@ class ControlsWidget(QDockWidget):
         self.tilt_right.setMaximumSize(100, 70)
         self.controls_layout.addWidget(self.tilt_right, 1, 2)
 
-        # creating directional yaw buttons 
         self.yaw_left = QPushButton("Q\nYaw\nLeft")
         self.yaw_left.setStyleSheet('''
             QPushButton { 
@@ -90,7 +83,6 @@ class ControlsWidget(QDockWidget):
         self.yaw_right.setMaximumSize(100, 70)
         self.controls_layout.addWidget(self.yaw_right, 0, 2)
 
-        # creating the ascent and descent buttons
         self.ascend = QPushButton("R\nAscend\n")
         self.ascend.setStyleSheet('''
             QPushButton { 
@@ -111,11 +103,9 @@ class ControlsWidget(QDockWidget):
         self.descend.setMaximumSize(100, 70)  
         self.controls_layout.addWidget(self.descend, 1, 3)      
 
-        # creating a spacer between the directional and tool buttons
         self.spacer = QSpacerItem(100, 70)
         self.controls_layout.addItem(self.spacer, 2, 0)
 
-        # creating tools buttons 
         self.tool1 = QPushButton("6\nTool")
         self.tool1.setStyleSheet('''
             QPushButton { 
