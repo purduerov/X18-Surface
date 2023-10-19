@@ -1,0 +1,39 @@
+[0.043s] Invoking command in '/home/benboardley/src/ROV/X16-Surface/ros/build/thrusters': /home/benboardley/.local/bin/cmake --build /home/benboardley/src/ROV/X16-Surface/ros/build/thrusters -- -j8 -l8
+[0.208s] Built target ament_cmake_python_copy_thrusters
+[0.505s] running egg_info
+[0.522s] writing thrusters.egg-info/PKG-INFO
+[0.522s] writing dependency_links to thrusters.egg-info/dependency_links.txt
+[0.523s] writing top-level names to thrusters.egg-info/top_level.txt
+[0.580s] reading manifest file 'thrusters.egg-info/SOURCES.txt'
+[0.582s] writing manifest file 'thrusters.egg-info/SOURCES.txt'
+[0.620s] Built target ament_cmake_python_build_thrusters_egg
+[0.634s] Invoked command in '/home/benboardley/src/ROV/X16-Surface/ros/build/thrusters' returned '0': /home/benboardley/.local/bin/cmake --build /home/benboardley/src/ROV/X16-Surface/ros/build/thrusters -- -j8 -l8
+[0.715s] Invoking command in '/home/benboardley/src/ROV/X16-Surface/ros/build/thrusters': /home/benboardley/.local/bin/cmake --install /home/benboardley/src/ROV/X16-Surface/ros/build/thrusters
+[0.757s] -- Install configuration: ""
+[0.758s] -- Up-to-date: /home/benboardley/src/ROV/X16-Surface/ros/install/thrusters/share/thrusters/environment/pythonpath.sh
+[0.758s] -- Up-to-date: /home/benboardley/src/ROV/X16-Surface/ros/install/thrusters/share/thrusters/environment/pythonpath.dsv
+[0.758s] -- Up-to-date: /home/benboardley/src/ROV/X16-Surface/ros/install/thrusters/local/lib/python3.10/dist-packages/thrusters-0.0.0-py3.10.egg-info
+[0.758s] -- Installing: /home/benboardley/src/ROV/X16-Surface/ros/install/thrusters/local/lib/python3.10/dist-packages/thrusters-0.0.0-py3.10.egg-info/dependency_links.txt
+[0.759s] -- Installing: /home/benboardley/src/ROV/X16-Surface/ros/install/thrusters/local/lib/python3.10/dist-packages/thrusters-0.0.0-py3.10.egg-info/PKG-INFO
+[0.759s] -- Installing: /home/benboardley/src/ROV/X16-Surface/ros/install/thrusters/local/lib/python3.10/dist-packages/thrusters-0.0.0-py3.10.egg-info/top_level.txt
+[0.761s] -- Installing: /home/benboardley/src/ROV/X16-Surface/ros/install/thrusters/local/lib/python3.10/dist-packages/thrusters-0.0.0-py3.10.egg-info/SOURCES.txt
+[0.761s] -- Up-to-date: /home/benboardley/src/ROV/X16-Surface/ros/install/thrusters/local/lib/python3.10/dist-packages/thrusters
+[0.761s] -- Up-to-date: /home/benboardley/src/ROV/X16-Surface/ros/install/thrusters/local/lib/python3.10/dist-packages/thrusters/__init__.py
+[0.803s] Listing '/home/benboardley/src/ROV/X16-Surface/ros/install/thrusters/local/lib/python3.10/dist-packages/thrusters'...
+[0.815s] -- Up-to-date: /home/benboardley/src/ROV/X16-Surface/ros/install/thrusters/lib/thrusters/status.py
+[0.815s] -- Up-to-date: /home/benboardley/src/ROV/X16-Surface/ros/install/thrusters/share/ament_index/resource_index/package_run_dependencies/thrusters
+[0.815s] -- Up-to-date: /home/benboardley/src/ROV/X16-Surface/ros/install/thrusters/share/ament_index/resource_index/parent_prefix_path/thrusters
+[0.815s] -- Up-to-date: /home/benboardley/src/ROV/X16-Surface/ros/install/thrusters/share/thrusters/environment/ament_prefix_path.sh
+[0.815s] -- Up-to-date: /home/benboardley/src/ROV/X16-Surface/ros/install/thrusters/share/thrusters/environment/ament_prefix_path.dsv
+[0.815s] -- Up-to-date: /home/benboardley/src/ROV/X16-Surface/ros/install/thrusters/share/thrusters/environment/path.sh
+[0.815s] -- Up-to-date: /home/benboardley/src/ROV/X16-Surface/ros/install/thrusters/share/thrusters/environment/path.dsv
+[0.815s] -- Up-to-date: /home/benboardley/src/ROV/X16-Surface/ros/install/thrusters/share/thrusters/local_setup.bash
+[0.815s] -- Up-to-date: /home/benboardley/src/ROV/X16-Surface/ros/install/thrusters/share/thrusters/local_setup.sh
+[0.815s] -- Up-to-date: /home/benboardley/src/ROV/X16-Surface/ros/install/thrusters/share/thrusters/local_setup.zsh
+[0.816s] -- Up-to-date: /home/benboardley/src/ROV/X16-Surface/ros/install/thrusters/share/thrusters/local_setup.dsv
+[0.816s] -- Up-to-date: /home/benboardley/src/ROV/X16-Surface/ros/install/thrusters/share/thrusters/package.dsv
+[0.816s] -- Up-to-date: /home/benboardley/src/ROV/X16-Surface/ros/install/thrusters/share/ament_index/resource_index/packages/thrusters
+[0.816s] -- Up-to-date: /home/benboardley/src/ROV/X16-Surface/ros/install/thrusters/share/thrusters/cmake/thrustersConfig.cmake
+[0.816s] -- Up-to-date: /home/benboardley/src/ROV/X16-Surface/ros/install/thrusters/share/thrusters/cmake/thrustersConfig-version.cmake
+[0.816s] -- Up-to-date: /home/benboardley/src/ROV/X16-Surface/ros/install/thrusters/share/thrusters/package.xml
+[0.878s] Invoked command in '/home/benboardley/src/ROV/X16-Surface/ros/build/thrusters' returned '0': /home/benboardley/.local/bin/cmake --install /home/benboardley/src/ROV/X16-Surface/ros/build/thrusters

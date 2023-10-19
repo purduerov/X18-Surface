@@ -1,0 +1,16 @@
+setup.py
+shared_msgs/__init__.py
+shared_msgs.egg-info/PKG-INFO
+shared_msgs.egg-info/SOURCES.txt
+shared_msgs.egg-info/dependency_links.txt
+shared_msgs.egg-info/top_level.txt
+shared_msgs/msg/__init__.py
+shared_msgs/msg/_can_msg.py
+shared_msgs/msg/_com_msg.py
+shared_msgs/msg/_final_thrust_msg.py
+shared_msgs/msg/_imu_msg.py
+shared_msgs/msg/_rov_velocity_command.py
+shared_msgs/msg/_temp_msg.py
+shared_msgs/msg/_thrust_command_msg.py
+shared_msgs/msg/_thrust_status_msg.py
+shared_msgs/msg/_tools_command_msg.py

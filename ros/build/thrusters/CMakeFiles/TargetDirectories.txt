@@ -1,0 +1,11 @@
+/home/benboardley/src/ROV/X16-Surface/ros/build/thrusters/CMakeFiles/uninstall.dir
+/home/benboardley/src/ROV/X16-Surface/ros/build/thrusters/CMakeFiles/thrusters_uninstall.dir
+/home/benboardley/src/ROV/X16-Surface/ros/build/thrusters/CMakeFiles/ament_cmake_python_copy_thrusters.dir
+/home/benboardley/src/ROV/X16-Surface/ros/build/thrusters/CMakeFiles/ament_cmake_python_build_thrusters_egg.dir
+/home/benboardley/src/ROV/X16-Surface/ros/build/thrusters/CMakeFiles/test.dir
+/home/benboardley/src/ROV/X16-Surface/ros/build/thrusters/CMakeFiles/edit_cache.dir
+/home/benboardley/src/ROV/X16-Surface/ros/build/thrusters/CMakeFiles/rebuild_cache.dir
+/home/benboardley/src/ROV/X16-Surface/ros/build/thrusters/CMakeFiles/list_install_components.dir
+/home/benboardley/src/ROV/X16-Surface/ros/build/thrusters/CMakeFiles/install.dir
+/home/benboardley/src/ROV/X16-Surface/ros/build/thrusters/CMakeFiles/install/local.dir
+/home/benboardley/src/ROV/X16-Surface/ros/build/thrusters/CMakeFiles/install/strip.dir
