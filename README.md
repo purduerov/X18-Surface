@@ -91,6 +91,9 @@ All of the information needed for use of the X16 ROV can be found below.
 
 ### User Interface
 
+### Launch UI with Surface Nodes
+ros2 run ui runner.py
+
 ### Camera Streams
 
 To launch and receive the camera streams externally, follow these instructions:
