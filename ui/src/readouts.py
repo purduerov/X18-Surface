@@ -1,7 +1,6 @@
 # This is the readout widget class for the X16 ROV 
 # This contains the 8 thruster readouts, velocity readout, and depth readout.
 
-import sys
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
@@ -12,7 +11,6 @@ class ReadoutsWidget(QDockWidget):
 
     def initReadouts(self):
 
-        # setting the readout dock properties
         self.setMaximumWidth(300)
         self.setFeatures(QDockWidget.DockWidgetMovable | QDockWidget.DockWidgetFloatable)
         self.setAllowedAreas(Qt.RightDockWidgetArea)
@@ -26,8 +24,8 @@ class ReadoutsWidget(QDockWidget):
         self.reaout_layout = QGridLayout(self.readouts)
         self.reaout_layout.setSpacing(30)
         self.reaout_layout.setAlignment(Qt.AlignTop)
+        self.setStyleSheet("background:transparent;")
 
-        # adding the 8 thruster readouts to the dock
         self.thruster1 = QProgressBar()
         self.thruster1.setMaximumHeight(50)
         self.thruster1.setValue(50)
@@ -76,20 +74,18 @@ class ReadoutsWidget(QDockWidget):
         self.reaout_layout.addWidget(QLabel("Thruster 8"), 7, 0)
         self.reaout_layout.addWidget(self.thruster8, 7, 1)
 
-        # adding the velocity readout to the dock
         self.velocity = QLCDNumber()
         self.velocity.setMaximumSize(100, 100)
         self.velocity.setDigitCount(5)
-        self.velocity.display(5.3)
+        self.velocity.display(0.0)
         self.reaout_layout.addWidget(QLabel("Velocity"), 8, 0)
         self.reaout_layout.addWidget(self.velocity, 8, 1)
 
-        # adding the depth readout to the dock
         self.depth = QLCDNumber()
         self.depth.setMaximumSize(100, 100)
         self.depth.setDigitCount(5)
-        self.depth.display(12.6)
+        self.depth.display(0.0)
         self.reaout_layout.addWidget(QLabel("Depth"), 9, 0)
         self.reaout_layout.addWidget(self.depth, 9, 1)
-
-        self.setWidget(self.readouts)        
+        
+        self.setWidget(self.readouts)      
