@@ -30,7 +30,10 @@ TRIM_Z = 0.0
 
 REVERSE = 1
 LOCKOUT = True
-MODE = True
+#is fine = 0 = std_mode
+#is_fine = 1 = fine_mode
+#is_fine = 2 = yeet mode
+is_fine = 0
 FINE_MULTIPLIER = 1.041
 
 class SocketManager:
@@ -52,7 +55,7 @@ class SocketManager:
 
     def run(self):
         global SCALE_ROTATIONAL_X, SCALE_ROTATIONAL_Y, SCALE_ROTATIONAL_Z, SCALE_TRANSLATIONAL_X, SCALE_TRANSLATIONAL_Y, SCALE_TRANSLATIONAL_Z
-        global TRIM_X, TRIM_Y, TRIM_Z, REVERSE, LOCKOUT, MODE, FINE_MULTIPLIER
+        global TRIM_X, TRIM_Y, TRIM_Z, REVERSE, LOCKOUT, FINE_MULTIPLIER #MODE
 
         while not self.connected and self.running:
             try:
@@ -88,12 +91,13 @@ class SocketManager:
                 elif mode == 'lockout':
                     LOCKOUT = decoded.split(':')[1] == 'T'
                 elif mode == 'mode':
-                    MODE = decoded.split(':')[1] == 'T'
+                    pass
                 elif mode == 'absolute':
                     FINE_MULTIPLIER = float(decoded.split(':')[1])
 
 def getMessage():
     global gamepad_state
+    global is_fine
 
     t = Twist()
 
@@ -115,7 +119,7 @@ def getMessage():
     new_msg = RovVelocityCommand()
     new_msg.twist = t
     new_msg.source = 'gamepad'
-    new_msg.is_fine = MODE
+    new_msg.is_fine = is_fine
     new_msg.multiplier = FINE_MULTIPLIER
     new_msg.is_percent_power = False
     new_msg.is_pool_centric = False
@@ -153,6 +157,8 @@ def correct_raw(raw, abbv):
 
 def process_event(event):
     global tools
+    global is_fine
+    global gamepad_state
     if event.ev_type in ignore_events:
         return
 
@@ -169,6 +175,19 @@ def process_event(event):
 
         if event.code == 'BTN_NORTH' and event.state and LOCKOUT:
             tools[3] = not tools[3]
+        
+        if event.code == 'BTN_START' and event.state:
+        #if event.code == 'DPADX' and event.state:
+            if (is_fine == 0):
+                is_fine = 1
+            elif (is_fine == 1):
+                is_fine = 2
+            else:
+                is_fine = 0
+
+        if event.code == 'BTN_SELECT' and event.state:
+        #if event.code == 'DPADY' and event.state:
+            is_fine = 0
 
     elif event.ev_type == EVENT_ABSOLUTE:
         gamepad_state[EVENTS[event.code]] = correct_raw(event.state, EVENTS[event.code])
