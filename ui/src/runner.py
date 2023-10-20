@@ -16,7 +16,7 @@ def run_ros_node(node):
 def run_multiple_nodes(nodes):
     while True:
         for node in nodes:
-            rclpy.spin_once(node)
+            rclpy.spin_once(node, timeout_sec=0.1)
 
 
 
