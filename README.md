@@ -113,14 +113,16 @@ Once downloaded, follow these steps to start using QtDesigner:
 - Once finished, save the file to your local project folder (this will be saved as a .ui file)
 - Open your terminal and navigate to your local project folder
 - Run the following command in the terminal to convert your .ui file to a .py file:
+  
   ```bash
   pyuic5 -o <python-filename>.py <qtdesigner-filename>.ui
   ```
-- Import your new Python file into your main window file and set the following fields:
-```python
-self.ui = Ui_MainWindow()
-self.ui.setupUi(self)
-```
+- Import your new Python file into the file containing your main window class and set the following fields in the class:
+  
+  ```python
+  self.ui = Ui_MainWindow()
+  self.ui.setupUi(self)
+  ```
 - Your user interface should now open once you run your main file
 
 ### Camera Streams
