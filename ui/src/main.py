@@ -8,29 +8,40 @@ from PyQt5.QtWidgets import *
 import command as command
 import subprocess as subprocess
 
-import streams as stream
 import readouts as readouts
 import controls as controls 
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.showMaximized()
-        self.setWindowTitle("ROV X16")
-        self.setStyleSheet('''
-            QMainWindow {
-                background-color: #2C2C2C;
-            }
-            ''')
-        
-        # self.controls_widget = controls.ControlsWidget()
-        # self.addDockWidget(Qt.LeftDockWidgetArea, self.controls_widget)
 
-        self.readout_widget = readouts.ReadoutsWidget()
-        self.addDockWidget(Qt.RightDockWidgetArea, self.readout_widget)
-        
-        self.camera_stream_widget = stream.CameraStreamWidget()
-        self.setCentralWidget(self.camera_stream_widget)
+        screen_geometry = QDesktopWidget().screenGeometry()
+        screen_height = screen_geometry.height()
+        screen_width = screen_geometry.width()
+        self.setGeometry(0, screen_height // 2, screen_width, screen_height // 2)
+        self.setWindowTitle("ROV X16")
+        self.setStyleSheet("background-color: #2C2C2C;") # keeping the border for size estimation "border: 1px solid black;"
+        main_widget = QWidget()
+        self.setCentralWidget(main_widget)
+        grid_layout = QGridLayout()
+
+        self.thrusters_widget = readouts.ThrustersWidget()
+        self.thrusters_widget.setMaximumSize(300, 300)
+        grid_layout.addWidget(self.thrusters_widget, 0, 0, 2, 1)
+
+        self.velocity_widget = readouts.VelocityWidget()
+        self.velocity_widget.setMaximumSize(150, 500)
+        grid_layout.addWidget(self.velocity_widget, 0, 1, 2, 1)
+    
+        self.depth_widget = readouts.DepthWidget()
+        self.depth_widget.setMaximumSize(150, 500)
+        grid_layout.addWidget(self.depth_widget, 0, 2, 1, 1)
+
+        self.fine_widget = readouts.FineModeWidget()
+        self.fine_widget.setMaximumSize(150, 500)
+        grid_layout.addWidget(self.fine_widget, 1, 2, 1, 1)
+
+        main_widget.setLayout(grid_layout)
 
 if __name__ == "__main__":
     python_executable = sys.executable

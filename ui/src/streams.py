@@ -15,22 +15,6 @@ class CameraStreamWidget(QWidget):
         stream_layout = QGridLayout(self.stream)
         self.setLayout(stream_layout)
 
-        self.stream1 = QLabel("Stream 1")
-        self.stream1.setAlignment(Qt.AlignCenter)
-        stream_layout.addWidget(self.stream1, 0, 0)
-
-        self.stream2 = QLabel("Stream 2")
-        self.stream2.setAlignment(Qt.AlignCenter)
-        stream_layout.addWidget(self.stream2, 0, 1)
-
-        self.stream3 = QLabel("Stream 3")
-        self.stream3.setAlignment(Qt.AlignCenter)
-        stream_layout.addWidget(self.stream3, 1, 0)
-
-        self.stream4 = QLabel("Stream 4")
-        self.stream4.setAlignment(Qt.AlignCenter)
-        stream_layout.addWidget(self.stream4, 1, 1)
-
         self.launch_stream()
 
     def launch_stream(self):
