@@ -1,0 +1,76 @@
+[0.081s] Invoking command in '/home/benboardley/src/ROV/X16-Surface/build/gamepad': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble WSLENV=ELECTRON_RUN_AS_NODE/w:WT_SESSION:WT_PROFILE_ID: /home/benboardley/.local/bin/cmake /home/benboardley/src/ROV/X16-Surface/ros/gamepad -DCMAKE_INSTALL_PREFIX=/home/benboardley/src/ROV/X16-Surface/install/gamepad
+[0.437s] -- The C compiler identification is GNU 11.4.0
+[3.001s] -- The CXX compiler identification is GNU 11.4.0
+[5.797s] -- Detecting C compiler ABI info
+[6.419s] -- Detecting C compiler ABI info - done
+[6.450s] -- Check for working C compiler: /usr/bin/cc - skipped
+[6.450s] -- Detecting C compile features
+[6.451s] -- Detecting C compile features - done
+[6.740s] -- Detecting CXX compiler ABI info
+[7.398s] -- Detecting CXX compiler ABI info - done
+[7.430s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[7.431s] -- Detecting CXX compile features
+[7.435s] -- Detecting CXX compile features - done
+[7.441s] -- Found ament_cmake: 1.3.5 (/opt/ros/humble/share/ament_cmake/cmake)
+[16.133s] -- Found Python3: /usr/bin/python3.10 (found version "3.10.12") found components: Interpreter 
+[16.326s] -- Found rclpy: 3.3.9 (/opt/ros/humble/share/rclpy/cmake)
+[16.329s] -- Found builtin_interfaces: 1.2.1 (/opt/ros/humble/share/builtin_interfaces/cmake)
+[16.830s] -- Found rosidl_generator_c: 3.1.5 (/opt/ros/humble/share/rosidl_generator_c/cmake)
+[16.840s] -- Found rosidl_adapter: 3.1.5 (/opt/ros/humble/share/rosidl_adapter/cmake)
+[16.855s] -- Found rosidl_generator_cpp: 3.1.5 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)
+[16.889s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[16.946s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[16.986s] -- Found rosidl_default_generators: 1.2.0 (/opt/ros/humble/share/rosidl_default_generators/cmake)
+[17.167s] -- Found ament_lint_auto: 0.12.7 (/opt/ros/humble/share/ament_lint_auto/cmake)
+[17.312s] -- Added test 'flake8' to check Python code syntax and style conventions
+[17.313s] -- Added test 'lint_cmake' to check CMake code style
+[17.314s] -- Added test 'pep257' to check Python code against some of the docstring style conventions in PEP 257
+[17.318s] -- Added test 'xmllint' to check XML markup files
+[17.322s] -- Configuring done (17.2s)
+[17.332s] -- Generating done (0.0s)
+[17.335s] -- Build files have been written to: /home/benboardley/src/ROV/X16-Surface/build/gamepad
+[17.352s] Invoked command in '/home/benboardley/src/ROV/X16-Surface/build/gamepad' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble WSLENV=ELECTRON_RUN_AS_NODE/w:WT_SESSION:WT_PROFILE_ID: /home/benboardley/.local/bin/cmake /home/benboardley/src/ROV/X16-Surface/ros/gamepad -DCMAKE_INSTALL_PREFIX=/home/benboardley/src/ROV/X16-Surface/install/gamepad
+[17.357s] Invoking command in '/home/benboardley/src/ROV/X16-Surface/build/gamepad': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble WSLENV=ELECTRON_RUN_AS_NODE/w:WT_SESSION:WT_PROFILE_ID: /home/benboardley/.local/bin/cmake --build /home/benboardley/src/ROV/X16-Surface/build/gamepad -- -j8 -l8
+[17.431s] Built target ament_cmake_python_copy_gamepad
+[17.744s] running egg_info
+[17.745s] creating gamepad.egg-info
+[17.774s] writing gamepad.egg-info/PKG-INFO
+[17.774s] writing dependency_links to gamepad.egg-info/dependency_links.txt
+[17.774s] writing top-level names to gamepad.egg-info/top_level.txt
+[17.774s] writing manifest file 'gamepad.egg-info/SOURCES.txt'
+[17.837s] reading manifest file 'gamepad.egg-info/SOURCES.txt'
+[17.838s] writing manifest file 'gamepad.egg-info/SOURCES.txt'
+[17.871s] Built target ament_cmake_python_build_gamepad_egg
+[17.885s] Invoked command in '/home/benboardley/src/ROV/X16-Surface/build/gamepad' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble WSLENV=ELECTRON_RUN_AS_NODE/w:WT_SESSION:WT_PROFILE_ID: /home/benboardley/.local/bin/cmake --build /home/benboardley/src/ROV/X16-Surface/build/gamepad -- -j8 -l8
+[17.956s] Invoking command in '/home/benboardley/src/ROV/X16-Surface/build/gamepad': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble WSLENV=ELECTRON_RUN_AS_NODE/w:WT_SESSION:WT_PROFILE_ID: /home/benboardley/.local/bin/cmake --install /home/benboardley/src/ROV/X16-Surface/build/gamepad
+[18.028s] -- Install configuration: ""
+[18.030s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/gamepad/share/gamepad/environment/pythonpath.sh
+[18.031s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/gamepad/share/gamepad/environment/pythonpath.dsv
+[18.031s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/gamepad/local/lib/python3.10/dist-packages/gamepad-0.0.0-py3.10.egg-info
+[18.033s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/gamepad/local/lib/python3.10/dist-packages/gamepad-0.0.0-py3.10.egg-info/dependency_links.txt
+[18.033s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/gamepad/local/lib/python3.10/dist-packages/gamepad-0.0.0-py3.10.egg-info/PKG-INFO
+[18.034s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/gamepad/local/lib/python3.10/dist-packages/gamepad-0.0.0-py3.10.egg-info/top_level.txt
+[18.035s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/gamepad/local/lib/python3.10/dist-packages/gamepad-0.0.0-py3.10.egg-info/SOURCES.txt
+[18.035s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/gamepad/local/lib/python3.10/dist-packages/gamepad
+[18.035s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/gamepad/local/lib/python3.10/dist-packages/gamepad/__init__.py
+[18.106s] Listing '/home/benboardley/src/ROV/X16-Surface/install/gamepad/local/lib/python3.10/dist-packages/gamepad'...
+[18.106s] Compiling '/home/benboardley/src/ROV/X16-Surface/install/gamepad/local/lib/python3.10/dist-packages/gamepad/__init__.py'...
+[18.116s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/gamepad/lib/gamepad/config.py
+[18.116s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/gamepad/lib/gamepad/inputs.py
+[18.117s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/gamepad/lib/gamepad/sender.py
+[18.118s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/gamepad/share/ament_index/resource_index/package_run_dependencies/gamepad
+[18.119s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/gamepad/share/ament_index/resource_index/parent_prefix_path/gamepad
+[18.119s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/gamepad/share/gamepad/environment/ament_prefix_path.sh
+[18.120s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/gamepad/share/gamepad/environment/ament_prefix_path.dsv
+[18.120s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/gamepad/share/gamepad/environment/path.sh
+[18.120s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/gamepad/share/gamepad/environment/path.dsv
+[18.121s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/gamepad/share/gamepad/local_setup.bash
+[18.121s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/gamepad/share/gamepad/local_setup.sh
+[18.121s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/gamepad/share/gamepad/local_setup.zsh
+[18.122s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/gamepad/share/gamepad/local_setup.dsv
+[18.122s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/gamepad/share/gamepad/package.dsv
+[18.122s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/gamepad/share/ament_index/resource_index/packages/gamepad
+[18.123s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/gamepad/share/gamepad/cmake/gamepadConfig.cmake
+[18.123s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/gamepad/share/gamepad/cmake/gamepadConfig-version.cmake
+[18.123s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/gamepad/share/gamepad/package.xml
+[18.146s] Invoked command in '/home/benboardley/src/ROV/X16-Surface/build/gamepad' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble WSLENV=ELECTRON_RUN_AS_NODE/w:WT_SESSION:WT_PROFILE_ID: /home/benboardley/.local/bin/cmake --install /home/benboardley/src/ROV/X16-Surface/build/gamepad

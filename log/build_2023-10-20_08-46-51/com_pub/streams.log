@@ -1,0 +1,74 @@
+[0.075s] Invoking command in '/home/benboardley/src/ROV/X16-Surface/build/com_pub': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble WSLENV=ELECTRON_RUN_AS_NODE/w:WT_SESSION:WT_PROFILE_ID: /home/benboardley/.local/bin/cmake /home/benboardley/src/ROV/X16-Surface/ros/com_pub -DCMAKE_INSTALL_PREFIX=/home/benboardley/src/ROV/X16-Surface/install/com_pub
+[0.481s] -- The C compiler identification is GNU 11.4.0
+[3.024s] -- The CXX compiler identification is GNU 11.4.0
+[5.887s] -- Detecting C compiler ABI info
+[6.466s] -- Detecting C compiler ABI info - done
+[6.489s] -- Check for working C compiler: /usr/bin/cc - skipped
+[6.490s] -- Detecting C compile features
+[6.491s] -- Detecting C compile features - done
+[6.817s] -- Detecting CXX compiler ABI info
+[7.520s] -- Detecting CXX compiler ABI info - done
+[7.569s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[7.570s] -- Detecting CXX compile features
+[7.572s] -- Detecting CXX compile features - done
+[7.586s] -- Found ament_cmake: 1.3.5 (/opt/ros/humble/share/ament_cmake/cmake)
+[17.686s] -- Found Python3: /usr/bin/python3.10 (found version "3.10.12") found components: Interpreter 
+[17.841s] -- Found rclpy: 3.3.9 (/opt/ros/humble/share/rclpy/cmake)
+[17.843s] -- Found builtin_interfaces: 1.2.1 (/opt/ros/humble/share/builtin_interfaces/cmake)
+[18.383s] -- Found rosidl_generator_c: 3.1.5 (/opt/ros/humble/share/rosidl_generator_c/cmake)
+[18.393s] -- Found rosidl_adapter: 3.1.5 (/opt/ros/humble/share/rosidl_adapter/cmake)
+[18.409s] -- Found rosidl_generator_cpp: 3.1.5 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)
+[18.428s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[18.460s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[18.486s] -- Found rosidl_default_generators: 1.2.0 (/opt/ros/humble/share/rosidl_default_generators/cmake)
+[18.678s] -- Found ament_lint_auto: 0.12.7 (/opt/ros/humble/share/ament_lint_auto/cmake)
+[18.836s] -- Added test 'flake8' to check Python code syntax and style conventions
+[18.837s] -- Added test 'lint_cmake' to check CMake code style
+[18.838s] -- Added test 'pep257' to check Python code against some of the docstring style conventions in PEP 257
+[18.840s] -- Added test 'xmllint' to check XML markup files
+[18.843s] -- Configuring done (18.7s)
+[18.857s] -- Generating done (0.0s)
+[18.859s] -- Build files have been written to: /home/benboardley/src/ROV/X16-Surface/build/com_pub
+[18.879s] Invoked command in '/home/benboardley/src/ROV/X16-Surface/build/com_pub' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble WSLENV=ELECTRON_RUN_AS_NODE/w:WT_SESSION:WT_PROFILE_ID: /home/benboardley/.local/bin/cmake /home/benboardley/src/ROV/X16-Surface/ros/com_pub -DCMAKE_INSTALL_PREFIX=/home/benboardley/src/ROV/X16-Surface/install/com_pub
+[18.881s] Invoking command in '/home/benboardley/src/ROV/X16-Surface/build/com_pub': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble WSLENV=ELECTRON_RUN_AS_NODE/w:WT_SESSION:WT_PROFILE_ID: /home/benboardley/.local/bin/cmake --build /home/benboardley/src/ROV/X16-Surface/build/com_pub -- -j8 -l8
+[18.965s] Built target ament_cmake_python_copy_com_pub
+[19.325s] running egg_info
+[19.325s] creating com_pub.egg-info
+[19.363s] writing com_pub.egg-info/PKG-INFO
+[19.364s] writing dependency_links to com_pub.egg-info/dependency_links.txt
+[19.364s] writing top-level names to com_pub.egg-info/top_level.txt
+[19.364s] writing manifest file 'com_pub.egg-info/SOURCES.txt'
+[19.440s] reading manifest file 'com_pub.egg-info/SOURCES.txt'
+[19.442s] writing manifest file 'com_pub.egg-info/SOURCES.txt'
+[19.479s] Built target ament_cmake_python_build_com_pub_egg
+[19.496s] Invoked command in '/home/benboardley/src/ROV/X16-Surface/build/com_pub' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble WSLENV=ELECTRON_RUN_AS_NODE/w:WT_SESSION:WT_PROFILE_ID: /home/benboardley/.local/bin/cmake --build /home/benboardley/src/ROV/X16-Surface/build/com_pub -- -j8 -l8
+[19.588s] Invoking command in '/home/benboardley/src/ROV/X16-Surface/build/com_pub': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble WSLENV=ELECTRON_RUN_AS_NODE/w:WT_SESSION:WT_PROFILE_ID: /home/benboardley/.local/bin/cmake --install /home/benboardley/src/ROV/X16-Surface/build/com_pub
+[19.649s] -- Install configuration: ""
+[19.650s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/com_pub/share/com_pub/environment/pythonpath.sh
+[19.651s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/com_pub/share/com_pub/environment/pythonpath.dsv
+[19.651s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/com_pub/local/lib/python3.10/dist-packages/com_pub-0.0.0-py3.10.egg-info
+[19.652s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/com_pub/local/lib/python3.10/dist-packages/com_pub-0.0.0-py3.10.egg-info/dependency_links.txt
+[19.653s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/com_pub/local/lib/python3.10/dist-packages/com_pub-0.0.0-py3.10.egg-info/PKG-INFO
+[19.653s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/com_pub/local/lib/python3.10/dist-packages/com_pub-0.0.0-py3.10.egg-info/top_level.txt
+[19.653s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/com_pub/local/lib/python3.10/dist-packages/com_pub-0.0.0-py3.10.egg-info/SOURCES.txt
+[19.653s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/com_pub/local/lib/python3.10/dist-packages/com_pub
+[19.654s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/com_pub/local/lib/python3.10/dist-packages/com_pub/__init__.py
+[19.728s] Listing '/home/benboardley/src/ROV/X16-Surface/install/com_pub/local/lib/python3.10/dist-packages/com_pub'...
+[19.728s] Compiling '/home/benboardley/src/ROV/X16-Surface/install/com_pub/local/lib/python3.10/dist-packages/com_pub/__init__.py'...
+[19.740s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/com_pub/lib/com_pub/sender.py
+[19.740s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/com_pub/share/ament_index/resource_index/package_run_dependencies/com_pub
+[19.741s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/com_pub/share/ament_index/resource_index/parent_prefix_path/com_pub
+[19.741s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/com_pub/share/com_pub/environment/ament_prefix_path.sh
+[19.742s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/com_pub/share/com_pub/environment/ament_prefix_path.dsv
+[19.743s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/com_pub/share/com_pub/environment/path.sh
+[19.743s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/com_pub/share/com_pub/environment/path.dsv
+[19.744s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/com_pub/share/com_pub/local_setup.bash
+[19.744s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/com_pub/share/com_pub/local_setup.sh
+[19.745s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/com_pub/share/com_pub/local_setup.zsh
+[19.745s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/com_pub/share/com_pub/local_setup.dsv
+[19.745s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/com_pub/share/com_pub/package.dsv
+[19.745s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/com_pub/share/ament_index/resource_index/packages/com_pub
+[19.745s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/com_pub/share/com_pub/cmake/com_pubConfig.cmake
+[19.746s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/com_pub/share/com_pub/cmake/com_pubConfig-version.cmake
+[19.746s] -- Installing: /home/benboardley/src/ROV/X16-Surface/install/com_pub/share/com_pub/package.xml
+[19.763s] Invoked command in '/home/benboardley/src/ROV/X16-Surface/build/com_pub' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble WSLENV=ELECTRON_RUN_AS_NODE/w:WT_SESSION:WT_PROFILE_ID: /home/benboardley/.local/bin/cmake --install /home/benboardley/src/ROV/X16-Surface/build/com_pub

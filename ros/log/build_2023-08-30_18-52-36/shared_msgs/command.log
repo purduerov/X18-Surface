@@ -1,4 +1,0 @@
-Invoking command in '/home/benboardley/src/ROV/X16-Surface/ros/build/shared_msgs': /home/benboardley/.local/bin/cmake --build /home/benboardley/src/ROV/X16-Surface/ros/build/shared_msgs -- -j8 -l8
-Invoked command in '/home/benboardley/src/ROV/X16-Surface/ros/build/shared_msgs' returned '0': /home/benboardley/.local/bin/cmake --build /home/benboardley/src/ROV/X16-Surface/ros/build/shared_msgs -- -j8 -l8
-Invoking command in '/home/benboardley/src/ROV/X16-Surface/ros/build/shared_msgs': /home/benboardley/.local/bin/cmake --install /home/benboardley/src/ROV/X16-Surface/ros/build/shared_msgs
-Invoked command in '/home/benboardley/src/ROV/X16-Surface/ros/build/shared_msgs' returned '0': /home/benboardley/.local/bin/cmake --install /home/benboardley/src/ROV/X16-Surface/ros/build/shared_msgs
