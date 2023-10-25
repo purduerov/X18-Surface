@@ -6,14 +6,23 @@
 - [Project Description](#project-description)
   - [System Architecture](#system-architecture)
   - [Dependencies](#dependencies)
+    - [ROS2](#ros2)
+    - [PyQt5](#pyqt5)
 - [Installation](#installation)
 - [Usage](#usage)
   - [Startup](#startup)
+    - [Connecting the ROV](#connecting-the-rov)
+    - [Launching the ROS2 Network](#launching-the-ros2-network)
   - [User Interface](#user-interface)
+    - [Using QtDesigner](#using-qtdesigner)
   - [Camera Streams](#camera-streams)
+    - [Launching Streams](#launch-streams)
+    - [Receiving Streams](#receive-streams)
   - [Troubleshooting](#troubleshooting)
   - [Documentation](#documentation)
 - [Credits](#credits)
+  - [Project Team](#project-team)
+  - [Special Thanks](#special-thanks)
 - [Contact Information](#contact-information)
 
 ## About ROV 
@@ -41,22 +50,21 @@ Shown below is a diagram showing the X16 system architecture. Each white box rep
 
 ### Dependencies
 
-#### ROS2 (Robot Operating System 2)
+#### ROS2
 - **Description:** ROS2, or Robot Operating System 2, is an open-source framework designed for developing and controlling robotic systems. It provides a comprehensive suite of libraries, tools, and middleware for communication, hardware abstraction, and real-time control.
 - **Nodes:** A node is a fundamental computational unit in ROS. It is an individual process that performs a specific task.
 - **Master:** The ROS Master is the centralized coordination service that helps nodes discover and communicate with each other. Nodes register with the ROS Master, which maintains a registry of all active nodes.
 - **Topics:** Topics are named communication channels that allow nodes to send and receive data. Nodes can publish data to a topic or subscribe to receive data from a topic.
 - **Communication:** Nodes in a ROS system communicate asynchronously. This means that they can operate independently, sending nad receiving messages at their own pace. Multiple nodes can public data to the same topic, and multiple nodes can subscribe to the same topic.
 
-#### Python Qt5
-- **Description:** Python Qt5 is a Python binding for the Qt framework. Qt is a cross-platform application development framework that provides tools and libraries for creating graphical user interfaces and other software components.
+#### PyQt5
+- **Description:** PyQt5 is a Python binding for the Qt framework. Qt is a cross-platform application development framework that provides tools and libraries for creating graphical user interfaces and other software components. 
 - **Widgets:** Widgets are graphical components such as buttons, labels, textboxes, etc. The can be used to create the various components of a graphical user interface.
 - **Layouts:** Layouts can be used to organize and arrange widgets within your window. You can also place widgets in a dock, on the tool bar, or set a central widget.
 - **Signals and Slots:** Widgets emit signals in response to user action or system events (e.g., key press, key release, etc.). These signals can be connected to slots, which are functions that get called in response to signals.
+- **QtDesigner:** Qt Designer is an application within Qt that allows you to design a user interface using drag-and-drop methods, and then is able to convert your design to working C++ or Python code.
 
-#### GStreamer 
-
-#### OpenCV
+**Note:** Downloading Qt as an application needs over 20Gb. If you just want to use QtDesigner, you can download a standalone version here: https://build-system.fman.io/qt-designer-download 
 
 ## Installation
 
@@ -91,14 +99,24 @@ All of the information needed for use of the X16 ROV can be found below.
 
 ### User Interface
 
-### Launch UI with Surface Nodes
-ros2 run ui runner.py
+#### Using QtDesigner 
+
+Follow these steps to start using QtDesigner:
+
+- Use QtDesigner to design/modify the user interface
+- Once finished, save the file to your local project folder (this will be saved as a .ui file)
+- Open your terminal and navigate to your local project folder. You must be in the same folder as your .ui file.
+- Run the following command in the terminal to convert your .ui file to a .py file:
+  
+  ```bash
+  pyuic5 -o <python-filename>.py <qtdesigner-filename>.ui
+  ```
+- This generates an automated file containing your ui design as a python file
+- Your user interface should now open once you run your main file
 
 ### Camera Streams
 
-To launch and receive the camera streams externally, follow these instructions:
-
-#### Launch Streams
+#### Launching Streams
 
 - Plug in the ROV and connect the ethernet cable from the tether to the router. Power on the ROV.
 - Connect your computer to the ROV wifi
@@ -106,10 +124,10 @@ To launch and receive the camera streams externally, follow these instructions:
 - In *Attatched Devices*, you can see the IP address assigned to the Raspberry Pi and the IP address assigned to your computer.
 - In a terminal, ssh into the pi using the following command:
   ```bash
-  ssh pi@<rov_ip_address>
+  ssh pi@<rov-ip-address>
   ```
 - To launch the camera streams, run one of the following commands while ssh'd into the pi. You will have to change the *host* to match the IP address of your computer.
-  NOTE: running a command will begin a process timer. If you want to launch and receive multiple streams you will have to ssh into multiple terminal windows.
+  **NOTE:** running a command will begin a process timer. If you want to launch and receive multiple streams you will have to ssh into multiple terminal windows.
 
   Stream 1 (Front-facing camera)
   ```bash
@@ -126,7 +144,7 @@ To launch and receive the camera streams externally, follow these instructions:
   gst-launch-1.0 -v v4l2src device=/dev/video0 ! image/jpeg, width=1920,height=1080, framerate=30/1 ! jpegparse ! queue max-size-buffers=100 ! rtpjpegpay ! udpsink host=10.0.0.101 port=5602 sync=false buffer-size=1048576
   ```
 
-#### Receive Streams
+#### Receiving Streams
 
 - To receive the camera streams, run the corresponding command in a new terminal (this terminal should not be ssh'd into the pi)
   NOTE: The port for a receiving command should match the port from the corresponding launch command.
@@ -145,28 +163,6 @@ To launch and receive the camera streams externally, follow these instructions:
   ```bash
   gst-launch-1.0 -v v4l2src device=/dev/video0 ! image/jpeg, width=1920,height=1080, framerate=30/1 ! jpegparse ! queue max-size-buffers=100 ! rtpjpegpay ! udpsink host=10.0.0.101 port=5602 sync=false buffer-size=1048576
   ```
-
-## Using the Gamepad
-  <img src="https://github.com/purduerov/X16-Surface/assets/28714773/623a7855-31f7-410b-8da2-ef688b6bcab6" alt="gamepad" width="50%" height="50%"/>\
-  The above image is the xbox controller used as the gamepad for the ROV. 
-
-  The gamepad is used to control linear and angular movement of the ROV as well as the movement mode that it is in. The gamepad is also used to control the solenoids and other tools located on the ROV. 
-
-  ### Movement
-   The ROV is capable of movement in the x,y,z linear directions as well as the x,y,z angular directions also called roll, pitch, and yaw respectively. 
-
-   Linear x: Move the left stick (LS) up for positive x movement and down for negative x movement.\
-   Linear y: Move the left stick (LS) left for positive y movement and right for negative y movement.\
-   Linear z: Hold down the right trigger (RT) for positive z movement and the left trigger (LT) for negative z movement.
-
-   Angular x (roll): Hold down the right bumper (RB) for positive x roll and the left bumper (LB) for negative x roll.\
-   Angular y (pitch): Move the right stick (RS) up for positive y pitch and the right stick (RS) down for negative y pitch.\
-   Angular z (yaw): Move the right stick (RS) left for positive z yaw and the left stick (LS) right for positive z yaw.
-
-   Tool 1: Press button A\
-   Tool 2: Press button B\
-   Tool 3: Press button Y\
-   Tool 4: Press button X
   
 ### Troubleshooting 
 
