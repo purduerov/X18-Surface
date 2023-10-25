@@ -4,88 +4,161 @@
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-class ReadoutsWidget(QDockWidget):
+class ThrustersWidget(QWidget):
     def __init__(self):
         super().__init__()
-        self.initReadouts()
+        self.initThrusters()
 
-    def initReadouts(self):
+    def initThrusters(self):
+        self.thrusters_layout = QGridLayout(self)
+        self.thrusters_layout.setSpacing(30)
+        self.setMaximumSize(300, 500)
+        self.setStyleSheet("background: transparent;")
+        self.setLayout(self.thrusters_layout)
 
-        self.setMaximumWidth(300)
-        self.setFeatures(QDockWidget.DockWidgetMovable | QDockWidget.DockWidgetFloatable)
-        self.setAllowedAreas(Qt.RightDockWidgetArea)
-        self.setStyleSheet('''
-            QDockWidget {
-                background-color: transparent;
-                border: 0px;
-            }
-            ''')
-        self.readouts = QWidget()
-        self.reaout_layout = QGridLayout(self.readouts)
-        self.reaout_layout.setSpacing(30)
-        self.reaout_layout.setAlignment(Qt.AlignTop)
-        self.setStyleSheet("background:transparent;")
+        self.thruster_label = QLabel("Thrusters")
+        self.thruster_label.setAlignment(Qt.AlignCenter)
+        self.thrusters_layout.addWidget(self.thruster_label, 0, 0, 1, 4)
+        self.thruster_label.setMaximumHeight(20)
 
-        self.thruster1 = QProgressBar()
-        self.thruster1.setMaximumHeight(50)
-        self.thruster1.setValue(50)
-        self.reaout_layout.addWidget(QLabel("Thruster 1"), 0, 0)
-        self.reaout_layout.addWidget(self.thruster1, 0, 1)
+        self.top_label = QLabel("Top")
+        self.top_label.setAlignment(Qt.AlignCenter)
+        self.thrusters_layout.addWidget(self.top_label, 1, 0, 1, 2)
+        self.top_label.setMaximumHeight(20)
 
-        self.thruster2 = QProgressBar()
-        self.thruster2.setMaximumHeight(50)
-        self.thruster2.setValue(80)
-        self.reaout_layout.addWidget(QLabel("Thruster 2"), 1, 0)
-        self.reaout_layout.addWidget(self.thruster2, 1, 1)
+        self.bottom_label = QLabel("Bottom")
+        self.bottom_label.setAlignment(Qt.AlignCenter)
+        self.thrusters_layout.addWidget(self.bottom_label, 1, 2, 1, 2)
+        self.bottom_label.setMaximumHeight(20)
 
-        self.thruster3 = QProgressBar()
-        self.thruster3.setMaximumHeight(50)
-        self.thruster3.setValue(20)
-        self.reaout_layout.addWidget(QLabel("Thruster 3"), 2, 0)
-        self.reaout_layout.addWidget(self.thruster3, 2, 1)
+        self.top_front_left = QProgressBar()
+        self.top_front_left.setMaximumHeight(20)
+        self.top_front_left.setValue(0)
+        self.thrusters_layout.addWidget(QLabel("FL"), 2, 0)
+        self.thrusters_layout.addWidget(self.top_front_left, 2, 1)
 
-        self.thruster4 = QProgressBar()
-        self.thruster4.setMaximumHeight(50)
-        self.thruster4.setValue(70)
-        self.reaout_layout.addWidget(QLabel("Thruster 4"), 3, 0)
-        self.reaout_layout.addWidget(self.thruster4, 3, 1)
+        self.top_front_right = QProgressBar()
+        self.top_front_right.setMaximumHeight(20)
+        self.top_front_right.setValue(0)
+        self.thrusters_layout.addWidget(QLabel("FR"), 3, 0)
+        self.thrusters_layout.addWidget(self.top_front_right, 3, 1)
 
-        self.thruster5 = QProgressBar()
-        self.thruster5.setMaximumHeight(50)
-        self.thruster5.setValue(90)
-        self.reaout_layout.addWidget(QLabel("Thruster 5"), 4, 0)
-        self.reaout_layout.addWidget(self.thruster5, 4, 1)
+        self.top_back_left = QProgressBar()
+        self.top_back_left.setMaximumHeight(20)
+        self.top_back_left.setValue(0)
+        self.thrusters_layout.addWidget(QLabel("BL"), 4, 0)
+        self.thrusters_layout.addWidget(self.top_back_left, 4, 1)
 
-        self.thruster6 = QProgressBar()
-        self.thruster6.setMaximumHeight(50)
-        self.thruster6.setValue(10)
-        self.reaout_layout.addWidget(QLabel("Thruster 6"), 5, 0)
-        self.reaout_layout.addWidget(self.thruster6, 5, 1)
+        self.top_back_right = QProgressBar()
+        self.top_back_right.setMaximumHeight(20)
+        self.top_back_right.setValue(0)
+        self.thrusters_layout.addWidget(QLabel("BR"), 5, 0)
+        self.thrusters_layout.addWidget(self.top_back_right, 5, 1)
 
-        self.thruster7 = QProgressBar()
-        self.thruster7.setMaximumHeight(50)
-        self.thruster7.setValue(30)
-        self.reaout_layout.addWidget(QLabel("Thruster 7"), 6, 0)
-        self.reaout_layout.addWidget(self.thruster7, 6, 1)
+        self.bottom_front_left = QProgressBar()
+        self.bottom_front_left.setMaximumHeight(20)
+        self.bottom_front_left.setValue(0)
+        self.thrusters_layout.addWidget(QLabel("FL"), 2, 2)
+        self.thrusters_layout.addWidget(self.bottom_front_left, 2, 3)
 
-        self.thruster8 = QProgressBar()
-        self.thruster8.setMaximumHeight(50)
-        self.thruster8.setValue(60)
-        self.reaout_layout.addWidget(QLabel("Thruster 8"), 7, 0)
-        self.reaout_layout.addWidget(self.thruster8, 7, 1)
+        self.bottom_front_right = QProgressBar()
+        self.bottom_front_right.setMaximumHeight(20)
+        self.bottom_front_right.setValue(0)
+        self.thrusters_layout.addWidget(QLabel("FR"), 3, 2)
+        self.thrusters_layout.addWidget(self.bottom_front_right, 3, 3)
 
-        self.velocity = QLCDNumber()
-        self.velocity.setMaximumSize(100, 100)
-        self.velocity.setDigitCount(5)
-        self.velocity.display(0.0)
-        self.reaout_layout.addWidget(QLabel("Velocity"), 8, 0)
-        self.reaout_layout.addWidget(self.velocity, 8, 1)
+        self.bottom_back_left = QProgressBar()
+        self.bottom_back_left.setMaximumHeight(20)
+        self.bottom_back_left.setValue(0)
+        self.thrusters_layout.addWidget(QLabel("BL"), 4, 2)
+        self.thrusters_layout.addWidget(self.bottom_back_left, 4, 3)
+
+        self.bottom_back_right = QProgressBar()
+        self.bottom_back_right.setMaximumHeight(20)
+        self.bottom_back_right.setValue(0)
+        self.thrusters_layout.addWidget(QLabel("BR"), 5, 2)
+        self.thrusters_layout.addWidget(self.bottom_back_right, 5, 3)
+
+class DepthWidget(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.initDepth()
+
+    def initDepth(self):
+        self.depth_layout = QGridLayout(self)
+        self.depth_layout.setSpacing(30)
+        self.setMaximumSize(200, 400)
+        self.setStyleSheet("background: transparent;")
+        self.setLayout(self.depth_layout)
+
+        self.depth_label = QLabel("Depth")
+        self.depth_label.setAlignment(Qt.AlignCenter)
+        self.depth_layout.addWidget(self.depth_label, 0, 0)
+        self.depth_label.setMaximumHeight(20)
 
         self.depth = QLCDNumber()
-        self.depth.setMaximumSize(100, 100)
+        self.depth.setMaximumSize(80, 30)
         self.depth.setDigitCount(5)
         self.depth.display(0.0)
-        self.reaout_layout.addWidget(QLabel("Depth"), 9, 0)
-        self.reaout_layout.addWidget(self.depth, 9, 1)
-        
-        self.setWidget(self.readouts)      
+        self.depth_layout.addWidget(self.depth, 1, 0)
+
+class VelocityWidget(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.initVelocity()
+
+    def initVelocity(self):
+        self.velocity_layout = QGridLayout(self)
+        self.velocity_layout.setSpacing(30)
+        self.setMaximumSize(200, 400)
+        self.setStyleSheet("background: transparent;")
+        self.setLayout(self.velocity_layout)
+
+        self.velocity_label = QLabel("Velocity")
+        self.velocity_label.setAlignment(Qt.AlignCenter)
+        self.velocity_layout.addWidget(self.velocity_label, 0, 0, 1, 2)
+        self.velocity_label.setMaximumHeight(20)
+
+        self.x = QLCDNumber()
+        self.x.setMaximumSize(100, 100)
+        self.x.setDigitCount(5)
+        self.x.display(0.0)
+        self.velocity_layout.addWidget(QLabel("X"), 1, 0)
+        self.velocity_layout.addWidget(self.x, 1, 1)
+
+        self.y = QLCDNumber()
+        self.y.setMaximumSize(100, 100)
+        self.y.setDigitCount(5)
+        self.y.display(0.0)
+        self.velocity_layout.addWidget(QLabel("Y"), 2, 0)
+        self.velocity_layout.addWidget(self.y, 2, 1)
+
+        self.z = QLCDNumber()
+        self.z.setMaximumSize(100, 100)
+        self.z.setDigitCount(5)
+        self.z.display(0.0)
+        self.velocity_layout.addWidget(QLabel("Z"), 3, 0)
+        self.velocity_layout.addWidget(self.z, 3, 1)
+
+class FineModeWidget(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.initFineMode()
+
+    def initFineMode(self):
+        self.fine_layout = QGridLayout(self)
+        self.fine_layout.setSpacing(30)
+        self.setMaximumSize(200, 400)
+        self.setStyleSheet("background: transparent;")
+        self.setLayout(self.fine_layout)
+
+        self.fine_label = QLabel("Fine Mode")
+        self.fine_label.setAlignment(Qt.AlignCenter)
+        self.fine_layout.addWidget(self.fine_label, 0, 0)
+        self.fine_label.setMaximumHeight(20)
+
+        self.fine = QLCDNumber()
+        self.fine.setMaximumSize(75, 100)
+        self.fine.setDigitCount(5)
+        self.fine.display(0.0)
+        self.fine_layout.addWidget(self.fine, 1, 0)
