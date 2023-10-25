@@ -1,6 +1,0 @@
-setup.py
-gamepad/__init__.py
-gamepad.egg-info/PKG-INFO
-gamepad.egg-info/SOURCES.txt
-gamepad.egg-info/dependency_links.txt
-gamepad.egg-info/top_level.txt
