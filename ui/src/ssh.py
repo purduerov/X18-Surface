@@ -13,7 +13,7 @@ class controller():
     def get_ip(self):
         try:
             hostname = socket.gethostname()
-            ip = "10.0.0.10" + socket.gethostbyname(socket.gethostname()).split('.')[-1]
+            ip = "10.0.0." + socket.gethostbyname(socket.gethostname()).split('.')[-1]
             print("Local IP address: ", ip)
             return ip
         
