@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 import cv2
 import gi
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
-from PyQt5.QtGui import *
 import numpy as np
 import command as command
 gi.require_version('Gst', '1.0')
