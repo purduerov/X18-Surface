@@ -77,7 +77,7 @@ pipreqs X16-Surface
 
 To install all of the dependancies for the frontend, you can run the following command:
 ```bash 
-pip install -r X16-Surface/requirements.txt
+pip install -r requirements.txt
 ```
 
 ## Usage 
