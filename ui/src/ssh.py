@@ -18,7 +18,7 @@ class controller():
                 if netifaces.AF_INET in addrs:
                     for addr_info in addrs[netifaces.AF_INET]:
                         ip_address = addr_info['addr']
-                        if ip_address.startswith("10."):
+                        if ip_address.startswith("10.0.0."):
                             return ip_address
         except Exception as e:
             print(f"Error: {str(e)}")
