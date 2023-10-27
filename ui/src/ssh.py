@@ -1,5 +1,5 @@
 import paramiko
-import socket
+import netifaces
 import time 
 
 class controller():
@@ -12,17 +12,21 @@ class controller():
 
     def get_ip(self):
         try:
-            hostname = socket.gethostname()
-            ip = "10.0.0." + socket.gethostbyname(socket.gethostname()).split('.')[-1]
-            print("Local IP address: ", ip)
-            return ip
-        
+            interfaces = netifaces.interfaces()
+            for interface in interfaces:
+                addrs = netifaces.ifaddresses(interface)
+                if netifaces.AF_INET in addrs:
+                    for addr_info in addrs[netifaces.AF_INET]:
+                        ip_address = addr_info['addr']
+                        if ip_address.startswith("10."):
+                            return ip_address
         except Exception as e:
-            print(f"Error: {e}")
+            print(f"Error: {str(e)}")
 
     def connect(self):
         try:
             ip = self.get_ip()
+            print(f"Local ip address: {ip}")
             stream1_launch_cmd = (f"gst-launch-1.0 -v v4l2src device=/dev/video8 ! video/x-h264, width=1920,height=1080! h264parse ! queue ! rtph264pay config-interval=10 pt=96 ! udpsink host={ip} port=5600 sync=false buffer-size=1048576 & echo $! > pid.txt")
             stream2_launch_cmd = (f"gst-launch-1.0 -v v4l2src device=/dev/video4 ! video/x-h264, width=1920,height=1080! h264parse ! queue ! rtph264pay config-interval=10 pt=96 ! udpsink host={ip} port=5601 sync=false buffer-size=1048576 & echo $! > pid.txt")
 

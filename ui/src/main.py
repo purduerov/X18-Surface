@@ -1,10 +1,8 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 import sys
-import subprocess as subprocess
-import command as command
 
 from interface import Ui_MainWindow
 from ssh import controller
