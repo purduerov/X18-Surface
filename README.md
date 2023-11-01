@@ -95,7 +95,12 @@ All of the information needed for use of the X16 ROV can be found below.
   
   ```bash
   ros2 launch rov_launch run_rov_launch.xml
-  ``` 
+  ```
+  To run test publishers (so you can see the UI update with information. Make sure to . install/setup.bash in your ROV folder, then you can run:
+```
+ ros2 topic pub /depth std_msgs/Float64 "data: 7.2"
+ ros2 topic pub /final_thrust shared_msgs/FinalThrustMsg "thrusters: [0,0,0,0,0,0,0,25]"
+```
 
 ### User Interface
 
