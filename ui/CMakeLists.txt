@@ -19,10 +19,9 @@ ament_python_install_package(${PROJECT_NAME})
 install(PROGRAMS
   src/runner.py
   src/streams.py
-  src/ssh_startup.py
-  src/controls.py
+  src/ssh.py
   src/main.py
-  src/readouts.py
+  src/interface.py
   src/subscribers/ThrustersSurface.py
   src/subscribers/DepthSurface.py
   DESTINATION lib/${PROJECT_NAME}

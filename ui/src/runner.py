@@ -42,6 +42,15 @@ def main():
     node_thread = threading.Thread(target=run_multiple_nodes, args=(nodelist,))
     node_thread.daemon = True
     node_thread.start()
+    print("Starting SSH processes...")
+    #controller = controller()
+    #connection = controller.connect()
+
+    print("Starting camera stream processes...")
+    #streams = streams(connection)
+    #streams.start()
+
+    print("Starting application...") 
     window.show()
     sys.exit(app.exec_())
 

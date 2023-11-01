@@ -23,7 +23,7 @@ class DepthSurfaceNode(Node):
 
     def callback(self, data):
         depth = json.dumps(data.data)
-        self.window.readout_widget.depth.display(data.data)
+        self.window.ui.depthoutput.display(data.data)
 
         print(depth, flush=True, end=' ')
 
