@@ -1,50 +1,38 @@
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
-from PyQt5.QtGui import *
 import subprocess
-import command as command
 
-class CameraStreamWidget(QWidget):
-    def __init__(self):
-        super().__init__()
-        self.initStream()
+stream1_receive_cmd = "gst-launch-1.0 udpsrc port=5600 ! application/x-rtp ! rtpjitterbuffer ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink sync=false"
+stream2_receive_cmd = "gst-launch-1.0 udpsrc port=5601 ! application/x-rtp ! rtpjitterbuffer ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink sync=false"
 
-    def initStream(self):
+class streams():
+    def __init__(self, connection):
+        self.stream1_process = None
+        self.stream2_process = None 
+        self.ssh_connection = connection
 
-        self.stream = QLabel()
-        stream_layout = QGridLayout(self.stream)
-        self.setLayout(stream_layout)
-
-        self.stream1 = QLabel("Stream 1")
-        self.stream1.setAlignment(Qt.AlignCenter)
-        stream_layout.addWidget(self.stream1, 0, 0)
-
-        self.stream2 = QLabel("Stream 2")
-        self.stream2.setAlignment(Qt.AlignCenter)
-        stream_layout.addWidget(self.stream2, 0, 1)
-
-        self.stream3 = QLabel("Stream 3")
-        self.stream3.setAlignment(Qt.AlignCenter)
-        stream_layout.addWidget(self.stream3, 1, 0)
-
-        self.stream4 = QLabel("Stream 4")
-        self.stream4.setAlignment(Qt.AlignCenter)
-        stream_layout.addWidget(self.stream4, 1, 1)
-
-        self.launch_stream()
-
-    def launch_stream(self):
-
-        # gstreamer commands for starting stream on the pi
-        launch_stream1 = "gst-launch-1.0 -v v4l2src device=/dev/video8 ! video/x-h264, width=1920,height=1080! h264parse ! queue ! rtph264pay config-interval=10 pt=96 ! udpsink host=10.0.0.103 port=5600 sync=false buffer-size=1048576"
-        launch_stream2 = "gst-launch-1.0 -v v4l2src device=/dev/video4 ! video/x-h264, width=1920,height=1080! h264parse ! queue ! rtph264pay config-interval=10 pt=96 ! udpsink host=10.0.0.103 port=5601 sync=false buffer-size=1048576"
-        # launch_stream3 = "gst-launch-1.0 -v v4l2src device=/dev/video0 ! image/jpeg, width=1920,height=1080, framerate=30/1 ! jpegparse ! queue max-size-buffers=100 ! rtpjpegpay ! udpsink host=10.0.0.101 port=5602 sync=false buffer-size=1048576"
-
-        # gstreamer pipeline for receiving stream 
-        receive_stream1 = "gst-launch-1.0 udpsrc port=5600 ! application/x-rtp ! rtpjitterbuffer ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink sync=false"
-        receive_stream2 = "gst-launch-1.0 udpsrc port=5601 ! application/x-rtp ! rtpjitterbuffer ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink sync=false"
-        # receive_stream3 = "gst-launch-1.0 -v v4l2src device=/dev/video0 ! image/jpeg, width=1920,height=1080, framerate=30/1 ! jpegparse ! queue max-size-buffers=100 ! rtpjpegpay ! udpsink host=10.0.0.101 port=5602 sync=false buffer-size=1048576"
+    def start(self): 
+        if self.ssh_connection is None:
+            print("ERROR: camera streams unable to start")
+            return     
         
-        self.stream1_process = subprocess.Popen(receive_stream1, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        # self.stream2_process = subprocess.Popen(receive_stream2, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        # self.stream3_process = subprocess.Popen(receive_stream3, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        print("Receiving camera stream 1...")
+        self.stream1_process = subprocess.Popen(stream1_receive_cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        if self.stream1_process is not None:
+            print(f"Process {self.stream1_process.pid} started")
+        else:
+            print("Failed to receive camera stream 1")
+
+        print("Receiving camera stream 2...")
+        self.stream2_process = subprocess.Popen(stream2_receive_cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        if self.stream2_process is not None:
+            print(f"Process {self.stream2_process.pid} started")
+        else:
+            print("Failed to receive camera stream 2")
+
+    def stop(self):
+        if self.stream1_process is not None:
+            self.stream1_process.kill()
+            print(f"Process {self.stream1_process.pid} killed")
+        if self.stream2_process is not None:
+            self.stream2_process.kill()
+            print(f"Process {self.stream2_process.pid} killed")
+     
