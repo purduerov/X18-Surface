@@ -5,12 +5,13 @@ import rclpy
 from rclpy.node import Node
 from shared_msgs.msg import FinalThrustMsg
 
-class ThrustersSurfaceNode(Node):
 
+class ThrustersSurfaceNode(Node):
     def __init__(self, window):
-        super().__init__('thrusters_surface')
+        super().__init__("thrusters_surface")
         self.subscription = self.create_subscription(
-            FinalThrustMsg, '/final_thrust', self.thrust_callback, 10)
+            FinalThrustMsg, "/final_thrust", self.thrust_callback, 10
+        )
 
         # Initialize the thrust array
         self.thrust = [0, 0, 0, 0, 0, 0, 0, 0]
@@ -39,11 +40,13 @@ class ThrustersSurfaceNode(Node):
         self.get_logger().info(json.dumps(self.thrust))
         print("running")
 
+
 def main(args=None):
     rclpy.init(args=args)
     node = ThrustersSurfaceNode()
     rclpy.spin(node)
     rclpy.shutdown()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

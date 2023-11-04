@@ -176,7 +176,9 @@ class Ui_MainWindow(object):
         self.gridLayout_6.addWidget(self.zoutput, 3, 2, 1, 1)
         self.velocitylabel = QtWidgets.QLabel(self.velocitywidget)
         self.velocitylabel.setObjectName("velocitylabel")
-        self.gridLayout_6.addWidget(self.velocitylabel, 0, 0, 1, 3, QtCore.Qt.AlignHCenter)
+        self.gridLayout_6.addWidget(
+            self.velocitylabel, 0, 0, 1, 3, QtCore.Qt.AlignHCenter
+        )
         self.rotationwidget = QtWidgets.QFrame(self.mainframe)
         self.rotationwidget.setGeometry(QtCore.QRect(140, 250, 431, 181))
         self.rotationwidget.setFrameShape(QtWidgets.QFrame.StyledPanel)
@@ -193,7 +195,9 @@ class Ui_MainWindow(object):
         self.gridLayout_4.addWidget(self.rolllabel, 2, 0, 1, 1)
         self.rotationlabel = QtWidgets.QLabel(self.rotationwidget)
         self.rotationlabel.setObjectName("rotationlabel")
-        self.gridLayout_4.addWidget(self.rotationlabel, 0, 0, 1, 4, QtCore.Qt.AlignHCenter)
+        self.gridLayout_4.addWidget(
+            self.rotationlabel, 0, 0, 1, 4, QtCore.Qt.AlignHCenter
+        )
         self.label_27 = QtWidgets.QLabel(self.rotationwidget)
         self.label_27.setObjectName("label_27")
         self.gridLayout_4.addWidget(self.label_27, 1, 1, 1, 1)
