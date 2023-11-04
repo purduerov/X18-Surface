@@ -11,9 +11,6 @@
 - [Installation](#installation)
 - [Usage](#usage)
   - [Startup](#startup)
-    - [Connecting the ROV](#connecting-the-rov)
-    - [Launching the ROS2 Network](#launching-the-ros2-network)
-    - [Launching the User Interface](#launching-the-user-interface)
   - [User Interface](#user-interface)
     - [Using QtDesigner](#using-qtdesigner)
   - [Camera Streams](#camera-streams)
@@ -102,16 +99,14 @@ All of the information needed for use of the X16 ROV can be found below.
   ```bash
   ros2 launch rov_launch run_rov_launch.xml
   ```
-#### Launching the User Interface
-
-- The user interface can be launched by running the main file in **X16Surface > ui > src**
-- This will automatically launch and bring up the camera streams
-- Upon closing the user interface, these processes will be killed
+  To run test publishers (so you can see the UI update with information. Make sure to . install/setup.bash in your ROV folder, then you can run:
+```
+ ros2 topic pub /depth std_msgs/Float64 "data: 7.2"
+ ros2 topic pub /final_thrust shared_msgs/FinalThrustMsg "thrusters: [0,0,0,0,0,0,0,25]"
+```
 
 ### User Interface
 
-### Launch UI with Surface Nodes
-ros2 run ui runner.py
 #### Using QtDesigner 
 
 Follow these steps to start using QtDesigner:
@@ -176,28 +171,6 @@ Follow these steps to start using QtDesigner:
   ```bash
   gst-launch-1.0 -v v4l2src device=/dev/video0 ! image/jpeg, width=1920,height=1080, framerate=30/1 ! jpegparse ! queue max-size-buffers=100 ! rtpjpegpay ! udpsink host=10.0.0.101 port=5602 sync=false buffer-size=1048576
   ```
-
-## Using the Gamepad
-  <img src="https://github.com/purduerov/X16-Surface/assets/28714773/623a7855-31f7-410b-8da2-ef688b6bcab6" alt="gamepad" width="50%" height="50%"/>\
-  The above image is the xbox controller used as the gamepad for the ROV. 
-
-  The gamepad is used to control linear and angular movement of the ROV as well as the movement mode that it is in. The gamepad is also used to control the solenoids and other tools located on the ROV. 
-
-  ### Movement
-   The ROV is capable of movement in the x,y,z linear directions as well as the x,y,z angular directions also called roll, pitch, and yaw respectively. 
-
-   Linear x: Move the left stick (LS) up for positive x movement and down for negative x movement.\
-   Linear y: Move the left stick (LS) left for positive y movement and right for negative y movement.\
-   Linear z: Hold down the right trigger (RT) for positive z movement and the left trigger (LT) for negative z movement.
-
-   Angular x (roll): Hold down the right bumper (RB) for positive x roll and the left bumper (LB) for negative x roll.\
-   Angular y (pitch): Move the right stick (RS) up for positive y pitch and the right stick (RS) down for negative y pitch.\
-   Angular z (yaw): Move the right stick (RS) left for positive z yaw and the left stick (LS) right for positive z yaw.
-
-   Tool 1: Press button A\
-   Tool 2: Press button B\
-   Tool 3: Press button Y\
-   Tool 4: Press button X
   
 ### Troubleshooting 
 
