@@ -1,8 +1,9 @@
 import paramiko
 import netifaces
-import time 
+import time
 
-class ssh():
+
+class ssh:
     def __init__(self):
         self.ssh_host = "10.0.0.103"
         self.ssh_username = "pi"
@@ -20,21 +21,26 @@ class ssh():
             # commands to launch on the pi
             ros2_source_cmd = "source ros2_ws/install/setup.bash"
             ros2_launch_cmd = "ros2 launch rov_launch run_rov_launch.xml"
-            stream1_launch_cmd = (f"gst-launch-1.0 -v v4l2src device=/dev/video8 ! video/x-h264, width=1920,height=1080! h264parse ! queue ! rtph264pay config-interval=10 pt=96 ! udpsink host={ip} port=5600 sync=false buffer-size=1048576 & echo $! > pid.txt")
-            stream2_launch_cmd = (f"gst-launch-1.0 -v v4l2src device=/dev/video4 ! video/x-h264, width=1920,height=1080! h264parse ! queue ! rtph264pay config-interval=10 pt=96 ! udpsink host={ip} port=5601 sync=false buffer-size=1048576 & echo $! > pid.txt")
+            stream1_launch_cmd = f"gst-launch-1.0 -v v4l2src device=/dev/video8 ! video/x-h264, width=1920,height=1080! h264parse ! queue ! rtph264pay config-interval=10 pt=96 ! udpsink host={ip} port=5600 sync=false buffer-size=1048576 & echo $! > pid.txt"
+            stream2_launch_cmd = f"gst-launch-1.0 -v v4l2src device=/dev/video4 ! video/x-h264, width=1920,height=1080! h264parse ! queue ! rtph264pay config-interval=10 pt=96 ! udpsink host={ip} port=5601 sync=false buffer-size=1048576 & echo $! > pid.txt"
 
             # establishing the ssh connection
             print("Establishing SSH connection...")
             self.ssh_client = paramiko.SSHClient()
             self.ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-            self.ssh_client.connect(self.ssh_host, username=self.ssh_username, password=self.ssh_password, timeout=5)
+            self.ssh_client.connect(
+                self.ssh_host,
+                username=self.ssh_username,
+                password=self.ssh_password,
+                timeout=5,
+            )
             if self.ssh_client is not None:
                 print("SSH connection established")
                 self.connection = True
             else:
                 print("ERROR: SSH connection failed")
                 return
-            
+
             # launching the ros2 nodes on the pi
             self.launch_ros2_nodes(ros2_source_cmd, ros2_launch_cmd)
 
@@ -49,7 +55,6 @@ class ssh():
             return
 
     def close(self):
-
         # killing each process
         if self.pid_list is not None:
             for pid in self.pid_list:
@@ -68,7 +73,7 @@ class ssh():
                 addrs = netifaces.ifaddresses(interface)
                 if netifaces.AF_INET in addrs:
                     for addr_info in addrs[netifaces.AF_INET]:
-                        ip_address = addr_info['addr']
+                        ip_address = addr_info["addr"]
                         if ip_address.startswith("10.0.0."):
                             return ip_address
         except Exception as e:
@@ -96,14 +101,3 @@ class ssh():
             print(f"Process {self.pid} started")
         except Exception as e:
             print(f"ERROR: {e}")
-
-
-            
-
-
-
-
-
-
-
-
