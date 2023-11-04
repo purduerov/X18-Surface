@@ -11,9 +11,6 @@
 - [Installation](#installation)
 - [Usage](#usage)
   - [Startup](#startup)
-    - [Connecting the ROV](#connecting-the-rov)
-    - [Launching the ROS2 Network](#launching-the-ros2-network)
-    - [Launching the User Interface](#launching-the-user-interface)
   - [User Interface](#user-interface)
     - [Using QtDesigner](#using-qtdesigner)
   - [Camera Streams](#camera-streams)
@@ -102,11 +99,11 @@ All of the information needed for use of the X16 ROV can be found below.
   ```bash
   ros2 launch rov_launch run_rov_launch.xml
   ```
-#### Launching the User Interface
-
-- The user interface can be launched by running the main file in **X16Surface > ui > src**
-- This will automatically launch and bring up the camera streams
-- Upon closing the user interface, these processes will be killed
+  To run test publishers (so you can see the UI update with information. Make sure to . install/setup.bash in your ROV folder, then you can run:
+```
+ ros2 topic pub /depth std_msgs/Float64 "data: 7.2"
+ ros2 topic pub /final_thrust shared_msgs/FinalThrustMsg "thrusters: [0,0,0,0,0,0,0,25]"
+```
 
 ### User Interface
 

@@ -1,6 +1,6 @@
 import paramiko
 import netifaces
-import time 
+import time
 
 class ssh():
     def __init__(self):
@@ -27,7 +27,12 @@ class ssh():
             print("Establishing SSH connection...")
             self.ssh_client = paramiko.SSHClient()
             self.ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-            self.ssh_client.connect(self.ssh_host, username=self.ssh_username, password=self.ssh_password, timeout=5)
+            self.ssh_client.connect(
+                self.ssh_host,
+                username=self.ssh_username,
+                password=self.ssh_password,
+                timeout=5,
+            )
             if self.ssh_client is not None:
                 print("SSH connection established")
                 self.connection = True
@@ -68,7 +73,7 @@ class ssh():
                 addrs = netifaces.ifaddresses(interface)
                 if netifaces.AF_INET in addrs:
                     for addr_info in addrs[netifaces.AF_INET]:
-                        ip_address = addr_info['addr']
+                        ip_address = addr_info["addr"]
                         if ip_address.startswith("10.0.0."):
                             return ip_address
         except Exception as e:
@@ -96,14 +101,3 @@ class ssh():
             print(f"Process {self.pid} started")
         except Exception as e:
             print(f"ERROR: {e}")
-
-
-            
-
-
-
-
-
-
-
-

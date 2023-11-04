@@ -3,26 +3,37 @@ import subprocess
 stream1_receive_cmd = "gst-launch-1.0 udpsrc port=5600 ! application/x-rtp ! rtpjitterbuffer ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink sync=false"
 stream2_receive_cmd = "gst-launch-1.0 udpsrc port=5601 ! application/x-rtp ! rtpjitterbuffer ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink sync=false"
 
-class streams():
+
+class streams:
     def __init__(self, connection):
         self.stream1_process = None
-        self.stream2_process = None 
+        self.stream2_process = None
         self.ssh_connection = connection
 
-    def start(self): 
+    def start(self):
         if self.ssh_connection is None:
             print("ERROR: camera streams unable to start")
-            return     
-        
+            return
+
         print("Receiving camera stream 1...")
-        self.stream1_process = subprocess.Popen(stream1_receive_cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        self.stream1_process = subprocess.Popen(
+            stream1_receive_cmd,
+            shell=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
         if self.stream1_process is not None:
             print(f"Process {self.stream1_process.pid} started")
         else:
             print("Failed to receive camera stream 1")
 
         print("Receiving camera stream 2...")
-        self.stream2_process = subprocess.Popen(stream2_receive_cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        self.stream2_process = subprocess.Popen(
+            stream2_receive_cmd,
+            shell=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
         if self.stream2_process is not None:
             print(f"Process {self.stream2_process.pid} started")
         else:
@@ -35,4 +46,3 @@ class streams():
         if self.stream2_process is not None:
             self.stream2_process.kill()
             print(f"Process {self.stream2_process.pid} killed")
-     
