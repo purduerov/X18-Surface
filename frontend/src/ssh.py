@@ -2,9 +2,9 @@ import paramiko
 import netifaces
 import time 
 
-class controller():
+class ssh():
     def __init__(self):
-        self.ssh_host = "10.0.0.102"
+        self.ssh_host = "10.0.0.103"
         self.ssh_username = "pi"
         self.ssh_password = "pie"
         self.ssh_client = None
@@ -13,11 +13,17 @@ class controller():
 
     def connect(self):
         try:
+            # getting the local ip address
             ip = self.get_ip()
             print(f"Local IP address: {ip}")
+
+            # commands to launch on the pi
+            ros2_source_cmd = "source ros2_ws/install/setup.bash"
+            ros2_launch_cmd = "ros2 launch rov_launch run_rov_launch.xml"
             stream1_launch_cmd = (f"gst-launch-1.0 -v v4l2src device=/dev/video8 ! video/x-h264, width=1920,height=1080! h264parse ! queue ! rtph264pay config-interval=10 pt=96 ! udpsink host={ip} port=5600 sync=false buffer-size=1048576 & echo $! > pid.txt")
             stream2_launch_cmd = (f"gst-launch-1.0 -v v4l2src device=/dev/video4 ! video/x-h264, width=1920,height=1080! h264parse ! queue ! rtph264pay config-interval=10 pt=96 ! udpsink host={ip} port=5601 sync=false buffer-size=1048576 & echo $! > pid.txt")
 
+            # establishing the ssh connection
             print("Establishing SSH connection...")
             self.ssh_client = paramiko.SSHClient()
             self.ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -28,9 +34,14 @@ class controller():
             else:
                 print("ERROR: SSH connection failed")
                 return
+            
+            # launching the ros2 nodes on the pi
+            self.launch_ros2_nodes(ros2_source_cmd, ros2_launch_cmd)
 
+            # launching the camera streams on the pi
             self.launch_stream(1, stream1_launch_cmd)
             self.launch_stream(2, stream2_launch_cmd)
+
             return self.connection
 
         except Exception as e:
@@ -38,11 +49,14 @@ class controller():
             return
 
     def close(self):
+
+        # killing each process
         if self.pid_list is not None:
             for pid in self.pid_list:
                 self.ssh_client.exec_command("kill " + pid)
-                print(f"Process {pid} killed test")
+                print(f"Process {pid} killed")
 
+        # closing the ssh connection
         if self.ssh_client is not None:
             self.ssh_client.close()
             print("SSH connection closed")
@@ -60,6 +74,17 @@ class controller():
         except Exception as e:
             print(f"ERROR: {e}")
 
+    def launch_ros2_nodes(self, ros2_source_cmd, ros2_launch_cmd):
+        try:
+            print("Launching ROS2 nodes...")
+            self.ssh_client.exec_command(ros2_source_cmd)
+            time.sleep(1)
+            self.ssh_client.exec_command(ros2_launch_cmd)
+            time.sleep(1)
+            print("ROS2 nodes launched")
+        except Exception as e:
+            print(f"ERROR: {e}")
+
     def launch_stream(self, num, cmd):
         try:
             print(f"Launching camera stream {num}...")
@@ -71,6 +96,7 @@ class controller():
             print(f"Process {self.pid} started")
         except Exception as e:
             print(f"ERROR: {e}")
+
 
             
 
