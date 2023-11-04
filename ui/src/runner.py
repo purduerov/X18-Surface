@@ -11,9 +11,9 @@ import multiprocessing
 
 
 def run_ros_node(node):
-    # node = node(window=window)
-    rclpy.spin(node)
-    rclpy.shutdown()
+ # node = node(window=window)
+ rclpy.spin(node)
+ rclpy.shutdown()
 
 
 def run_multiple_nodes(nodes):
