@@ -5,8 +5,9 @@ from PyQt5.QtWidgets import *
 import sys
 
 from interface import Ui_MainWindow
-from ssh import controller
+from ssh import ssh
 from streams import streams
+from gamepad import gamepad
 
 # TODO: Refine error handling across all files
 
@@ -17,6 +18,7 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
+        # setting general window properties
         self.setWindowTitle("ROX X16")
         screen_geometry = QDesktopWidget().screenGeometry()
         screen_height = screen_geometry.height()
@@ -34,7 +36,8 @@ class MainWindow(QMainWindow):
         )
         if confirmation == QMessageBox.Yes:
             streams.stop()
-            controller.close()
+            # gamepad.stop()
+            ssh.close()
             print("Closing application")
             event.accept()
         else:
@@ -43,14 +46,18 @@ class MainWindow(QMainWindow):
 
 if __name__ == "__main__":
     print("Starting SSH processes...")
-    controller = controller()
-    connection = controller.connect()
+    ssh = ssh()
+    connection = ssh.connect()
 
     print("Starting camera stream processes...")
     streams = streams(connection)
     streams.start()
 
-    app = QApplication(sys.argv)
+    # print("Connecting to the gamepad...")
+    # gamepad = gamepad(connection)
+    # gamepad.start()
+
+    app = QApplication(sys.argv) 
     window = MainWindow()
     print("Starting application...")
     window.show()
