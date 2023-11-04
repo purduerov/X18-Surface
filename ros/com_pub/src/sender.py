@@ -10,11 +10,12 @@ com_x = 0.0
 com_y = 0.0
 com_z = 0.0
 
+
 class SocketManager:
     def __init__(self, port):
         self.running = True
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.sock.bind(('127.0.0.1', port))
+        self.sock.bind(("127.0.0.1", port))
         self.sock.listen(5)
         self.sock.settimeout(1)
         self.connected = False
@@ -42,7 +43,7 @@ class SocketManager:
             if data:
                 global com_x, com_y, com_z, pub
 
-                arr = [float(d) for d in data.decode().split(';')[0].split(',')]
+                arr = [float(d) for d in data.decode().split(";")[0].split(",")]
 
                 if len(arr) == 3:
                     com_x = arr[0]
@@ -55,26 +56,28 @@ class SocketManager:
                     msg.com[2] = com_z
                     pub.publish(msg)
 
+
 def shutdown(sig, frame):
     global sock
 
-    print('please')
+    print("please")
     sock.shutdown()
-   # rclpy.signal_shutdown('now')
+    # rclpy.signal_shutdown('now')
     rclpy.shutdown()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     signal.signal(signal.SIGINT, shutdown)
     signal.signal(signal.SIGTERM, shutdown)
 
     sock = SocketManager(int(sys.argv[1]))
 
     rclpy.init()
-    node = rclpy.create_node('com_sender')
+    node = rclpy.create_node("com_sender")
 
-    pub = node.create_publisher(ComMsg, '/rov/com_tweak', 10)
-    #rate = rclpy.Rate(10)
+    pub = node.create_publisher(ComMsg, "/rov/com_tweak", 10)
+    # rate = rclpy.Rate(10)
 
-    print('ready')
+    print("ready")
 
     rclpy.spin(node)
