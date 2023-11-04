@@ -12,4 +12,14 @@ jobs:
       - uses: actions/checkout@v2
       - uses: psf/black@stable
         with:
+<<<<<<< HEAD
          src: '.'
+=======
+          python-version: 3.8  # You can specify the version you need
+
+      - name: Install dependencies
+        run: pip install "black<23"
+
+      - name: Run Black
+        run: black --diff --check $(git ls-files '*.py')  # Replace "." with the path to your Python files or directories
+>>>>>>> master
