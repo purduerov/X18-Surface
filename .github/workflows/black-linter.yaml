@@ -7,14 +7,17 @@ on:
   push:
 
 jobs:
+  lint:
+    name: Run Black
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
-      - uses: psf/black@stable
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
         with:
-<<<<<<< HEAD
-         src: '.'
-=======
           python-version: 3.8  # You can specify the version you need
 
       - name: Install dependencies
@@ -22,4 +25,3 @@ jobs:
 
       - name: Run Black
         run: black --diff --check $(git ls-files '*.py')  # Replace "." with the path to your Python files or directories
->>>>>>> master
