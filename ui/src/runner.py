@@ -18,13 +18,13 @@ from gamepad import gamepad
 
 
 def run_ros_node(node):
-    # node = node(window=window)
-    rclpy.spin(node)
-    rclpy.shutdown()
+ # node = node(window=window)
+ rclpy.spin(node)
+ rclpy.shutdown()
 
 
 def run_multiple_nodes(nodes):
-    while True:
+ while True:
         for node in nodes:
             rclpy.spin_once(node, timeout_sec=0.1)
 

@@ -21,7 +21,7 @@ jobs:
           python-version: 3.8  # You can specify the version you need
 
       - name: Install dependencies
-        run: pip install black
+        run: pip install "black<23"
 
       - name: Run Black
-        run: black .  # Replace "." with the path to your Python files or directories
+        run: black --diff --check $(git ls-files '*.py')  # Replace "." with the path to your Python files or directories
