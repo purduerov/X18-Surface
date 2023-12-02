@@ -22,6 +22,7 @@ install(PROGRAMS
   src/ssh.py
   src/main.py
   src/interface.py
+  src/gamepad.py
   src/subscribers/ThrustersSurface.py
   src/subscribers/DepthSurface.py
   DESTINATION lib/${PROJECT_NAME}
