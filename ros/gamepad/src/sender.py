@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 from inputs import get_gamepad
-import json
 import sys
 
 #ROS
@@ -9,8 +8,6 @@ import rclpy
 from std_msgs.msg import String, Bool, Empty
 from shared_msgs.msg import RovVelocityCommand, ToolsCommandMsg
 from geometry_msgs.msg import Twist
-import socket, threading
-import signal, os
 
 from config import *
 
@@ -34,66 +31,6 @@ LOCKOUT = True
 #is_fine = 1 = fine_mode
 #is_fine = 2 = yeet mode
 is_fine = 0
-FINE_MULTIPLIER = 1.041
-
-class SocketManager:
-    def __init__(self):
-        self.running = True
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.sock.bind(('127.0.0.1', 11001))
-        self.sock.listen(5)
-        self.sock.settimeout(1)
-        self.connected = False
-
-        self.thread = threading.Thread(target=self.run)
-        self.thread.start()
-
-    def shutdown(self):
-        self.running = False
-        self.sock.close()
-        self.thread.join()
-
-    def run(self):
-        global SCALE_ROTATIONAL_X, SCALE_ROTATIONAL_Y, SCALE_ROTATIONAL_Z, SCALE_TRANSLATIONAL_X, SCALE_TRANSLATIONAL_Y, SCALE_TRANSLATIONAL_Z
-        global TRIM_X, TRIM_Y, TRIM_Z, REVERSE, LOCKOUT, FINE_MULTIPLIER #MODE
-
-        while not self.connected and self.running:
-            try:
-                conn, addr = self.sock.accept()
-                self.connected = True
-            except:
-                pass
-        while self.running:
-            try:
-                data = conn.recv(1024)
-            except:
-                pass
-            if data:
-                decoded = data.decode()
-                mode = decoded.split(':')[0]
-
-                if mode == 'scale':
-                    arr = [float(d) for d in decoded.split(':')[1].split(',')]
-                    SCALE_TRANSLATIONAL_X = arr[0]
-                    SCALE_TRANSLATIONAL_Y = arr[1]
-                    SCALE_TRANSLATIONAL_Z = arr[2]
-
-                    SCALE_ROTATIONAL_X = arr[3]
-                    SCALE_ROTATIONAL_Y = arr[4]
-                    SCALE_ROTATIONAL_Z = arr[5]
-                elif mode == 'trim':
-                    arr = [float(d) for d in decoded.split(':')[1].split(',')]
-                    TRIM_X = arr[0]
-                    TRIM_Y = arr[1]
-                    TRIM_Z = arr[2]
-                elif mode == 'reverse':
-                    REVERSE = 1 if decoded.split(':')[1] == 'F' else -1
-                elif mode == 'lockout':
-                    LOCKOUT = decoded.split(':')[1] == 'T'
-                elif mode == 'mode':
-                    pass
-                elif mode == 'absolute':
-                    FINE_MULTIPLIER = float(decoded.split(':')[1])
 
 def getMessage():
     global gamepad_state
@@ -118,9 +55,7 @@ def getMessage():
 
     new_msg = RovVelocityCommand()
     new_msg.twist = t
-    new_msg.source = 'gamepad'
     new_msg.is_fine = is_fine
-    new_msg.multiplier = FINE_MULTIPLIER
     new_msg.is_percent_power = False
     new_msg.is_pool_centric = False
 
@@ -137,7 +72,6 @@ def getTools():
 def correct_raw(raw, abbv):
     sign = (raw >= 0) * 2 - 1
     raw = abs(raw)
-
     if abbv[1] == 'T':
         dead_zone = TRIGGER_DEAD_ZONE
         value_range = TRIGGER_RANGE
@@ -177,7 +111,6 @@ def process_event(event):
             tools[3] = not tools[3]
         
         if event.code == 'BTN_START' and event.state:
-        #if event.code == 'DPADX' and event.state:
             if (is_fine == 0):
                 is_fine = 1
             elif (is_fine == 1):
@@ -186,10 +119,16 @@ def process_event(event):
                 is_fine = 0
 
         if event.code == 'BTN_SELECT' and event.state:
-        #if event.code == 'DPADY' and event.state:
             is_fine = 0
 
     elif event.ev_type == EVENT_ABSOLUTE:
+        if event.code == 'ABS_HAT0Y' and event.state==-1:
+            is_fine +=1
+        elif event.code == 'ABS_HAT0Y' and event.state==1:
+            is_fine -=1
+        else:
+            pass
+
         gamepad_state[EVENTS[event.code]] = correct_raw(event.state, EVENTS[event.code])
     else:
         gamepad_state[EVENTS[event.code]] = event.state
@@ -206,26 +145,14 @@ def update_gamepad():
         logger = node.get_logger().info('no gamepad')
         rclpy.shutdown()
 
-def shutdown(sig, frame):
-    global data_thread, gamepad_thread, sock_thread, gamepad_state
-    print('shutting down')
-    
-    data_thread.destroy()
-    gamepad_thread.destroy()
-    sock_thread.shutdown()
 
 if __name__ == '__main__':
-    global pub, pub_tools, data_thread, gamepad_thread, sock_thread
-
-    signal.signal(signal.SIGINT, shutdown)
-    signal.signal(signal.SIGTERM, shutdown)
+    global pub, pub_tools, data_thread, gamepad_thread
 
     try:
        get_gamepad()
     except:
         sys.exit(0)
-
-    sock_thread = SocketManager()
 
     rclpy.init()
     node = rclpy.create_node('gp_pub')
@@ -243,6 +170,5 @@ if __name__ == '__main__':
 
     data_thread.destroy()
     gamepad_thread.destroy()
-    sock_thread.shutdown()
 
     rclpy.shutdown()
