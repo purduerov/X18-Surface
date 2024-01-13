@@ -5,7 +5,7 @@ import time
 
 class ssh:
     def __init__(self):
-        self.ssh_host = "10.0.0.102"
+        self.ssh_host = "10.0.0.4"
         self.ssh_username = "pi"
         self.ssh_password = "pie"
         self.ssh_client = None
@@ -19,8 +19,8 @@ class ssh:
             print(f"Local IP address: {ip}")
 
             # commands to launch on the pi
-            ros2_source_cmd = "source ros2_ws/install/setup.bash"
-            ros2_launch_cmd = "ros2 launch rov_launch run_rov_launch.xml"
+            ros2_source_cmd = "source ros2_ws/install/setup.bash >> ~/source.txt"
+            ros2_launch_cmd = "ros2 launch rov_launch run_rov_launch.xml >> ~/launch.txt"
             stream1_launch_cmd = f"gst-launch-1.0 -v v4l2src device=/dev/video0 ! video/x-h264, width=1920,height=1080! h264parse ! queue ! rtph264pay config-interval=10 pt=96 ! udpsink host={ip} port=5600 sync=false buffer-size=1048576 & echo $! > pid.txt"
             stream2_launch_cmd = f"gst-launch-1.0 -v v4l2src device=/dev/video4 ! video/x-h264, width=1920,height=1080! h264parse ! queue ! rtph264pay config-interval=10 pt=96 ! udpsink host={ip} port=5601 sync=false buffer-size=1048576 & echo $! > pid.txt"
 
@@ -82,9 +82,11 @@ class ssh:
     def launch_ros2_nodes(self, ros2_source_cmd, ros2_launch_cmd):
         try:
             print("Launching ROS2 nodes...")
-            self.ssh_client.exec_command(ros2_source_cmd)
-            time.sleep(1)
-            self.ssh_client.exec_command(ros2_launch_cmd)
+            
+            # Concatenate the commands and run them in a single exec_command call
+            full_command = f"{ros2_source_cmd} && {ros2_launch_cmd}"
+            self.ssh_client.exec_command(full_command)
+            
             time.sleep(1)
             print("ROS2 nodes launched")
         except Exception as e:

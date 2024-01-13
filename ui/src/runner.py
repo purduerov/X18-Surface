@@ -33,12 +33,12 @@ def main():
     rclpy.init()
 
     print("Starting SSH processes...")
-    ssh = ssh()
-    connection = ssh.connect()
+    ssh_comm = ssh()
+    connection = ssh_comm.connect()
 
     print("Starting camera stream processes...")
-    streams = streams(connection)
-    streams.start()
+    #streams = streams(connection)
+    #streams.start()
 
     # print("Connecting gamepad...")
     # TODO: this
