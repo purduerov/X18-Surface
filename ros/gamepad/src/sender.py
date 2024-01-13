@@ -31,10 +31,16 @@ LOCKOUT = True
 #is_fine = 1 = fine_mode
 #is_fine = 2 = yeet mode
 is_fine = 0
+is_pool_centric = False
+depth_lock = False
+pitch_lock = False
 
 def getMessage():
     global gamepad_state
     global is_fine
+    global is_pool_centric
+    global pitch_lock
+    global depth_lock
 
     t = Twist()
 
@@ -56,8 +62,9 @@ def getMessage():
     new_msg = RovVelocityCommand()
     new_msg.twist = t
     new_msg.is_fine = is_fine
-    new_msg.is_percent_power = False
-    new_msg.is_pool_centric = False
+    new_msg.is_pool_centric = is_pool_centric
+    new_msg.depth_lock = depth_lock
+    new_msg.pitch_lock = pitch_lock
 
     return(new_msg)
 
@@ -93,6 +100,9 @@ def process_event(event):
     global tools
     global is_fine
     global gamepad_state
+    global is_pool_centric
+    global depth_lock
+    global pitch_lock
     if event.ev_type in ignore_events:
         return
 
@@ -109,23 +119,24 @@ def process_event(event):
 
         if event.code == 'BTN_NORTH' and event.state and LOCKOUT:
             tools[3] = not tools[3]
-        
-        if event.code == 'BTN_START' and event.state:
-            if (is_fine == 0):
-                is_fine = 1
-            elif (is_fine == 1):
-                is_fine = 2
-            else:
-                is_fine = 0
 
         if event.code == 'BTN_SELECT' and event.state:
-            is_fine = 0
+            is_pool_centric = not is_pool_centric
 
     elif event.ev_type == EVENT_ABSOLUTE:
         if event.code == 'ABS_HAT0Y' and event.state==-1:
-            is_fine +=1
+            if is_fine < 2:
+                is_fine +=1
         elif event.code == 'ABS_HAT0Y' and event.state==1:
-            is_fine -=1
+            if is_fine > 0:
+                is_fine -=1
+        else:
+            pass
+        if event.code == 'ABS_HAT0X' and event.state==-1:
+            pitch_lock = not pitch_lock
+        elif event.code == 'ABS_HAT0X' and event.state==1:
+            depth_lock = not depth_lock
+            is_pool_centric = True
         else:
             pass
 
