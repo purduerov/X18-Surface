@@ -8,11 +8,11 @@ from streams import streams
 from gamepad import gamepad
 
 class MainWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, ssh_comm):
         super().__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-
+        self.ssh = ssh_comm
         # setting general window properties
         self.setWindowTitle("ROX X16")
         screen_geometry = QDesktopWidget().screenGeometry()
@@ -30,9 +30,10 @@ class MainWindow(QMainWindow):
             QMessageBox.Yes | QMessageBox.No,
         )
         if confirmation == QMessageBox.Yes:
-            streams.stop()
+            #streams.stop()
             # gamepad.stop()
-            ssh.close()
+            #ssh_comm = ssh()
+            self.ssh.close()
             print("Closing application")
             event.accept()
         else:

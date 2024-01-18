@@ -5,7 +5,7 @@ import time
 
 class ssh:
     def __init__(self):
-        self.ssh_host = "10.0.0.4"
+        self.ssh_host = "192.168.1.2"
         self.ssh_username = "pi"
         self.ssh_password = "pie"
         self.ssh_client = None
@@ -17,10 +17,10 @@ class ssh:
             # getting the local ip address
             ip = self.get_ip()
             print(f"Local IP address: {ip}")
-
+            #ros_id = 69
             # commands to launch on the pi
-            ros2_source_cmd = "source ros2_ws/install/setup.bash >> ~/source.txt"
-            ros2_launch_cmd = "ros2 launch rov_launch run_rov_launch.xml >> ~/launch.txt"
+            ros2_source_cmd = "source ~/.bashrc >> ~/ros2_ws/startup_logs/sourcebash.txt && export ROS_DOMAIN_ID=69 && source ros2_ws/install/setup.bash >> ~/ros2_ws/startup_logs/source.txt && echo $ROS_DOMAIN_ID >> ~/ros2_ws/startup_logs/domain_id_tmux"
+            ros2_launch_cmd = "ros2 launch rov_launch run_rov_launch.xml >> ~/ros2_ws/startup_logs/launch.txt"
             stream1_launch_cmd = f"gst-launch-1.0 -v v4l2src device=/dev/video0 ! video/x-h264, width=1920,height=1080! h264parse ! queue ! rtph264pay config-interval=10 pt=96 ! udpsink host={ip} port=5600 sync=false buffer-size=1048576 & echo $! > pid.txt"
             stream2_launch_cmd = f"gst-launch-1.0 -v v4l2src device=/dev/video4 ! video/x-h264, width=1920,height=1080! h264parse ! queue ! rtph264pay config-interval=10 pt=96 ! udpsink host={ip} port=5601 sync=false buffer-size=1048576 & echo $! > pid.txt"
 
@@ -56,10 +56,10 @@ class ssh:
 
     def close(self):
         # killing each process
-        if self.pid_list is not None:
-            for pid in self.pid_list:
-                self.ssh_client.exec_command("kill " + pid)
-                print(f"Process {pid} killed")
+        # if self.pid_list is not None:
+        #     for pid in self.pid_list:
+        #         self.ssh_client.exec_command("kill " + pid)
+        self.ssh_client.exec_command("ps aux | grep ros2 | awk '{print $2}' | xargs kill -9 && tmux kill-session -t ros2_session")
 
         # closing the ssh connection
         if self.ssh_client is not None:
@@ -84,7 +84,7 @@ class ssh:
             print("Launching ROS2 nodes...")
             
             # Concatenate the commands and run them in a single exec_command call
-            full_command = f"{ros2_source_cmd} && {ros2_launch_cmd}"
+            full_command = f"tmux new-session -d -s ros2_session 'bash -c \"{ros2_source_cmd} && {ros2_launch_cmd}\"'"
             self.ssh_client.exec_command(full_command)
             
             time.sleep(1)

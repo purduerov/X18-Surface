@@ -44,7 +44,7 @@ def main():
     # TODO: this
 
     app = QApplication(sys.argv)
-    window = MainWindow()
+    window = MainWindow(ssh_comm)
 
     print("Connecting fronted ros nodes...")
     thrusters = ThrustersSurfaceNode(window=window)
