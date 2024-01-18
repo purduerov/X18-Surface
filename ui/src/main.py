@@ -2,22 +2,17 @@
 
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
-import sys
-
 from interface import Ui_MainWindow
 from ssh import ssh
 from streams import streams
 from gamepad import gamepad
 
-# TODO: Refine error handling across all files
-
-
 class MainWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, ssh_comm):
         super().__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-
+        self.ssh = ssh_comm
         # setting general window properties
         self.setWindowTitle("ROX X16")
         screen_geometry = QDesktopWidget().screenGeometry()
@@ -26,7 +21,7 @@ class MainWindow(QMainWindow):
         self.setGeometry(0, screen_height // 2, screen_width, screen_height // 2)
         self.setMaximumSize(screen_width, screen_height // 2)
         self.setMinimumSize(screen_width, screen_height // 2)
-
+            
     def closeEvent(self, event):
         confirmation = QMessageBox.question(
             self,
@@ -35,30 +30,11 @@ class MainWindow(QMainWindow):
             QMessageBox.Yes | QMessageBox.No,
         )
         if confirmation == QMessageBox.Yes:
-            streams.stop()
+            #streams.stop()
             # gamepad.stop()
-            ssh.close()
+            #ssh_comm = ssh()
+            self.ssh.close()
             print("Closing application")
             event.accept()
         else:
             event.ignore()
-
-
-if __name__ == "__main__":
-    print("Starting SSH processes...")
-    ssh = ssh()
-    connection = ssh.connect()
-
-    print("Starting camera stream processes...")
-    streams = streams(connection)
-    streams.start()
-
-    # print("Connecting to the gamepad...")
-    # gamepad = gamepad(connection)
-    # gamepad.start()
-
-    app = QApplication(sys.argv) 
-    window = MainWindow()
-    print("Starting application...")
-    window.show()
-    app.exec()

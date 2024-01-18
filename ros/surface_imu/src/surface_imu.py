@@ -4,12 +4,14 @@ import rclpy
 import rclpy.node as Node
 import json
 import sys
-#ROS
+
+# ROS
 from shared_msgs.msg import ImuMsg
 from std_msgs.msg import String
 import numpy as np
 
 imu = [0, 0, 0]
+
 
 def _imu(comm):
     global imu
@@ -20,9 +22,10 @@ def _imu(comm):
         imu[i] = imu[i].item()
     print(json.dumps(imu))
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     rclpy.init()
-    node = rclpy.create_node('surface_imu')
-    stat = node.create_subscription(ImuMsg,'/rov/imu', _imu,10)
+    node = rclpy.create_node("surface_imu")
+    stat = node.create_subscription(ImuMsg, "/rov/imu", _imu, 10)
 
     rclpy.spin(node)

@@ -1,0 +1,6 @@
+Invoking command in '/home/bboardle/src/X16-Surface/build/depth_comm': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake /home/bboardle/src/X16-Surface/ros/depth_comm -DCMAKE_INSTALL_PREFIX=/home/bboardle/src/X16-Surface/install/depth_comm
+Invoked command in '/home/bboardle/src/X16-Surface/build/depth_comm' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake /home/bboardle/src/X16-Surface/ros/depth_comm -DCMAKE_INSTALL_PREFIX=/home/bboardle/src/X16-Surface/install/depth_comm
+Invoking command in '/home/bboardle/src/X16-Surface/build/depth_comm': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/bboardle/src/X16-Surface/build/depth_comm -- -j16 -l16
+Invoked command in '/home/bboardle/src/X16-Surface/build/depth_comm' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/bboardle/src/X16-Surface/build/depth_comm -- -j16 -l16
+Invoking command in '/home/bboardle/src/X16-Surface/build/depth_comm': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --install /home/bboardle/src/X16-Surface/build/depth_comm
+Invoked command in '/home/bboardle/src/X16-Surface/build/depth_comm' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --install /home/bboardle/src/X16-Surface/build/depth_comm

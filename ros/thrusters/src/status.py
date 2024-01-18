@@ -1,11 +1,13 @@
 #! /usr/bin/python3
 
 import json
-#ROS
+
+# ROS
 import rclpy
 from shared_msgs.msg import FinalThrustMsg
 
 thrust = [0, 0, 0, 0, 0, 0, 0, 0]
+
 
 def _thruster(comm):
     global thrust
@@ -19,9 +21,10 @@ def _thruster(comm):
     thrust[7] = int(comm.thrusters[7])
     print(json.dumps(thrust))
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     rclpy.init()
-    node = rclpy.create_node('thrusters_surface')
-    stat = node.create_subscription(FinalThrustMsg,'/rov/final_thrust', _thruster,10)
+    node = rclpy.create_node("thrusters_surface")
+    stat = node.create_subscription(FinalThrustMsg, "/rov/final_thrust", _thruster, 10)
 
     rclpy.spin(node)
