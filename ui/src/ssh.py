@@ -1,13 +1,21 @@
 import paramiko
 import netifaces
 import time
+import os 
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 class ssh:
     def __init__(self):
-        self.ssh_host = "192.168.1.2"
-        self.ssh_username = "pi"
-        self.ssh_password = "pie"
+        self.ssh_host = os.getenv("HOST_IP")
+        self.ssh_username = os.getenv("HOST_USERNAME")
+        self.ssh_password = os.getenv("HOST_PASSWORD")
+        self.device_name1 = os.getenv("DEVICE_NAME1")
+        self.device_name2 = os.getenv("DEVICE_NAME2")
+        self.device_name3 = os.getenv("DEVICE_NAME3")
+        self.device_name4 = os.getenv("DEVICE_NAME4")
         self.ssh_client = None
         self.pid_list = list()
         self.connection = None
@@ -21,8 +29,8 @@ class ssh:
             # commands to launch on the pi
             ros2_source_cmd = "source ~/.bashrc >> ~/ros2_ws/startup_logs/sourcebash.txt && export ROS_DOMAIN_ID=69 && source ros2_ws/install/setup.bash >> ~/ros2_ws/startup_logs/source.txt && echo $ROS_DOMAIN_ID >> ~/ros2_ws/startup_logs/domain_id_tmux"
             ros2_launch_cmd = "ros2 launch rov_launch run_rov_launch.xml >> ~/ros2_ws/startup_logs/launch.txt"
-            stream1_launch_cmd = f"gst-launch-1.0 -v v4l2src device=/dev/video0 ! video/x-h264, width=1920,height=1080! h264parse ! queue ! rtph264pay config-interval=10 pt=96 ! udpsink host={ip} port=5600 sync=false buffer-size=1048576 & echo $! > pid.txt"
-            stream2_launch_cmd = f"gst-launch-1.0 -v v4l2src device=/dev/video4 ! video/x-h264, width=1920,height=1080! h264parse ! queue ! rtph264pay config-interval=10 pt=96 ! udpsink host={ip} port=5601 sync=false buffer-size=1048576 & echo $! > pid.txt"
+            stream1_launch_cmd = f"gst-launch-1.0 -v v4l2src device={self.device_name1} ! video/x-h264, width=1920,height=1080! h264parse ! queue ! rtph264pay config-interval=10 pt=96 ! udpsink host={ip} port=5600 sync=false buffer-size=1048576 & echo $! > pid.txt"
+            stream2_launch_cmd = f"gst-launch-1.0 -v v4l2src device={self.device_name2} ! video/x-h264, width=1920,height=1080! h264parse ! queue ! rtph264pay config-interval=10 pt=96 ! udpsink host={ip} port=5601 sync=false buffer-size=1048576 & echo $! > pid.txt"
 
             # establishing the ssh connection
             print("Establishing SSH connection...")
