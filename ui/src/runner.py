@@ -35,7 +35,7 @@ def main():
 
     print("Starting SSH processes...")
     ssh_comm = ssh()
-    #connection = ssh_comm.connect()
+    connection = ssh_comm.connect()
 
     print("Starting camera stream processes...")
     #streams = streams(connection)

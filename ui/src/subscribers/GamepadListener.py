@@ -10,9 +10,9 @@ import json
 
 class GamepadSurfaceNode(Node):
     def __init__(self, window):
-        super().__init__("surface_depth")
+        super().__init__("surface_gamepad")
         self.subscription = self.create_subscription(
-            RovVelocityCommand, "/rov_veloctiy", self.callback, 10
+            RovVelocityCommand, "/rov_velocity", self.callback, 10
         )
 
         # Initialize the thrust array
@@ -21,16 +21,19 @@ class GamepadSurfaceNode(Node):
         print("initialized")
 
     def callback(self, data):
+        #print('callback')
         fine = json.dumps(data.is_fine)
         pool_centric = json.dumps(data.is_pool_centric)
         pitch_lock = json.dumps(data.pitch_lock)
         depth_lock = json.dumps(data.pitch_lock)
+
+        twist = data.twist
+        linear = twist.linear
+
+        self.window.ui.xoutput.display(linear.x)
+        self.window.ui.youtput.display(linear.y)
+        self.window.ui.zoutput.display(linear.z)
         self.window.ui.finemodeoutput.display(fine)
-        #self.window.ui.depthoutput.display(data.data)
-        #self.window.ui.depthoutput.display(data.data)
-        #self.window.ui.depthoutput.display(data.data)
-        #self.window.ui.depthoutput.display(data.data)
-        print(fine)
 
 def main(args=None):
     rclpy.init(args=args)
