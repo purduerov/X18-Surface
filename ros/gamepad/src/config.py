@@ -1,8 +1,14 @@
 MIN_ABS_DIFFERENCE = 0
-TRIGGER_DEAD_ZONE = 50
-TRIGGER_RANGE = 1025
-STICK_DEAD_ZONE = 4000
-STICK_RANGE = 32768
+# Old ranges for the triggers and sticks
+# TRIGGER_DEAD_ZONE = 50
+# TRIGGER_RANGE = 1025
+# STICK_DEAD_ZONE = 4000
+# STICK_RANGE = 32768
+# New ranges for the triggers and sticks (Probably need to adjust these values)
+TRIGGER_DEAD_ZONE = 0.09
+TRIGGER_RANGE = 1.0
+STICK_DEAD_ZONE = 0.09
+STICK_RANGE = 1.0
 
 EVENT_MISC = "Misc"
 EVENT_SYNC = "Sync"
