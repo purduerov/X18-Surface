@@ -59,7 +59,8 @@ class ssh:
         # if self.pid_list is not None:
         #     for pid in self.pid_list:
         #         self.ssh_client.exec_command("kill " + pid)
-        self.ssh_client.exec_command("ps aux | grep ros2 | awk '{print $2}' | xargs kill -9 && tmux kill-session -t ros2_session")
+        if self.ssh_client is not None:
+            self.ssh_client.exec_command("ps aux | grep ros2 | awk '{print $2}' | xargs kill -9 && tmux kill-session -t ros2_session")
 
         # closing the ssh connection
         if self.ssh_client is not None:

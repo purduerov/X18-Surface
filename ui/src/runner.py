@@ -9,6 +9,7 @@ from PyQt5.QtWidgets import QApplication
 from main import MainWindow
 from ThrustersSurface import ThrustersSurfaceNode
 from DepthSurface import DepthSurfaceNode
+from GamepadListener import GamepadSurfaceNode
 import multiprocessing
 
 from interface import Ui_MainWindow
@@ -34,7 +35,7 @@ def main():
 
     print("Starting SSH processes...")
     ssh_comm = ssh()
-    connection = ssh_comm.connect()
+    #connection = ssh_comm.connect()
 
     print("Starting camera stream processes...")
     #streams = streams(connection)
@@ -49,7 +50,8 @@ def main():
     print("Connecting fronted ros nodes...")
     thrusters = ThrustersSurfaceNode(window=window)
     depth = DepthSurfaceNode(window=window)
-    nodelist = [thrusters, depth]
+    gamepad = GamepadSurfaceNode(window=window)
+    nodelist = [thrusters, depth, gamepad]
     node_thread = threading.Thread(target=run_multiple_nodes, args=(nodelist,))
     node_thread.daemon = True
     node_thread.start()
