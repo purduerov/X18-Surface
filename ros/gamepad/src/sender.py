@@ -166,8 +166,11 @@ def process_event(event):
     
     # If the gamepad is disconnected, try to reconnect it
     elif event.type == pygame.JOYDEVICEREMOVED:
-        print('Gamepad disconnected')
-        reconnect_gamepad()
+        if not reconnect_gamepad():
+            print("\nNo gamepad found, exiting")
+            pygame.quit()
+            rclpy.shutdown()
+            sys.exit(0)
 
 def pub_data():
     '''Publishes the data to the rov_velocity topic and the tools topic'''
@@ -195,30 +198,31 @@ def init_pygame():
 def reconnect_gamepad():
     '''Tries to reconnect the gamepad'''
     global joystick
-    for i in range(GAMEPAD_TIMEOUT):
+    reconnected = False
+    i = GAMEPAD_TIMEOUT
+    while i >= 0 and not reconnected:
         try:
-            print('Please reconnect the gamepad within {} seconds'.format(GAMEPAD_TIMEOUT - i))
+            print('Gamepad disconnected, reconnect within {:2} seconds'.format(i), end='\r')
             pygame.init()
             pygame.joystick.init()
             # make sure there is only one joystick
             if pygame.joystick.get_count() == 1:
                 # get the first joystick
                 joystick = pygame.joystick.Joystick(0)
+                reconnected = True
             else:
                 pygame.quit()
                 assert False
-            # break out of the loop
-            reconnected = True
-            print('Gamepad reconnected')
-            break
         except:
             # wait 1 second
             pygame.time.wait(1000)
-    if not reconnected:
-        print('Gamepad not reconnected, exiting...')
-        pygame.quit()
-        rclpy.shutdown()
-        sys.exit(0)
+            i -= 1
+
+    if reconnected:
+        print('\nGamepad reconnected')
+        joystick = pygame.joystick.Joystick(0)
+        
+    return reconnected
 
 
 if __name__ == '__main__':
@@ -227,17 +231,21 @@ if __name__ == '__main__':
     try:
         init_pygame()
     except:
-        print('No gamepad found')
-        print('Please connect a gamepad')
-        reconnect_gamepad()
+        print('No gamepad found, please connect a gamepad')
+        if not reconnect_gamepad():
+            print("\nNo gamepad found, exiting")
+            pygame.quit()
+            sys.exit(0)
     
-
+    # Initialize the ros node
     rclpy.init()
     node = rclpy.create_node('gp_pub')
 
+    # Create the publishers
     pub = node.create_publisher(RovVelocityCommand, 'rov_velocity', 10)
     pub_tools = node.create_publisher(ToolsCommandMsg, 'tools', 10)
 
+    # Create the timers
     data_thread = node.create_timer(0.1, pub_data)
     gamepad_thread = node.create_timer(0.001, update_gamepad)
 
