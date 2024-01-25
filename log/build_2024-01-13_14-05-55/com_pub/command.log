@@ -1,6 +1,0 @@
-Invoking command in '/home/bboardle/src/X16-Surface/build/com_pub': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake /home/bboardle/src/X16-Surface/ros/com_pub -DCMAKE_INSTALL_PREFIX=/home/bboardle/src/X16-Surface/install/com_pub
-Invoked command in '/home/bboardle/src/X16-Surface/build/com_pub' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake /home/bboardle/src/X16-Surface/ros/com_pub -DCMAKE_INSTALL_PREFIX=/home/bboardle/src/X16-Surface/install/com_pub
-Invoking command in '/home/bboardle/src/X16-Surface/build/com_pub': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/bboardle/src/X16-Surface/build/com_pub -- -j16 -l16
-Invoked command in '/home/bboardle/src/X16-Surface/build/com_pub' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/bboardle/src/X16-Surface/build/com_pub -- -j16 -l16
-Invoking command in '/home/bboardle/src/X16-Surface/build/com_pub': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --install /home/bboardle/src/X16-Surface/build/com_pub
-Invoked command in '/home/bboardle/src/X16-Surface/build/com_pub' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --install /home/bboardle/src/X16-Surface/build/com_pub

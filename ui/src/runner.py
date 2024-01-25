@@ -37,8 +37,8 @@ def main():
     connection = ssh_comm.connect()
 
     print("Starting camera stream processes...")
-    #streams = streams(connection)
-    #streams.start()
+    stream = streams(connection)
+    stream.start()
 
     # print("Connecting gamepad...")
     # TODO: this

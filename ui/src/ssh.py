@@ -4,8 +4,7 @@ import time
 import os 
 from dotenv import load_dotenv
 
-load_dotenv()
-
+load_dotenv(dotenv_path=f"{os.getcwd()}/X16-Surface/.env")
 
 class ssh:
     def __init__(self):
@@ -31,6 +30,7 @@ class ssh:
             ros2_launch_cmd = "ros2 launch rov_launch run_rov_launch.xml >> ~/ros2_ws/startup_logs/launch.txt"
             stream1_launch_cmd = f"gst-launch-1.0 -v v4l2src device={self.device_name1} ! video/x-h264, width=1920,height=1080! h264parse ! queue ! rtph264pay config-interval=10 pt=96 ! udpsink host={ip} port=5600 sync=false buffer-size=1048576 & echo $! > pid.txt"
             stream2_launch_cmd = f"gst-launch-1.0 -v v4l2src device={self.device_name2} ! video/x-h264, width=1920,height=1080! h264parse ! queue ! rtph264pay config-interval=10 pt=96 ! udpsink host={ip} port=5601 sync=false buffer-size=1048576 & echo $! > pid.txt"
+            print(stream1_launch_cmd)
 
             # establishing the ssh connection
             print("Establishing SSH connection...")
@@ -82,7 +82,7 @@ class ssh:
                 if netifaces.AF_INET in addrs:
                     for addr_info in addrs[netifaces.AF_INET]:
                         ip_address = addr_info["addr"]
-                        if ip_address.startswith("10.0.0."):
+                        if ip_address.startswith("192.168.1."):
                             return ip_address
         except Exception as e:
             print(f"ERROR: {e}")
