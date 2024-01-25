@@ -2,6 +2,7 @@
 
 import pygame
 import sys
+import time
 
 #ROS
 import rclpy
@@ -235,6 +236,8 @@ if __name__ == '__main__':
         if not reconnect_gamepad():
             print("\nNo gamepad found, exiting")
             pygame.quit()
+            # Sleep for 3 seconds
+            time.sleep(240)
             sys.exit(0)
     
     # Initialize the ros node
