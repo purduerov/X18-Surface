@@ -5,7 +5,7 @@ import time
 
 class ssh:
     def __init__(self):
-        self.ssh_host = "192.168.1.2"
+        self.ssh_host = "192.168.1.9"
         self.ssh_username = "pi"
         self.ssh_password = "pie"
         self.ssh_client = None
