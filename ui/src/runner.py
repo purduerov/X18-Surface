@@ -9,6 +9,7 @@ from PyQt5.QtWidgets import QApplication
 from main import MainWindow
 from ThrustersSurface import ThrustersSurfaceNode
 from DepthSurface import DepthSurfaceNode
+from GamepadListener import GamepadSurfaceNode
 import multiprocessing
 
 from interface import Ui_MainWindow
@@ -35,28 +36,32 @@ def main():
     print("Starting SSH processes...")
     ssh_comm = ssh()
     connection = ssh_comm.connect()
+    try:
+        print("Starting camera stream processes...")
+        streams_comm = streams(connection)
+        streams_comm.start()
 
-    print("Starting camera stream processes...")
-    stream = streams(connection)
-    stream.start()
+        # print("Connecting gamepad...")
+        # TODO: this
 
-    # print("Connecting gamepad...")
-    # TODO: this
+        app = QApplication(sys.argv)
+        window = MainWindow(ssh_comm)
 
-    app = QApplication(sys.argv)
-    window = MainWindow(ssh_comm)
+        print("Connecting fronted ros nodes...")
+        thrusters = ThrustersSurfaceNode(window=window)
+        depth = DepthSurfaceNode(window=window)
+        gamepad = GamepadSurfaceNode(window=window)
+        nodelist = [thrusters, depth, gamepad]
+        node_thread = threading.Thread(target=run_multiple_nodes, args=(nodelist,))
+        node_thread.daemon = True
+        node_thread.start()
 
-    print("Connecting fronted ros nodes...")
-    thrusters = ThrustersSurfaceNode(window=window)
-    depth = DepthSurfaceNode(window=window)
-    nodelist = [thrusters, depth]
-    node_thread = threading.Thread(target=run_multiple_nodes, args=(nodelist,))
-    node_thread.daemon = True
-    node_thread.start()
-
-    print("Starting application...")
-    window.show()
-    sys.exit(app.exec_())
+        print("Starting application...")
+        window.show()
+        sys.exit(app.exec_())
+    except Exception as e:
+        ssh_comm.close()
+        print(f"ERROR: {e}")
 
 
 if __name__ == "__main__":

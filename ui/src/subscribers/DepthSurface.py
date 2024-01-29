@@ -29,7 +29,7 @@ class DepthSurfaceNode(Node):
 
 def main(args=None):
     rclpy.init(args=args)
-    node = ThrustersSurfaceNode()
+    node = DepthSurfaceNode()
     rclpy.spin(node)
     rclpy.shutdown()
 

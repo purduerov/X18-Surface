@@ -25,6 +25,7 @@ install(PROGRAMS
   src/gamepad.py
   src/subscribers/ThrustersSurface.py
   src/subscribers/DepthSurface.py
+  src/subscribers/GamepadListener.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
