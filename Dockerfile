@@ -2,7 +2,7 @@ FROM ros:humble
 
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get -y update
-RUN apt-get -y install xorg python3-pip libxkbcommon-x11-0 libxcb* 
+RUN apt-get -y install xorg python3-pip ssh libxkbcommon-x11-0 libxcb* 
 
 COPY requirements.txt requirements.txt
 
