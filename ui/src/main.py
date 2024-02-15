@@ -31,7 +31,7 @@ class MainWindow(QMainWindow):
         )
         if confirmation == QMessageBox.Yes:
             #streams.stop()
-            # gamepad.stop()
+        #    gamepad.stop()
             #ssh_comm = ssh()
             self.ssh.close()
             print("Closing application")
