@@ -1,0 +1,8 @@
+services:
+  surface:
+    build: .
+    network_mode: "host"
+    volumes:
+      - .:/X16-Surface
+    environment:
+      DISPLAY:
