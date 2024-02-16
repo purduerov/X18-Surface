@@ -30,13 +30,13 @@ def main():
 
     print("Starting SSH processes...")
     ssh_comm = ssh()
-    #connection = ssh_comm.connect()
+    connection = ssh_comm.connect()
     try:
         print("Starting camera stream processes...")
-        #streams_comm = streams(connection)
-        #streams_comm.start()
+        streams_comm = streams(connection)
+        streams_comm.start()
 
-        print("Connecting gamepad...")
+        #print("Connecting gamepad...")
         # TODO: this
         #gamepad = GamepadNode()
 
