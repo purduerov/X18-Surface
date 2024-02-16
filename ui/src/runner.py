@@ -55,15 +55,10 @@ def main():
 
         print("Starting application...")
         window.show()
-<<<<<<< HEAD
-        
-        sys.exit(app.exec_())
-=======
         while(app.exec_()):
             pass
         streams_comm.stop()
         sys.exit(1)
->>>>>>> master
     except Exception as e:
         ssh_comm.close()
         print(f"ERROR: {e}")
