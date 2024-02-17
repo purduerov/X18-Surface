@@ -93,7 +93,13 @@ All of the information needed for use of the X16 ROV can be found below.
 
 #### Launching the ROS2 Network
 
-- For the locally run nodes, the launching the frontend should launch the frontend ROS nodes
+- Launch the gamepad node first on the frontend computer using the following command:
+  ```bash
+  ros2 run gamepad sender.py
+  ```
+  This should print out the statement 'ready'
+- For the rest of the locally run nodes, the launching the frontend should launch the frontend ROS nodes
+- The Front End should launch all pi nodes in the case of an issue run the below command on the pi.
 - To launch the pi nodes, run the following command:
   
   ```bash

@@ -47,16 +47,23 @@ def main():
         print("Connecting fronted ros nodes...")
         thrusters = ThrustersSurfaceNode(window=window)
         depth = DepthSurfaceNode(window=window)
-        gamepad = GamepadSurfaceNode(window=window)
-        nodelist = [thrusters, depth, gamepad]
+        surfacegp = GamepadSurfaceNode(window=window)
+        nodelist = [thrusters, depth, surfacegp]
         node_thread = threading.Thread(target=run_multiple_nodes, args=(nodelist,))
         node_thread.daemon = True
         node_thread.start()
 
         print("Starting application...")
         window.show()
+<<<<<<< HEAD
         
         sys.exit(app.exec_())
+=======
+        while(app.exec_()):
+            pass
+        streams_comm.stop()
+        sys.exit(1)
+>>>>>>> master
     except Exception as e:
         ssh_comm.close()
         print(f"ERROR: {e}")

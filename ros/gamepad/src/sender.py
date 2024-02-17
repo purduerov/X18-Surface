@@ -260,4 +260,5 @@ if __name__ == '__main__':
     # Stop the pygame library
     pygame.quit()
 
+    node.destroy_node()
     rclpy.shutdown()
