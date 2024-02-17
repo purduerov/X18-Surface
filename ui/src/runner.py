@@ -16,18 +16,13 @@ from interface import Ui_MainWindow
 from ssh import ssh
 from streams import streams
 from gamepad import gamepad
-
-
-def run_ros_node(node):
- # node = node(window=window)
- rclpy.spin(node)
- rclpy.shutdown()
+from GamepadSender import GamepadNode
 
 
 def run_multiple_nodes(nodes):
- while True:
+    while True:
         for node in nodes:
-            rclpy.spin_once(node, timeout_sec=0.1)
+            rclpy.spin_once(node, timeout_sec=0.01)
 
 
 def main():
@@ -41,11 +36,9 @@ def main():
         streams_comm = streams(connection)
         streams_comm.start()
 
-        gp = gamepad(connection)
-        gp.start()
-
-        # print("Connecting gamepad...")
+        #print("Connecting gamepad...")
         # TODO: this
+        gamepad = GamepadNode()
 
         app = QApplication(sys.argv)
         window = MainWindow(ssh_comm)
@@ -54,8 +47,9 @@ def main():
         thrusters = ThrustersSurfaceNode(window=window)
         depth = DepthSurfaceNode(window=window)
         surfacegp = GamepadSurfaceNode(window=window)
-        nodelist = [thrusters, depth, surfacegp]
-        node_thread = threading.Thread(target=run_multiple_nodes, args=(nodelist,))
+        nodelist = [thrusters, depth, surfacegp, gamepad]
+        node_thread = threading.Thread(
+            target=run_multiple_nodes, args=(nodelist,))
         node_thread.daemon = True
         node_thread.start()
 
