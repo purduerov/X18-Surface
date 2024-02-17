@@ -3,7 +3,7 @@ import pygame
 import sys
 import time
 
-#ROS
+# ROS
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String, Bool, Empty
@@ -12,12 +12,15 @@ from geometry_msgs.msg import Twist
 
 from config import *
 
+
 class GamepadNode(Node):
     def __init__(self):
         try:
             super().__init__('gp_pub')
-            self.pub = self.create_publisher(RovVelocityCommand, 'rov_velocity', 10)
-            self.pub_tools = self.create_publisher(ToolsCommandMsg, 'tools', 10)
+            self.pub = self.create_publisher(
+                RovVelocityCommand, 'rov_velocity', 10)
+            self.pub_tools = self.create_publisher(
+                ToolsCommandMsg, 'tools', 10)
 
             self.tools = [0, 0, 0, 0, 0]
 
@@ -41,7 +44,7 @@ class GamepadNode(Node):
             self.pitch_lock = False
             self.GAMEPAD_TIMEOUT = 20
 
-            self.gamepad_state = {}
+            self.gamepad_state = gamepad_state
 
             self.init_pygame()
 
@@ -72,7 +75,8 @@ class GamepadNode(Node):
         i = self.GAMEPAD_TIMEOUT
         while i >= 0 and not reconnected:
             try:
-                print('Gamepad disconnected, reconnect within {:2} seconds'.format(i), end='\r')
+                print('Gamepad disconnected, reconnect within {:2} seconds'.format(
+                    i), end='\r')
                 pygame.init()
                 pygame.joystick.init()
                 if pygame.joystick.get_count() == 1:
@@ -147,7 +151,8 @@ class GamepadNode(Node):
                 pass
 
         elif event.type == pygame.JOYAXISMOTION:
-            self.gamepad_state[JOY_AXIS[event.axis]] = self.correct_raw(event.value, JOY_AXIS[event.axis])
+            self.gamepad_state[JOY_AXIS[event.axis]] = self.correct_raw(
+                event.value, JOY_AXIS[event.axis])
 
         elif event.type == pygame.JOYDEVICEREMOVED:
             if not self.reconnect_gamepad():
@@ -166,9 +171,14 @@ class GamepadNode(Node):
 
     def getMessage(self):
         t = Twist()
-        t.linear.x = -(self.gamepad_state['LSY'] * self.SCALE_TRANSLATIONAL_X + self.TRIM_X) * self.REVERSE
-        t.linear.y = -(self.gamepad_state['LSX'] * self.SCALE_TRANSLATIONAL_Y + self.TRIM_Y) * self.REVERSE
-        t.linear.z = ((self.gamepad_state['RT'] - self.gamepad_state['LT']) / 2.0) * self.SCALE_TRANSLATIONAL_Z + self.TRIM_Z
+        t.linear.x = - \
+            (self.gamepad_state['LSY'] *
+             self.SCALE_TRANSLATIONAL_X + self.TRIM_X) * self.REVERSE
+        t.linear.y = - \
+            (self.gamepad_state['LSX'] *
+             self.SCALE_TRANSLATIONAL_Y + self.TRIM_Y) * self.REVERSE
+        t.linear.z = ((self.gamepad_state['RT'] - self.gamepad_state['LT']
+                       ) / 2.0) * self.SCALE_TRANSLATIONAL_Z + self.TRIM_Z
 
         if self.gamepad_state['LB'] == 1:
             x = 1 * self.SCALE_ROTATIONAL_X
@@ -178,7 +188,8 @@ class GamepadNode(Node):
             x = 0.0
 
         t.angular.x = -x
-        t.angular.y = (-self.gamepad_state['RSY'] * self.SCALE_ROTATIONAL_Y) * self.REVERSE
+        t.angular.y = (-self.gamepad_state['RSY']
+                       * self.SCALE_ROTATIONAL_Y) * self.REVERSE
         t.angular.z = -self.gamepad_state['RSX'] * self.SCALE_ROTATIONAL_Z
 
         new_msg = RovVelocityCommand()
@@ -194,4 +205,3 @@ class GamepadNode(Node):
         tm = ToolsCommandMsg()
         tm.tools = [i for i in self.tools]
         return tm
-

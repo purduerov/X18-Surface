@@ -20,7 +20,7 @@ from GamepadSender import GamepadNode
 
 
 def run_multiple_nodes(nodes):
- while True:
+    while True:
         for node in nodes:
             rclpy.spin_once(node, timeout_sec=0.01)
 
@@ -38,8 +38,7 @@ def main():
 
         #print("Connecting gamepad...")
         # TODO: this
-        #gamepad = GamepadNode()
-
+        gamepad = GamepadNode()
 
         app = QApplication(sys.argv)
         window = MainWindow(ssh_comm)
@@ -48,8 +47,9 @@ def main():
         thrusters = ThrustersSurfaceNode(window=window)
         depth = DepthSurfaceNode(window=window)
         surfacegp = GamepadSurfaceNode(window=window)
-        nodelist = [thrusters, depth, surfacegp]
-        node_thread = threading.Thread(target=run_multiple_nodes, args=(nodelist,))
+        nodelist = [thrusters, depth, surfacegp, gamepad]
+        node_thread = threading.Thread(
+            target=run_multiple_nodes, args=(nodelist,))
         node_thread.daemon = True
         node_thread.start()
 
