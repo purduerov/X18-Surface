@@ -12,6 +12,7 @@
 - [Usage](#usage)
   - [Startup](#startup)
   - [User Interface](#user-interface)
+    - [Launching through Docker Compose](#launching-through-docker-compose)
     - [Using QtDesigner](#using-qtdesigner)
   - [Camera Streams](#camera-streams)
     - [Launching Streams](#launch-streams)
@@ -93,7 +94,13 @@ All of the information needed for use of the X16 ROV can be found below.
 
 #### Launching the ROS2 Network
 
-- For the locally run nodes, the launching the frontend should launch the frontend ROS nodes
+- Launch the gamepad node first on the frontend computer using the following command:
+  ```bash
+  ros2 run gamepad sender.py
+  ```
+  This should print out the statement 'ready'
+- For the rest of the locally run nodes, the launching the frontend should launch the frontend ROS nodes
+- The Front End should launch all pi nodes in the case of an issue run the below command on the pi.
 - To launch the pi nodes, run the following command:
   
   ```bash
@@ -106,6 +113,30 @@ All of the information needed for use of the X16 ROV can be found below.
 ```
 
 ### User Interface
+
+#### Launching through Docker Compose
+
+First, install docker. Installation instructions
+[here](https://docs.docker.com/engine/install/). In order to launch through 
+docker-compose, run the following in the X16-Surface folder:
+
+```bash
+
+sudo docker compose up
+```
+
+You may need to give the docker container permission to access X11, which you
+can do by running the following command:
+
+```bash
+xhost +local:
+```
+
+After editing robot code, run the following to rebuild code:
+
+```bash
+sudo docker compose build
+```
 
 #### Using QtDesigner 
 

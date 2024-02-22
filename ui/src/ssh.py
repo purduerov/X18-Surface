@@ -1,10 +1,11 @@
 import paramiko
 import netifaces
 import time
-import os 
+import os
 from dotenv import load_dotenv
 
 load_dotenv(dotenv_path=f"{os.getcwd()}/X16-Surface/.env")
+
 
 class ssh:
     def __init__(self):
@@ -35,7 +36,8 @@ class ssh:
             # establishing the ssh connection
             print("Establishing SSH connection...")
             self.ssh_client = paramiko.SSHClient()
-            self.ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            self.ssh_client.set_missing_host_key_policy(
+                paramiko.AutoAddPolicy())
             self.ssh_client.connect(
                 self.ssh_host,
                 username=self.ssh_username,
@@ -67,7 +69,9 @@ class ssh:
         # if self.pid_list is not None:
         #     for pid in self.pid_list:
         #         self.ssh_client.exec_command("kill " + pid)
-        self.ssh_client.exec_command("ps aux | grep ros2 | awk '{print $2}' | xargs kill -9 && tmux kill-session -t ros2_session")
+        if self.ssh_client is not None:
+            self.ssh_client.exec_command(
+                "ps aux | grep ros2 | awk '{print $2}' | xargs kill -9 && tmux kill-session -t ros2_session")
 
         # closing the ssh connection
         if self.ssh_client is not None:
@@ -90,11 +94,11 @@ class ssh:
     def launch_ros2_nodes(self, ros2_source_cmd, ros2_launch_cmd):
         try:
             print("Launching ROS2 nodes...")
-            
+
             # Concatenate the commands and run them in a single exec_command call
             full_command = f"tmux new-session -d -s ros2_session 'bash -c \"{ros2_source_cmd} && {ros2_launch_cmd}\"'"
             self.ssh_client.exec_command(full_command)
-            
+
             time.sleep(1)
             print("ROS2 nodes launched")
         except Exception as e:
@@ -118,4 +122,3 @@ class ssh:
 # gst-launch-1.0 -v udpsrc port=5600 ! application/x-rtp, payload=26 ! rtpjpegdepay ! jpegdec ! autovideosink
 
 # launch command for camera stream 2
-

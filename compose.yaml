@@ -1,0 +1,11 @@
+services:
+  surface:
+    build: .
+    network_mode: "host"
+    privileged: true
+    tty: true
+    volumes:
+      - .:/X16-Surface
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    environment:
+      DISPLAY:
