@@ -134,12 +134,12 @@ class GamepadNode(Node):
             self.gamepad_state[JOY_BUTTON[event.button]] = 0
 
         elif event.type == pygame.JOYHATMOTION:
-            if event.value[1] == -1:
-                if self.is_fine < 2:
-                    self.is_fine += 1
-            elif event.value[1] == 1:
+            if event.value[1] == 1:
+                if self.is_fine < 3:
+                    self.is_fine +=1
+            elif event.value[1] == -1:
                 if self.is_fine > 0:
-                    self.is_fine -= 1
+                    self.is_fine -=1
             else:
                 pass
             if event.value[0] == -1:
