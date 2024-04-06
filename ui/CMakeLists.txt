@@ -28,6 +28,8 @@ install(PROGRAMS
   src/subscribers/GamepadListener.py
   src/subscribers/GamepadSender.py
   src/subscribers/config.py
+  src/subscribers/TempListener.py
+  src/subscribers/LeakListener.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
