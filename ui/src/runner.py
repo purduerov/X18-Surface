@@ -10,6 +10,8 @@ from main import MainWindow
 from ThrustersSurface import ThrustersSurfaceNode
 from DepthSurface import DepthSurfaceNode
 from GamepadListener import GamepadSurfaceNode
+from TempListener import TempListenerNode
+from LeakListener import LeakListenerNode
 import multiprocessing
 
 from interface import Ui_MainWindow
@@ -47,7 +49,9 @@ def main():
         thrusters = ThrustersSurfaceNode(window=window)
         depth = DepthSurfaceNode(window=window)
         surfacegp = GamepadSurfaceNode(window=window)
-        nodelist = [thrusters, depth, surfacegp, gamepad]
+        temp = TempListenerNode(window=window)
+        leak = LeakListenerNode(window=window)
+        nodelist = [thrusters, depth, surfacegp, gamepad, temp, leak]
         node_thread = threading.Thread(
             target=run_multiple_nodes, args=(nodelist,))
         node_thread.daemon = True
