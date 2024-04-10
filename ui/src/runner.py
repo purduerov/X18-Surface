@@ -15,7 +15,6 @@ import multiprocessing
 from interface import Ui_MainWindow
 from ssh import ssh
 from streams import streams
-from gamepad import gamepad
 from GamepadSender import GamepadNode
 
 
@@ -36,9 +35,9 @@ def main():
         streams_comm = streams(connection)
         streams_comm.start()
 
-        #print("Connecting gamepad...")
+        print("Connecting gamepad...")
         # TODO: this
-        gamepad = GamepadNode()
+        #gamepad = GamepadNode()
 
         app = QApplication(sys.argv)
         window = MainWindow(ssh_comm)
@@ -47,7 +46,7 @@ def main():
         thrusters = ThrustersSurfaceNode(window=window)
         depth = DepthSurfaceNode(window=window)
         surfacegp = GamepadSurfaceNode(window=window)
-        nodelist = [thrusters, depth, surfacegp, gamepad]
+        nodelist = [thrusters, depth, surfacegp, ]#gamepad]
         node_thread = threading.Thread(
             target=run_multiple_nodes, args=(nodelist,))
         node_thread.daemon = True

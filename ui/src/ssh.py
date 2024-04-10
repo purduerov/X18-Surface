@@ -31,7 +31,7 @@ class ssh:
             ros2_launch_cmd = "ros2 launch rov_launch run_rov_launch.xml >> ~/ros2_ws/startup_logs/launch.txt"
             stream1_launch_cmd = f"gst-launch-1.0 -v v4l2src device={self.device_name1} ! video/x-h264, width=1920,height=1080! h264parse ! queue ! rtph264pay config-interval=10 pt=96 ! udpsink host={ip} port=5600 sync=false buffer-size=1048576 & echo $! > pid.txt"
             stream2_launch_cmd = f"gst-launch-1.0 -v v4l2src device={self.device_name2} ! video/x-h264, width=1920,height=1080! h264parse ! queue ! rtph264pay config-interval=10 pt=96 ! udpsink host={ip} port=5601 sync=false buffer-size=1048576 & echo $! > pid.txt"
-          #  print(stream1_launch_cmd)
+            #print(stream1_launch_cmd)
 
             # establishing the ssh connection
             print("Establishing SSH connection...")
@@ -69,9 +69,13 @@ class ssh:
         # if self.pid_list is not None:
         #     for pid in self.pid_list:
         #         self.ssh_client.exec_command("kill " + pid)
+        kill_gst_command = "ps aux | grep 'gst-launch-1.0' | awk '{print $2}' | xargs -r kill -9"
+        kill_ros_and_tmux_command = "ps aux | grep ros2 | awk '{print $2}' | xargs kill -9 && tmux kill-session -t ros2_session"
+        combined_kill_command = f"{kill_ros_and_tmux_command} && {kill_gst_command}"
         if self.ssh_client is not None:
-            self.ssh_client.exec_command(
-                "ps aux | grep ros2 | awk '{print $2}' | xargs kill -9 && tmux kill-session -t ros2_session")
+            self.ssh_client.exec_command(combined_kill_command)
+               
+               # "ps aux | grep ros2 | awk '{print $2}' | xargs kill -9 && tmux kill-session -t ros2_session")
 
         # closing the ssh connection
         if self.ssh_client is not None:
