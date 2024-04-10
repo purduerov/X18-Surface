@@ -144,10 +144,10 @@ def process_event(event):
 
     # DPAD buttons
     elif event.type == pygame.JOYHATMOTION:
-        if event.value[1] == -1:
-            if is_fine < 2:
+        if event.value[1] == 1:
+            if is_fine < 3:
                 is_fine +=1
-        elif event.value[1] == 1:
+        elif event.value[1] == -1:
             if is_fine > 0:
                 is_fine -=1
         else:

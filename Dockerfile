@@ -9,7 +9,7 @@ RUN apt-get -y install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev \
 		gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa \
 		gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 \
 		gstreamer1.0-pulseaudio xorg python3-pip ssh \
-		libxkbcommon-x11-0 libxcb* 
+		libxkbcommon-x11-0 libxcb* qtbase5-dev
 
 COPY requirements.txt requirements.txt
 
@@ -18,4 +18,6 @@ RUN pip3 install -r requirements.txt
 COPY . /X16-Surface/
 WORKDIR /X16-Surface/
 RUN bash /X16-Surface/build.sh
+
+WORKDIR /
 CMD bash /X16-Surface/run.sh

@@ -5,7 +5,6 @@ import rclpy
 from rclpy.node import Node
 from shared_msgs.msg import RovVelocityCommand
 from std_msgs.msg import Float64
-import json
 
 
 class GamepadSurfaceNode(Node):
