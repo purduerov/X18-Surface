@@ -39,7 +39,7 @@ def main():
 
         print("Connecting gamepad...")
         # TODO: this
-        #gamepad = GamepadNode()
+        gamepad = GamepadNode()
 
         app = QApplication(sys.argv)
         window = MainWindow(ssh_comm)
