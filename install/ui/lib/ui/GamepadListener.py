@@ -28,10 +28,13 @@ class GamepadSurfaceNode(Node):
 
         twist = data.twist
         linear = twist.linear
-
+        angular = twist.angular
         self.window.ui.xoutput.display(linear.x)
         self.window.ui.youtput.display(linear.y)
         self.window.ui.zoutput.display(linear.z)
+        self.window.ui.rotxoutput.display(linear.x)
+        self.window.ui.rotyoutput.display(linear.y)
+        self.window.ui.rotzoutput.display(angular.z)
         self.window.ui.finemodeoutput.display(fine)
 
 def main(args=None):

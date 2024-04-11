@@ -75,9 +75,13 @@ class ssh:
         # if self.pid_list is not None:
         #     for pid in self.pid_list:
         #         self.ssh_client.exec_command("kill " + pid)
+        kill_gst_command = "ps aux | grep 'gst-launch-1.0' | awk '{print $2}' | xargs -r kill -9"
+        kill_ros_and_tmux_command = "ps aux | grep ros2 | awk '{print $2}' | xargs kill -9 && tmux kill-session -t ros2_session"
+        combined_kill_command = f"{kill_ros_and_tmux_command} && {kill_gst_command}"
         if self.ssh_client is not None:
-            self.ssh_client.exec_command(
-                "ps aux | grep ros2 | awk '{print $2}' | xargs kill -9 && tmux kill-session -t ros2_session")
+            self.ssh_client.exec_command(combined_kill_command)
+               
+               # "ps aux | grep ros2 | awk '{print $2}' | xargs kill -9 && tmux kill-session -t ros2_session")
 
         # closing the ssh connection
         if self.ssh_client is not None:

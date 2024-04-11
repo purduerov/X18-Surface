@@ -19,10 +19,10 @@ class ThrustersSurfaceNode(Node):
         print("initialized")
 
     def thrust_callback(self, comm):
-        self.window.ui.bfloutput.setProperty("value", int(comm.thrusters[4])/255 * 100)
-        self.window.ui.bfroutput.setProperty("value", int(comm.thrusters[7])/255 * 100)
-        self.window.ui.bbloutput.setProperty("value", int(comm.thrusters[5])/255 * 100)
-        self.window.ui.bbroutput.setProperty("value", int(comm.thrusters[6])/255 * 100)
+        self.window.ui.tfloutput_2.setProperty("value", int(comm.thrusters[4])/255 * 100)
+        self.window.ui.tfroutput_2.setProperty("value", int(comm.thrusters[7])/255 * 100)
+        self.window.ui.tbloutput_2.setProperty("value", int(comm.thrusters[5])/255 * 100)
+        self.window.ui.tbroutput_2.setProperty("value", int(comm.thrusters[6])/255 * 100)
         self.window.ui.tfloutput.setProperty("value", int(comm.thrusters[0])/255 * 100)
         self.window.ui.tfroutput.setProperty("value", int(comm.thrusters[3])/255 * 100)
         self.window.ui.tbloutput.setProperty("value", int(comm.thrusters[1])/255 * 100)
