@@ -1,9 +1,0 @@
-/home/bboardle/src/X16-Surface/build/shared_msgs/rosidl_adapter/shared_msgs:msg/CanMsg.idl
-/home/bboardle/src/X16-Surface/build/shared_msgs/rosidl_adapter/shared_msgs:msg/ComMsg.idl
-/home/bboardle/src/X16-Surface/build/shared_msgs/rosidl_adapter/shared_msgs:msg/FinalThrustMsg.idl
-/home/bboardle/src/X16-Surface/build/shared_msgs/rosidl_adapter/shared_msgs:msg/ImuMsg.idl
-/home/bboardle/src/X16-Surface/build/shared_msgs/rosidl_adapter/shared_msgs:msg/RovVelocityCommand.idl
-/home/bboardle/src/X16-Surface/build/shared_msgs/rosidl_adapter/shared_msgs:msg/TempMsg.idl
-/home/bboardle/src/X16-Surface/build/shared_msgs/rosidl_adapter/shared_msgs:msg/ThrustCommandMsg.idl
-/home/bboardle/src/X16-Surface/build/shared_msgs/rosidl_adapter/shared_msgs:msg/ThrustStatusMsg.idl
-/home/bboardle/src/X16-Surface/build/shared_msgs/rosidl_adapter/shared_msgs:msg/ToolsCommandMsg.idl
