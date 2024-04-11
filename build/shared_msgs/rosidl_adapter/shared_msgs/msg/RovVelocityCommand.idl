@@ -1,0 +1,21 @@
+// generated from rosidl_adapter/resource/msg.idl.em
+// with input from shared_msgs/msg/RovVelocityCommand.msg
+// generated code does not contain a copyright notice
+
+#include "geometry_msgs/msg/Twist.idl"
+
+module shared_msgs {
+  module msg {
+    struct RovVelocityCommand {
+      geometry_msgs::msg::Twist twist;
+
+      uint8 is_fine;
+
+      boolean is_pool_centric;
+
+      boolean pitch_lock;
+
+      boolean depth_lock;
+    };
+  };
+};

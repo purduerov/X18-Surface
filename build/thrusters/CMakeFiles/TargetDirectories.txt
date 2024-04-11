@@ -1,0 +1,11 @@
+/home/bboardle/src/X16-Surface/build/thrusters/CMakeFiles/uninstall.dir
+/home/bboardle/src/X16-Surface/build/thrusters/CMakeFiles/thrusters_uninstall.dir
+/home/bboardle/src/X16-Surface/build/thrusters/CMakeFiles/ament_cmake_python_copy_thrusters.dir
+/home/bboardle/src/X16-Surface/build/thrusters/CMakeFiles/ament_cmake_python_build_thrusters_egg.dir
+/home/bboardle/src/X16-Surface/build/thrusters/CMakeFiles/test.dir
+/home/bboardle/src/X16-Surface/build/thrusters/CMakeFiles/edit_cache.dir
+/home/bboardle/src/X16-Surface/build/thrusters/CMakeFiles/rebuild_cache.dir
+/home/bboardle/src/X16-Surface/build/thrusters/CMakeFiles/list_install_components.dir
+/home/bboardle/src/X16-Surface/build/thrusters/CMakeFiles/install.dir
+/home/bboardle/src/X16-Surface/build/thrusters/CMakeFiles/install/local.dir
+/home/bboardle/src/X16-Surface/build/thrusters/CMakeFiles/install/strip.dir

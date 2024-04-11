@@ -1,0 +1,13 @@
+// generated from rosidl_adapter/resource/msg.idl.em
+// with input from shared_msgs/msg/ThrustStatusMsg.msg
+// generated code does not contain a copyright notice
+
+
+module shared_msgs {
+  module msg {
+    typedef float float__8[8];
+    struct ThrustStatusMsg {
+      float__8 status;
+    };
+  };
+};

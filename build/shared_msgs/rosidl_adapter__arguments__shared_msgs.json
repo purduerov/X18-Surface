@@ -1,0 +1,14 @@
+{
+  "package_name": "shared_msgs",
+  "non_idl_tuples": [
+    "/home/bboardle/src/X16-Surface/ros/shared_msgs:msg/CanMsg.msg",
+    "/home/bboardle/src/X16-Surface/ros/shared_msgs:msg/ComMsg.msg",
+    "/home/bboardle/src/X16-Surface/ros/shared_msgs:msg/FinalThrustMsg.msg",
+    "/home/bboardle/src/X16-Surface/ros/shared_msgs:msg/ImuMsg.msg",
+    "/home/bboardle/src/X16-Surface/ros/shared_msgs:msg/RovVelocityCommand.msg",
+    "/home/bboardle/src/X16-Surface/ros/shared_msgs:msg/TempMsg.msg",
+    "/home/bboardle/src/X16-Surface/ros/shared_msgs:msg/ThrustCommandMsg.msg",
+    "/home/bboardle/src/X16-Surface/ros/shared_msgs:msg/ThrustStatusMsg.msg",
+    "/home/bboardle/src/X16-Surface/ros/shared_msgs:msg/ToolsCommandMsg.msg"
+  ]
+}

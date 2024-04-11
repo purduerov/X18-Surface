@@ -10,6 +10,12 @@
     <height>847</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+    <horstretch>1</horstretch>
+    <verstretch>1</verstretch>
+   </sizepolicy>
+  </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
@@ -23,6 +29,12 @@
       <height>831</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+      <horstretch>1</horstretch>
+      <verstretch>1</verstretch>
+     </sizepolicy>
+    </property>
     <property name="frameShape">
      <enum>QFrame::StyledPanel</enum>
     </property>
@@ -30,13 +42,22 @@
      <enum>QFrame::Raised</enum>
     </property>
     <widget class="QFrame" name="thrusterwidget">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>851</width>
+       <width>811</width>
        <height>231</height>
       </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>1</horstretch>
+       <verstretch>1</verstretch>
+      </sizepolicy>
      </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
@@ -47,6 +68,12 @@
      <layout class="QGridLayout" name="gridLayout_5">
       <item row="0" column="0" colspan="2" alignment="Qt::AlignHCenter">
        <widget class="QLabel" name="label">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="text">
          <string>THRUSTERS</string>
         </property>
@@ -361,11 +388,17 @@
     <widget class="QFrame" name="velocitywidget">
      <property name="geometry">
       <rect>
-       <x>870</x>
+       <x>830</x>
        <y>10</y>
-       <width>141</width>
+       <width>161</width>
        <height>231</height>
       </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>1</horstretch>
+       <verstretch>1</verstretch>
+      </sizepolicy>
      </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
@@ -382,7 +415,14 @@
        </widget>
       </item>
       <item row="1" column="2">
-       <widget class="QLCDNumber" name="xoutput"/>
+       <widget class="QLCDNumber" name="xoutput">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
       </item>
       <item row="2" column="0">
        <widget class="QLabel" name="ylabel">
@@ -392,7 +432,14 @@
        </widget>
       </item>
       <item row="2" column="2">
-       <widget class="QLCDNumber" name="youtput"/>
+       <widget class="QLCDNumber" name="youtput">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
       </item>
       <item row="3" column="0" colspan="2">
        <widget class="QLabel" name="xlabel_2">
@@ -408,12 +455,19 @@
        </widget>
       </item>
       <item row="3" column="2">
-       <widget class="QLCDNumber" name="zoutput"/>
+       <widget class="QLCDNumber" name="zoutput">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
       </item>
       <item row="0" column="0" colspan="3" alignment="Qt::AlignHCenter">
        <widget class="QLabel" name="velocitylabel">
         <property name="text">
-         <string>VELOCITY</string>
+         <string>VELOCITY OUTPUT</string>
         </property>
        </widget>
       </item>
@@ -422,11 +476,17 @@
     <widget class="QFrame" name="depthwidget">
      <property name="geometry">
       <rect>
-       <x>1170</x>
-       <y>90</y>
-       <width>241</width>
+       <x>180</x>
+       <y>330</y>
+       <width>221</width>
        <height>71</height>
       </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>1</horstretch>
+       <verstretch>1</verstretch>
+      </sizepolicy>
      </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
@@ -443,18 +503,31 @@
        </widget>
       </item>
       <item>
-       <widget class="QLCDNumber" name="depthoutput"/>
+       <widget class="QLCDNumber" name="depthoutput">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
     <widget class="QFrame" name="finemodewidget">
      <property name="geometry">
       <rect>
-       <x>1170</x>
-       <y>170</y>
-       <width>241</width>
+       <x>180</x>
+       <y>410</y>
+       <width>221</width>
        <height>71</height>
       </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>1</horstretch>
+       <verstretch>1</verstretch>
+      </sizepolicy>
      </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
@@ -471,18 +544,31 @@
        </widget>
       </item>
       <item>
-       <widget class="QLCDNumber" name="finemodeoutput"/>
+       <widget class="QLCDNumber" name="finemodeoutput">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
     <widget class="QFrame" name="pnumaticswidget">
      <property name="geometry">
       <rect>
-       <x>870</x>
+       <x>640</x>
        <y>250</y>
        <width>291</width>
-       <height>151</height>
+       <height>231</height>
       </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>1</horstretch>
+       <verstretch>1</verstretch>
+      </sizepolicy>
      </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
@@ -520,24 +606,51 @@
        </widget>
       </item>
       <item row="2" column="0">
-       <widget class="QLCDNumber" name="line1output"/>
+       <widget class="QLCDNumber" name="line1output">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QLCDNumber" name="line2output"/>
+       <widget class="QLCDNumber" name="line2output">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
       </item>
       <item row="2" column="2">
-       <widget class="QLCDNumber" name="line3output"/>
+       <widget class="QLCDNumber" name="line3output">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
     <widget class="QFrame" name="rotationwidget">
      <property name="geometry">
       <rect>
-       <x>1020</x>
+       <x>1000</x>
        <y>10</y>
-       <width>141</width>
+       <width>161</width>
        <height>231</height>
       </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>1</horstretch>
+       <verstretch>1</verstretch>
+      </sizepolicy>
      </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
@@ -554,7 +667,14 @@
        </widget>
       </item>
       <item row="1" column="2">
-       <widget class="QLCDNumber" name="rotxoutput"/>
+       <widget class="QLCDNumber" name="rotxoutput">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
       </item>
       <item row="2" column="0">
        <widget class="QLabel" name="rotylabel">
@@ -564,7 +684,14 @@
        </widget>
       </item>
       <item row="2" column="2">
-       <widget class="QLCDNumber" name="rotyoutput"/>
+       <widget class="QLCDNumber" name="rotyoutput">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
       </item>
       <item row="3" column="0" colspan="2">
        <widget class="QLabel" name="rotzlabel">
@@ -580,12 +707,25 @@
        </widget>
       </item>
       <item row="3" column="2">
-       <widget class="QLCDNumber" name="rotzoutput"/>
+       <widget class="QLCDNumber" name="rotzoutput">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
       </item>
-      <item row="0" column="0" colspan="3" alignment="Qt::AlignHCenter">
+      <item row="0" column="0" colspan="3">
        <widget class="QLabel" name="rotationlabel">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="text">
-         <string>ROTATION</string>
+         <string>ROTATION OUTPUT</string>
         </property>
        </widget>
       </item>
@@ -594,11 +734,17 @@
     <widget class="QFrame" name="leakwidget">
      <property name="geometry">
       <rect>
-       <x>1170</x>
-       <y>10</y>
-       <width>241</width>
+       <x>180</x>
+       <y>250</y>
+       <width>221</width>
        <height>71</height>
       </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>1</horstretch>
+       <verstretch>1</verstretch>
+      </sizepolicy>
      </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
@@ -615,18 +761,31 @@
        </widget>
       </item>
       <item>
-       <widget class="QLCDNumber" name="leakoutput"/>
+       <widget class="QLCDNumber" name="leakoutput">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
     <widget class="QFrame" name="tempwidget">
      <property name="geometry">
       <rect>
-       <x>1170</x>
+       <x>410</x>
        <y>250</y>
-       <width>241</width>
+       <width>221</width>
        <height>71</height>
       </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>1</horstretch>
+       <verstretch>1</verstretch>
+      </sizepolicy>
      </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
@@ -643,18 +802,31 @@
        </widget>
       </item>
       <item>
-       <widget class="QLCDNumber" name="tempoutput"/>
+       <widget class="QLCDNumber" name="tempoutput">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
     <widget class="QFrame" name="offsetwidget">
      <property name="geometry">
       <rect>
-       <x>1170</x>
+       <x>410</x>
        <y>330</y>
-       <width>241</width>
-       <height>71</height>
+       <width>221</width>
+       <height>151</height>
       </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>1</horstretch>
+       <verstretch>1</verstretch>
+      </sizepolicy>
      </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
@@ -662,16 +834,154 @@
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_8">
-      <item alignment="Qt::AlignHCenter">
+     <layout class="QGridLayout" name="gridLayout_4">
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_18">
+        <property name="text">
+         <string>ADD º</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QDoubleSpinBox" name="offsetinput">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_19">
+        <property name="text">
+         <string>SUBTRACT º</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QDoubleSpinBox" name="offsetinput_2">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0" colspan="2" alignment="Qt::AlignHCenter">
        <widget class="QLabel" name="offsetlabel">
         <property name="text">
          <string>TEMP OFFSET</string>
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QDoubleSpinBox" name="offsetinput"/>
+     </layout>
+    </widget>
+    <widget class="QPushButton" name="pushButton">
+     <property name="geometry">
+      <rect>
+       <x>1170</x>
+       <y>10</y>
+       <width>241</width>
+       <height>81</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>1</horstretch>
+       <verstretch>1</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Start Camera Streams</string>
+     </property>
+    </widget>
+    <widget class="QFrame" name="velocitywidget_2">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>250</y>
+       <width>161</width>
+       <height>231</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>1</horstretch>
+       <verstretch>1</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_8">
+      <item row="1" column="0">
+       <widget class="QLabel" name="xlabel_3">
+        <property name="text">
+         <string>Xº</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QLCDNumber" name="xoutput_2">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="ylabel_2">
+        <property name="text">
+         <string>Yº</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QLCDNumber" name="youtput_2">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0" colspan="2">
+       <widget class="QLabel" name="xlabel_4">
+        <property name="maximumSize">
+         <size>
+          <width>16</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Zº</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="2">
+       <widget class="QLCDNumber" name="zoutput_2">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0" colspan="3" alignment="Qt::AlignHCenter">
+       <widget class="QLabel" name="velocitylabel_2">
+        <property name="text">
+         <string>ROV ANGLE </string>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>

@@ -1,0 +1,6 @@
+setup.py
+thrusters/__init__.py
+thrusters.egg-info/PKG-INFO
+thrusters.egg-info/SOURCES.txt
+thrusters.egg-info/dependency_links.txt
+thrusters.egg-info/top_level.txt
