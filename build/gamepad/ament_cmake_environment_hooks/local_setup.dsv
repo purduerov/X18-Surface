@@ -1,0 +1,3 @@
+source;share/gamepad/environment/ament_prefix_path.sh
+source;share/gamepad/environment/path.sh
+source;share/gamepad/environment/pythonpath.sh

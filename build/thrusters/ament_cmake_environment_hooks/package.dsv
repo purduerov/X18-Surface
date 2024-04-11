@@ -1,0 +1,4 @@
+source;share/thrusters/local_setup.bash
+source;share/thrusters/local_setup.dsv
+source;share/thrusters/local_setup.sh
+source;share/thrusters/local_setup.zsh
