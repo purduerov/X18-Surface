@@ -39,7 +39,7 @@ def main():
 
         print("Connecting gamepad...")
         # TODO: this
-        #gamepad = GamepadNode()
+        gamepad = GamepadNode()
 
         app = QApplication(sys.argv)
         window = MainWindow(ssh_comm)
@@ -50,7 +50,7 @@ def main():
         surfacegp = GamepadSurfaceNode(window=window)
         temp = TempListenerNode(window=window)
         leak = LeakListenerNode(window=window)
-        nodelist = [thrusters, depth, surfacegp,  temp, leak] #gamepad,
+        nodelist = [thrusters, depth, surfacegp, gamepad, temp, leak]
         node_thread = threading.Thread(
             target=run_multiple_nodes, args=(nodelist,))
         node_thread.daemon = True
