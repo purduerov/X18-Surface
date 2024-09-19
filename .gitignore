@@ -6,3 +6,4 @@ build
 install
 .vscode/
 .idea/
+.DS_Store
