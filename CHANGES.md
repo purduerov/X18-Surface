@@ -37,7 +37,7 @@ After the launch command, the interface should be accessable at `http://127.0.0.
 - M3 MacBook Pro (ARM) - MacOS Sequoia 15.0 (9/19/2024)
 
 ### Known issues
-- None yet!
+- You cannot access any hardware yet (gamepad, etc.)
 
 ### Updates
 
