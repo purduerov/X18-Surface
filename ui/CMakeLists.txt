@@ -28,7 +28,7 @@ install(PROGRAMS
 
 install(DIRECTORY
   src/templates
-  DESTINATION share/${PROJECT_NAME}/templates
+  DESTINATION lib/${PROJECT_NAME}
 )
 
 if(BUILD_TESTING)

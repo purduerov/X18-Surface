@@ -13,4 +13,6 @@ for dir in "${directories[@]}"; do
     fi
 done
 
+source /opt/ros/humble/setup.bash
+
 echo "Cleanup complete."
