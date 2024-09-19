@@ -6,3 +6,4 @@ paramiko==3.4.0
 pygame==2.5.2
 python-dotenv==1.0.1
 setuptools==59.6.0
+flask==3.0.3

@@ -16,8 +16,19 @@ find_package(rclpy REQUIRED)
 
 ament_python_install_package(${PROJECT_NAME})
 
+install(DIRECTORY
+  launch
+  DESTINATION share/${PROJECT_NAME}/
+)
+
 install(PROGRAMS
+  src/app.py
   DESTINATION lib/${PROJECT_NAME}
+)
+
+install(DIRECTORY
+  src/templates
+  DESTINATION share/${PROJECT_NAME}/templates
 )
 
 if(BUILD_TESTING)

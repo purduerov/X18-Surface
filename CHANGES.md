@@ -1,31 +1,45 @@
-# Changes for X17-Surface so far on this branch
+# X17-Surface PHOENIX BRANCH
 
-This is the phoenix branch for X17-Surface.
+This is the phoenix branch for X17-Surface. It is a rewrite of the previous X17-Surface codebase, with a focus on readability and maintainability. I will try to remove as much unnecessary complexity as possible while still maintaining the core functionality.
 
-It is a rewrite of the previous X17-Surface codebase, with a focus on readability, maintainability, and performance.
+> [!WARNING]
+> This branch is still a work in progress and is not yet fully functional. Do not merge into main until sufficient testing has been completed.
 
-## New structure
+### Changes Made
 
-##### 1. New .devcontainer setup
+#### 1. New .devcontainer setup
 This will allow for easier development in a consistent environment.
 Requires the following components to be installed on your machine:
-- Docker
 - Docker Desktop
 - Visual Studio Code
 - Visual Studio Code Dev Containers extension
 
 When all of the above are installed, you can open the project in Visual Studio Code and it will prompt you to reopen in a container. If you are not prompted, you can use the command palette (Ctrl+Shift+P) and select "Dev-Containers: Rebuild and Reopen in Container".
 
-##### 2. xml -> yaml conversion
-The configuration files have been converted from XML to YAML format for better readability and ease of use.
+#### 2. xml -> yaml conversion
+The configuration files have been converted from XML to YAML format for better readability and ease of use. I plan on doing the same for the CORE repo as well.
 
-##### 3. New script directory
-A new directory has been created for scripts, making it easier to manage and organize scripts related to the project.
+#### 3. New script directory
+A new directory has been created for scripts, making it easier to manage and organize scripts related to the project. (Running, building, etc.)
 
-##### 4. New launch configuration
+#### 4. New launch configuration
 There is a new launch configuration. It is intended to create more parity between the surface and core functionality. This can be found in the `ui` directory. Now to launch the surface, you can use the following command (Does not work yet, just a template):
 
 ```
 ros2 launch ui surface_launch.yaml
 ```
 > Note: Make sure to build and source your workspace before running the launch command.
+
+After the launch command, the interface should be accessable at `http://127.0.0.1:5000`. I have run into some issues when trying to access the interface via `localhost` (which is where vscode will try to send you if you click on the link), so it is currently recommended to use the IP address directly.
+
+### Known working platforms
+> Format: Device (Architecture) - OS Version (Date tested)
+- M3 MacBook Pro (ARM) - MacOS Sequoia 15.0 (9/19/2024)
+
+### Known issues
+- None yet!
+
+### Updates
+
+9/19/2024: Initial commit. Implemented new .devcontainer setup, converted XML to YAML, created new script directory, and added new launch configuration. 
+The only nodes that are launched with the above launch command are the 'ui' node (Flask application) and the gamepad. I have not tested with the actual hardware yet so who knows if it will work.
