@@ -245,7 +245,7 @@ if __name__ == '__main__':
     
 
     # Create the publishers
-    pub = node.create_publisher(RovVelocityCommand, 'rov_velocity', 10)
+    pub = node.create_publisher(RovVelocityCommand, '/rov_velocity', 10)
     pub_tools = node.create_publisher(ToolsCommandMsg, 'tools', 10)
 
     # Create the timers
