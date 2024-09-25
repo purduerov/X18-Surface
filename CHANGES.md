@@ -30,7 +30,7 @@ ros2 launch ui surface_launch.yaml
 ```
 > Note: Make sure to build and source your workspace before running the launch command.
 
-After the launch command, the interface should be accessable at `http://127.0.0.1:5000`. I have run into some issues when trying to access the interface via `localhost` (which is where vscode will try to send you if you click on the link), so it is currently recommended to use the IP address directly. I have only had this issue on MacOS so far.
+After the launch command, the interface should be accessible at `http://127.0.0.1:5000`. I have run into some issues when trying to access the interface via `localhost` (which is where vscode will try to send you if you click on the link), so it is currently recommended to use the IP address directly. I have only had this issue on MacOS so far.
 
 ### Known working platforms
 > Format: Device (Architecture) - OS Version (Date tested)
