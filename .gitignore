@@ -2,3 +2,7 @@ __pycache__/
 ui/__pycache__
 log/
 .env
+build
+install
+.vscode/
+.idea/

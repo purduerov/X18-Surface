@@ -17,19 +17,6 @@ find_package(rclpy REQUIRED)
 ament_python_install_package(${PROJECT_NAME})
 
 install(PROGRAMS
-  src/runner.py
-  src/streams.py
-  src/ssh.py
-  src/main.py
-  src/interface.py
-  src/gamepad.py
-  src/subscribers/ThrustersSurface.py
-  src/subscribers/DepthSurface.py
-  src/subscribers/GamepadListener.py
-  src/subscribers/GamepadSender.py
-  src/subscribers/config.py
-  src/subscribers/TempListener.py
-  src/subscribers/LeakListener.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
