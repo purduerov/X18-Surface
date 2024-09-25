@@ -17,7 +17,6 @@ import multiprocessing
 from interface import Ui_MainWindow
 from ssh import ssh
 from streams import streams
-from gamepad import gamepad
 from GamepadSender import GamepadNode
 
 
@@ -38,7 +37,7 @@ def main():
         streams_comm = streams(connection)
         streams_comm.start()
 
-        #print("Connecting gamepad...")
+        print("Connecting gamepad...")
         # TODO: this
         gamepad = GamepadNode()
 
