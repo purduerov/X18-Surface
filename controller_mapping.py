@@ -6,6 +6,45 @@ import time
 #axis 2 rotation
 
 
+JOY_AXIS = {
+    'X':1, 'Y':0, 'Z':2
+}
+
+JOY_BUTTON = {
+    'trigger':0, '2':1, '3':2, '4':3, '5':4, '6':5, '7':6, '8':7, '9':8, '10':9, '11':10, '12':11
+}
+
+JOY_BUTTON_KEY = {
+    0:'trigger', 1:'2', 2:'3', 3:'4', 4:'5', 5:'6', 6:'7', 7:'8', 8:'9', 9:'10', 10:'11', 11:'12'
+}
+
+
+axis_state = {
+    'X':0.0,
+    'Y':0.0,
+    'Z':0.0
+}
+
+
+button_state = {
+    'trigger':0,
+    '2':0,
+    '3':0,
+    '4':0,
+    '5':0,
+    '6':0,
+    '7':0,
+    '8':0,
+    '9':0,
+    '10':0,
+    '11':0,
+    '12':0
+}
+no_controller = False
+wtf = False
+
+
+
 def init_pygame():
     '''Initializes pygame and the joystick'''
     global controller
@@ -13,47 +52,50 @@ def init_pygame():
     pygame.joystick.init()
     controller = pygame.joystick.Joystick(0)
 
-def check_axis():
-    print(controller.get_axis(0))
-    print(controller.get_axis(1))
-    print(controller.get_axis(2))
 
-def check_buttons():
-    num_of_buttons = controller.get_numbuttons()
-    for i in range(0, num_of_buttons):
-        print(controller.get_button(i))
-def check_button():
-    print(controller.get_numbuttons())
+def check_event():
+    for event in pygame.event.get():
+        wtf = False
+        if event.type == pygame.JOYAXISMOTION:
+            axis_state[event.axis] = event.value
+        elif event.type == pygame.JOYBUTTONDOWN:
+            button_state[event.button] = 1
+        elif event.type == pygame.JOYBUTTONUP:
+            button_state[event.button] = 0
+        elif event.type == pygame.JOYDEVICEREMOVED:
+            no_controller = True
+            pygame.quit()
+            sys.exit(0)
+            state_logger()
+        else:
+            wtf = True
 
-def check_joystick():
-    pygame.init()
-    pygame.joystick.init()
 
-    joystick_count  = pygame.joystick.get_count()
+def state_logger():
+    i = 0
+    for axis in axis_state:
+        print(f"Axis{i} value: {axis}", end = '')
+        i = i + 1
+    i = 0
+    print()
+    for button in button_state:
+        print(f"Button{i} value: {button}", end = '')
+        i = i + 1
+    print()
+    if no_controller == True :
+        print("No controller connected")
+    if wtf == True :
+        print("Unkown event")
 
-    if joystick_count == 0:
-        print("no joystick")
 
-        pygame.quit()
-        sys.exit()
-    else:
-        joystick = pygame.joystick.Joystick(0)
-        joystick.init()
-        print(f"Joystick detected: {joystick.get_name()}")
+
+
 
 
 if __name__ == '__main__':
     init_pygame()
-    i = 0
-    while i < 30:
-        
-        check_axis()
+    while(True):
+        check_event()
+        state_logger()
         pygame.time.wait(1000)
-        i = i + 1
-
-    pygame.quit()
-    sys.exit()
-
-
-
-        
+    
