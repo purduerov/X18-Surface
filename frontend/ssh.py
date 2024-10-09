@@ -3,55 +3,37 @@ import os
 from dotenv import load_dotenv
 import time
 
-# SSH details
-hostname = "192.168.1.4"
-username = "pi"
-password = "pie"
+load_dotenv(dotenv_path=f"/workspaces/X17-Surface/.env")
 
-# TODO 
-    # Make closing a function
-    # Function for establishing camera stream connections 
-    # Function for Gamepad Connections
-
-# Create an SSH client
-ssh_client = paramiko.SSHClient()
-# Add device to known hosts so it can connect.
-# if not present gives error - AttributeError: 'NoneType' object has no attribute 'time'
-ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-
-try:
-    # Connect to the host
-    ssh_client.connect(hostname, username=username, password=password)
-
-    # Execute a command
-    stdin, stdout, stderr = ssh_client.exec_command('ls')
-
-    # Print the output
-    print(stdout.read().decode())
-finally:
-    # Always close the SSH client explicitly
-    ssh_client.close()
+# # TODO 
+#     # Make closing a function
+#     # Function for establishing camera stream connections 
+#     # Function for Gamepad Connections
 
 
 class Ssh:
     def __init__(self):
         self.ssh_hostname = os.getenv("HOST_IP") # The IP address of the PI
+        print(self.ssh_hostname)
         self.ssh_password = os.getenv("HOST_PASSWORD") # The Password of the PI
+        print(self.ssh_password)
         self.ssh_username = os.getenv("HOST_USERNAME") # The username of the PI
+        print(self.ssh_username)
+
         self.ssh_client = None # Variable for the SSH client
         self.connection = None # 
 
         
     def connect(self):
+        # Create an SSH client
+        
         try:
-            # Create an SSH client
-            ssh_client = paramiko.SSHClient()
+            self.ssh_client = paramiko.SSHClient()
             # Add device to known hosts so it can connect.
             # if not present gives error - AttributeError: 'NoneType' object has no attribute 'time'
-            ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            self.ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
             # Connect to the host
-            ssh_client.connect(self.ssh_hostname, username=self.ssh_username, password=self.ssh_password)
-
+            self.ssh_client.connect(self.ssh_hostname, username=self.ssh_username, password=self.ssh_password)
             if self.ssh_client is not None: 
                 print("SSH Connection Established")
                 self.connection = True
@@ -81,6 +63,7 @@ def main():
     ssh.connect()
     time.sleep(10)
     ssh.close()
+    
 
 if __name__ == "__main__":
     main()
