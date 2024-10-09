@@ -20,7 +20,6 @@ jobs:
       # Set up ROS 2
       - name: Set up ROS 2
         run: |
-
           locale  # Set the locale
           sudo apt update && sudo apt install locales
           sudo locale-gen en_US en_US.UTF-8
@@ -46,3 +45,10 @@ jobs:
 
           # Source the ROS 2 setup script
           source /opt/ros/jazzy/setup.bash
+
+      # Build the workspace
+      - name: Build workspace
+        run: |
+          colcon build
+
+      # Run tests (to be implemented)
