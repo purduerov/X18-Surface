@@ -21,12 +21,10 @@ jobs:
       - name: Set up ROS 2
         run: |
 
-        locale  # Set the locale
         sudo apt update && sudo apt install locales
         sudo locale-gen en_US en_US.UTF-8
         sudo update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
         export LANG=en_US.UTF-8
-        locale  # verify settings
 
         # Ensure the Ubuntu Universe repository is enabled
         sudo apt install software-properties-common
