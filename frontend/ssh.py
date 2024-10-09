@@ -20,12 +20,11 @@ class Ssh:
         self.ssh_username = os.getenv("HOST_USERNAME") # The username of the PI
         print(self.ssh_username)
 
-        self.ssh_client = None # Variable for the SSH client
-        self.connection = None # 
+        self.ssh_client = None # Variable for the SSH client object
+        self.connection = None # Variable for checking if connection is present
 
         
     def connect(self):
-        # Create an SSH client
         
         try:
             self.ssh_client = paramiko.SSHClient()
@@ -58,15 +57,19 @@ class Ssh:
             print("SSH connection closed")
 
 
-def main():
-    ssh = Ssh()
-    ssh.connect()
-    time.sleep(10)
-    ssh.close()
+###############################
+### Testing File Code Below ### 
+###############################
+
+# def main():
+#     ssh = Ssh()
+#     ssh.connect()
+#     time.sleep(10)
+#     ssh.close()
     
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
 
 
         
