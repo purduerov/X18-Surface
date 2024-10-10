@@ -12,7 +12,8 @@ load_dotenv(dotenv_path=f"/workspaces/X17-Surface/.env")
 
 
 class Ssh:
-    def __init__(self):
+
+    def __init__(self, node):
         self.ssh_hostname = os.getenv("HOST_IP") # The IP address of the PI
         print(self.ssh_hostname)
         self.ssh_password = os.getenv("HOST_PASSWORD") # The Password of the PI
@@ -22,6 +23,7 @@ class Ssh:
 
         self.ssh_client = None # Variable for the SSH client object
         self.connection = None # Variable for checking if connection is present
+        self.node = node
 
         
     def connect(self):
@@ -34,8 +36,11 @@ class Ssh:
             # Connect to the host
             self.ssh_client.connect(self.ssh_hostname, username=self.ssh_username, password=self.ssh_password)
             if self.ssh_client is not None: 
+                self.node.get_logger().info("SSH Connection Established")
+
                 print("SSH Connection Established")
                 self.connection = True
+                self.ssh_client.exec_command("ls")
             else:
                 print("ERROR: SSH Connection Failed")
                 

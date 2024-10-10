@@ -23,6 +23,7 @@ install(DIRECTORY
 
 install(PROGRAMS
   src/app.py
+  src/ssh.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
