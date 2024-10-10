@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 
+'''WIP: WILL NOT RUN -Lucas'''
+
 import pygame
-import sys
+import syss
 import time
 
 #ROS
@@ -49,19 +51,19 @@ def getMessage():
 
     t = Twist()
 
-    t.linear.x = -(gamepad_state['LSY'] * SCALE_TRANSLATIONAL_X + TRIM_X) * REVERSE
-    t.linear.y = -(gamepad_state['LSX'] * SCALE_TRANSLATIONAL_Y + TRIM_Y) * REVERSE
+    t.linear.x = -(gamepad_state['X'] * SCALE_TRANSLATIONAL_X + TRIM_X) * REVERSE
+    t.linear.y = -(gamepad_state['Y'] * SCALE_TRANSLATIONAL_Y + TRIM_Y) * REVERSE
     t.linear.z = ((gamepad_state['RT'] - gamepad_state['LT']) / 2.0) * SCALE_TRANSLATIONAL_Z + TRIM_Z
 
-    if gamepad_state['LB'] == 1:
+    if gamepad_state['3'] == 1:
         x = 1 * SCALE_ROTATIONAL_X
-    elif gamepad_state['RB'] == 1:
+    elif gamepad_state['3'] == 1:
         x = -1 * SCALE_ROTATIONAL_X
     else:
         x = 0.0
 
     t.angular.x = -x
-    t.angular.y = (-gamepad_state['RSY'] * SCALE_ROTATIONAL_Y) * REVERSE
+    t.angular.y = (-gamepad_state['Z'] * SCALE_ROTATIONAL_Y) * REVERSE
     t.angular.z = -gamepad_state['RSX'] * SCALE_ROTATIONAL_Z
 
     new_msg = RovVelocityCommand()
@@ -86,61 +88,34 @@ def getTools():
 
 def correct_raw(raw, abbv):
     '''Corrects the raw value from the gamepad to be in the range [-1.0, 1.0]'''
-    # Separate the sign from the value
-    sign = (raw >= 0) * 2 - 1
-    raw = abs(raw)
-
-    # Check if the input is a trigger or a stick
-    if abbv == 'LT' or abbv == 'RT':
-        dead_zone = TRIGGER_DEAD_ZONE
-        value_range = TRIGGER_RANGE
+    if abs(raw) > AXIS_RANGE:
+        raw  = raw/abs(raw)
+    
+    if abbv == 'WHEEL':
+        return raw
     else:
-        dead_zone = STICK_DEAD_ZONE
-        value_range = STICK_RANGE
-
-    if raw < dead_zone:
-        return 0.0
-
-    # Remove dead zone and scale the value
-    raw -= dead_zone
-    raw *= value_range / (value_range - dead_zone)
-    raw = 1.0 if raw > value_range else raw / value_range
-    corrected = round(raw, 3)
-    corrected *= sign
-    return corrected
+        if raw <= STICK_DEAD_ZONE:
+            raw  = 0
+        return raw
 
 
 def process_event(event):
     '''Processes a pygame event'''
     global tools
     global is_fine
-    global gamepad_state
+    global button_state
+    global axis_state
     global is_pool_centric
     global depth_lock
     global pitch_lock
 
     # Button pressed down events
     if event.type == pygame.JOYBUTTONDOWN:
-        gamepad_state[JOY_BUTTON[event.button]] = 1
-        if event.button == JOY_BUTTON_KEY['A']:
-            tools[0] = not tools[0]
-
-        elif event.button == JOY_BUTTON_KEY['B']:
-            tools[1] = not tools[1]
-
-        elif event.button == JOY_BUTTON_KEY['X']:
-            tools[2] = not tools[2]
+        button_state[JOY_BUTTON_KEY[event.button]] = 1
         
-        elif event.button == JOY_BUTTON_KEY['Y'] and LOCKOUT:
-            tools[3] = not tools[3]
-        
-        elif event.button == JOY_BUTTON_KEY['MENU']:
-            is_pool_centric = not is_pool_centric
-        
-
     # Button released events    
     elif event.type == pygame.JOYBUTTONUP:
-        gamepad_state[JOY_BUTTON[event.button]] = 0
+        button_state[JOY_BUTTON_KEY[event.button]] = 0
 
     # DPAD buttons
     elif event.type == pygame.JOYHATMOTION:
@@ -162,7 +137,7 @@ def process_event(event):
 
     # Joysticks
     elif event.type == pygame.JOYAXISMOTION:
-        gamepad_state[JOY_AXIS[event.axis]] = correct_raw(event.value, JOY_AXIS[event.axis])
+        axis_state[JOY_AXIS_KEY[event.axis]] = correct_raw(event.value, JOY_AXIS_KEY[event.axis])
 
     
     # If the gamepad is disconnected, try to reconnect it
