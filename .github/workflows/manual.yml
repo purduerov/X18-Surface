@@ -1,7 +1,7 @@
 name: X17-Surface Build Test
 
-# Controls when the action will run. Workflow runs when manually triggered using the UI
-# or API.
+# Controls when the action will run. 
+# Workflow runs when manually triggered using the UI, or when a push or pull request is made to the main branch
 on:
   push:
     branches:
@@ -11,15 +11,30 @@ on:
       - main
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "greet"
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    # Runs a single command using the runners shell
-    - name: Send greeting
-      run: echo "Test run of the new CI"
+      # Check out the repository
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Set up ROS 2 (Jazzy)
+      - name: Set up ROS 2
+        uses: ros-tooling/setup-ros2@main
+        with:
+          ros-distro: jazzy
+
+      # Install dependencies from requirements.txt
+      - name: Install dependencies
+        run: |
+          sudo apt-get -y update
+          sudo apt-get 0y install python3-pip
+          pip3 install -r requirements.txt
+
+      # Success message
+      - name: Success
+        run: echo "Success!"
+      
