@@ -25,7 +25,7 @@ jobs:
       - name: Set up ROS 2
         uses: ros-tooling/setup-ros@v0.7
         with:
-          required-ros-distributions: jazzy
+          required-ros-distributions: humble
 
       # Install dependencies from requirements.txt
       - name: Install dependencies
