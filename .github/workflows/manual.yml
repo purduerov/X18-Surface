@@ -23,7 +23,7 @@ jobs:
 
       # Set up ROS 2 (Jazzy)
       - name: Set up ROS 2
-        uses: ros-tooling/setup-ros2@main
+        uses: ros-tooling/setup-ros@v0.7
         with:
           ros-distro: jazzy
 
@@ -31,7 +31,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get -y update
-          sudo apt-get 0y install python3-pip
+          sudo apt-get -y install python3-pip
           pip3 install -r requirements.txt
 
       # Success message
