@@ -7,12 +7,36 @@ STICK_RANGE = 1.0
 
 # Mapping of JoyAxisMotion events to gamepad_state keys
 # The number is the axis given by pygame
-JOY_AXIS = {1: 'LSY', 0: 'LSX', 4: 'RSY', 3: 'RSX', 2: 'LT', 5: 'RT'}
+JOY_AXIS = {1: "LSY", 0: "LSX", 4: "RSY", 3: "RSX", 2: "LT", 5: "RT"}
 
 # Mapping of JoyButton events to gamepad_state keys
 # The number is the button given by pygame
-JOY_BUTTON = {3: 'Y', 1: 'B', 0: 'A', 2: 'X', 9: 'LSZ', 10: 'RSZ', 4: 'LB', 5: 'RB', 8: 'XBOX', 6: 'START', 7: 'MENU'}
-JOY_BUTTON_KEY = {'Y': 3, 'B': 1, 'A': 0, 'X': 2, 'LSZ': 9, 'RSZ': 10, 'LB': 4, 'RB': 5, 'XBOX': 8, 'START': 6, 'MENU': 7}
+JOY_BUTTON = {
+    3: "Y",
+    1: "B",
+    0: "A",
+    2: "X",
+    9: "LSZ",
+    10: "RSZ",
+    4: "LB",
+    5: "RB",
+    8: "XBOX",
+    6: "START",
+    7: "MENU",
+}
+JOY_BUTTON_KEY = {
+    "Y": 3,
+    "B": 1,
+    "A": 0,
+    "X": 2,
+    "LSZ": 9,
+    "RSZ": 10,
+    "LB": 4,
+    "RB": 5,
+    "XBOX": 8,
+    "START": 6,
+    "MENU": 7,
+}
 
 gamepad_state = {
     "LSX": 0.0,
