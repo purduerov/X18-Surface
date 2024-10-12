@@ -3,6 +3,9 @@ MIN_ABS_DIFFERENCE = 0
 STICK_DEAD_ZONE = 0.09
 AXIS_RANGE = 1.0
 
+
+
+
 '''x-axis is foward and backward, y-axis is side to side, z-axis is twisting'''
 JOY_AXIS = {
     'X':1, 'Y':0, 'Z':2, 'WHEEL':3

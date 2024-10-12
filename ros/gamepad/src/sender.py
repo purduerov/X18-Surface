@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 
-'''WIP: WILL NOT RUN -Lucas'''
-
 import pygame
-import syss
+import sys
 import time
 
 #ROS
@@ -43,7 +41,9 @@ GAMEPAD_TIMEOUT = 20 # seconds
 
 def getMessage():
     '''Returns a RovVelocityCommand message based on the current gamepad state'''
-    global gamepad_state
+    global button_state
+    global axis_state
+    global hat_state
     global is_fine
     global is_pool_centric
     global pitch_lock
@@ -51,20 +51,22 @@ def getMessage():
 
     t = Twist()
 
-    t.linear.x = -(gamepad_state['X'] * SCALE_TRANSLATIONAL_X + TRIM_X) * REVERSE
-    t.linear.y = -(gamepad_state['Y'] * SCALE_TRANSLATIONAL_Y + TRIM_Y) * REVERSE
-    t.linear.z = ((gamepad_state['RT'] - gamepad_state['LT']) / 2.0) * SCALE_TRANSLATIONAL_Z + TRIM_Z
+    t.linear.x = -(axis_state['X'] * SCALE_TRANSLATIONAL_X + TRIM_X) * REVERSE
+    t.linear.y = -(axis_state['Y'] * SCALE_TRANSLATIONAL_Y + TRIM_Y) * REVERSE
+    t.linear.z = (hat_state[1]) * SCALE_TRANSLATIONAL_Z + TRIM_Z
 
-    if gamepad_state['3'] == 1:
+    if hat_state[0] == -1:
         x = 1 * SCALE_ROTATIONAL_X
-    elif gamepad_state['3'] == 1:
+    elif hat_state[0] == 1:
         x = -1 * SCALE_ROTATIONAL_X
     else:
         x = 0.0
 
+    y = button_state['4'] - button_state['3']
+    
     t.angular.x = -x
-    t.angular.y = (-gamepad_state['Z'] * SCALE_ROTATIONAL_Y) * REVERSE
-    t.angular.z = -gamepad_state['RSX'] * SCALE_ROTATIONAL_Z
+    t.angular.y = (-y * SCALE_ROTATIONAL_Y) * REVERSE
+    t.angular.z = -axis_state['Z'] * SCALE_ROTATIONAL_Z
 
     new_msg = RovVelocityCommand()
     new_msg.twist = t
@@ -112,6 +114,28 @@ def process_event(event):
     # Button pressed down events
     if event.type == pygame.JOYBUTTONDOWN:
         button_state[JOY_BUTTON_KEY[event.button]] = 1
+        if event.button == JOY_BUTTON_KEY['7']:
+            tools[0] = not tools[0]
+
+        elif event.button == JOY_BUTTON_KEY['9']:
+            tools[1] = not tools[1]
+
+        elif event.button == JOY_BUTTON_KEY['11']:
+            tools[2] = not tools[2]
+        
+        elif event.button == JOY_BUTTON_KEY['12'] and LOCKOUT:
+            tools[3] = not tools[3]
+        
+        elif event.button == JOY_BUTTON_KEY['2']:
+            is_pool_centric = not is_pool_centric
+
+        elif event.button == JOY_BUTTON_KEY['10']:
+            if is_fine < 3:
+                is_fine += 1
+        elif event.button == JOY_BUTTON_KEY['12']:
+            if is_fine > 0:
+                is_fine -= 1
+
         
     # Button released events    
     elif event.type == pygame.JOYBUTTONUP:
@@ -119,12 +143,17 @@ def process_event(event):
 
     # DPAD buttons
     elif event.type == pygame.JOYHATMOTION:
+        hat_state[0] = event[0]
+        hat_state[1] = event[1]
+        
+        '''
         if event.value[1] == 1:
             if is_fine < 3:
                 is_fine +=1
         elif event.value[1] == -1:
             if is_fine > 0:
                 is_fine -=1
+
         else:
             pass
         if event.value[0] == -1:
@@ -134,6 +163,7 @@ def process_event(event):
             is_pool_centric = True
         else:
             pass
+        '''
 
     # Joysticks
     elif event.type == pygame.JOYAXISMOTION:
