@@ -1,0 +1,30 @@
+name: X17-Surface Linter
+
+# Controls when the action will run. 
+# Workflow runs when manually triggered using the UI, or when a push or pull request is made to the main branch
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    steps:  
+      # Check out the repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name:
+      # use black linter
+        uses: github/super-linter@v4
+        env:
+          VALIDATE_ALL_CODEBASE: true
+          VALIDATE_PYTHON_BLACK: true
+          DEFAULT_BRANCH: master
