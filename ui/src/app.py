@@ -2,23 +2,25 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for
 from ssh import Ssh
+
 # Import rlcpy for logging
 import rclpy
 
 app = Flask(__name__)
 
-@app.route('/')
+
+@app.route("/")
 def index():
 
     # TODO: Add the four camera streams to the index.html file
 
-    return render_template('index.html')
+    return render_template("index.html")
 
 
 def initialize_ros_nodes():
     # Initialize the ros node
     rclpy.init()
-    node = rclpy.create_node('flask_server')
+    node = rclpy.create_node("flask_server")
     node.get_logger().info("Flask server started")
 
     return node
@@ -30,7 +32,7 @@ def connect(node):
     ssh.close()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     # Initialize the ROS nodes
     node = initialize_ros_nodes()
@@ -42,4 +44,4 @@ if __name__ == '__main__':
     connect(node)
 
     # Run the flask app
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host="0.0.0.0", port=5000)
