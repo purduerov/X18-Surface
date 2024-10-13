@@ -44,5 +44,4 @@ jobs:
         git push
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Use GitHub token for authentication
-      continue-on-error: true  # In case there are no changes
-      
+        
