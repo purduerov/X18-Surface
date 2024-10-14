@@ -12,7 +12,6 @@ load_dotenv(dotenv_path=f"/workspaces/X17-Surface/.env")
 
 
 class Ssh:
-
     def __init__(self, node):
         self.ssh_hostname = os.getenv("HOST_IP")  # The IP address of the PI
         print(self.ssh_hostname)
@@ -26,7 +25,9 @@ class Ssh:
         self.node = node
 
     def connect(self):
-
+        """ 
+        Establish an SSH connection to the ROV
+        """
         try:
             self.ssh_client = paramiko.SSHClient()
             # Add device to known hosts so it can connect.
@@ -51,7 +52,9 @@ class Ssh:
             print(f"ERROR: {e}")
 
     def close(self):
-
+        """
+        Close the SSH connection to the ROV
+        """
         # This is a program to stop ros2 and more
 
         # if self.ssh_client is not None:

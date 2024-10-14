@@ -17,16 +17,22 @@ def index():
     return render_template("index.html")
 
 
-def initialize_ros_nodes():
-    # Initialize the ros node
+
+def initialize_frontend_node():
+    """
+    Initialize the ROS node for the Flask server
+    Returns the node object
+    """
     rclpy.init()
     node = rclpy.create_node("flask_server")
     node.get_logger().info("Flask server started")
-
     return node
 
 
 def connect(node):
+    """
+    Connects to the ROV
+    """
     ssh = Ssh()
     ssh.connect(node)
     ssh.close()
@@ -34,8 +40,8 @@ def connect(node):
 
 if __name__ == "__main__":
 
-    # Initialize the ROS nodes
-    node = initialize_ros_nodes()
+    # Initialize the frontend ROS node
+    node = initialize_frontend_node()
     if node is None:
         print("ERROR: Could not initialize ROS node")
         exit(1)
