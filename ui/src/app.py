@@ -2,6 +2,7 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for
 from ssh import Ssh
+from streams import Streams
 # Import rlcpy for logging
 import rclpy
 
@@ -24,9 +25,13 @@ def initialize_ros_nodes():
     return node
 
 
-def connect(node):
-    ssh = Ssh()
-    ssh.connect(node)
+def pi_connection(node):
+    ssh = Ssh(node)
+    ssh_client = ssh.connect()
+    if ssh_client is None:
+        return None
+
+    streams = Streams(ssh_client)
     ssh.close()
 
 
@@ -39,7 +44,9 @@ if __name__ == '__main__':
         exit(1)
 
     # Connect to the ROV
-    connect(node)
-
+    pi = pi_connection(node)
+    if pi is None:
+        exit(1)
+        
     # Run the flask app
     app.run(host='0.0.0.0', port=5000)

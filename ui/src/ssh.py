@@ -20,7 +20,6 @@ class Ssh:
         self.ssh_username = os.getenv("HOST_USERNAME") # The username of the PI
 
         self.ssh_client = None # Variable for the SSH client object
-        self.connection = None # Variable for checking if connection is present
         self.node = node
 
         
@@ -39,12 +38,12 @@ class Ssh:
             if self.ssh_client is not None: 
                 self.node.get_logger().info("SSH Connection Established")
                 print("SSH Connection Established")
-                self.connection = True
-                # self.ssh_client.exec_command("ls")
+                return self.ssh_client
             else:
                 self.node.get_logger().info("SSH Connection Failed")
                 print("ERROR: SSH Connection Failed")
-            return self.connection
+                return None
+        
         except Exception as e:
             self.node.get_logger().info(f"ERROR: {e}")
             print(f"ERROR: {e}")
@@ -68,6 +67,8 @@ class Ssh:
         if self.ssh_client is not None:
             self.ssh_client.close()
             print("SSH connection closed")
+            self.node.get_logger().info("SSH Connection Closed")
+
 
 
 ###############################
