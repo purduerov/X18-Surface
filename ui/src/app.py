@@ -3,59 +3,13 @@ import os
 from flask import Flask, render_template, request, redirect, url_for
 from ssh import Ssh
 from streams import Streams
+from signal_handler import SignalHandler
 import rclpy
 import signal
 
 
+
 app = Flask(__name__)
-global global_node, global_rov_connection, global_streams, global_shutdown
-global_node = None
-global_rov_connection = None
-global_streams = None
-global_shutdown = False
-
-
-def close_app(signal, frame):
-    """
-    Closing the application
-    Triggered when the user presses Ctrl+C
-    Camera streams are closed and the SSH connection is closed
-    """
-
-    global global_node, global_rov_connection, global_streams, global_shutdown
-    
-    if global_shutdown:
-        return
-    global_shutdown = True
-    
-    try:
-        if global_node is not None:
-            global_node.get_logger().info("Closing application")  
-        
-        if global_streams is not None:
-            global_streams.close_camera_streams()
-            if global_node is not None:
-                global_node.get_logger().info("Camera streams closed")
-
-        if global_rov_connection is not None:
-            global_rov_connection.close()
-            if global_node is not None:
-                global_node.get_logger().info("Connection to ROV closed")
-        
-        if global_node is not None:
-            global_node.destroy_node()
-
-        rclpy.shutdown()
-        
-    except Exception as e:
-        if global_node is not None:
-            global_node.get_logger().error("Error during shutdown: " + str(e))
-    
-    print("Application closed")
-    exit(0)
-
-
-signal.signal(signal.SIGINT, close_app)
 
 
 @app.route('/')
@@ -103,21 +57,21 @@ if __name__ == '__main__':
     if node is None:
         print("ERROR: Could not initialize ROS node")
         exit(1)
-    else:
-        global_node = node
 
     rov_connection = establish_rov_connection(node)
     if rov_connection is None:
         node.get_logger().error("ERROR: Could not establish connection to ROV")
         exit(1)
-    else:
-        global_rov_connection = rov_connection
 
     streams = establish_camera_streams(node, rov_connection)
     if streams is None:
         node.get_logger().error("ERROR: Could not start camera streams")
         exit(1)
-    else:
-        global_streams = streams
+
+    # Initialize SignalHandler with the created objects
+    signal_handler = SignalHandler(node, rov_connection, streams)
+
+    # Register the handler for SIGINT (Ctrl+C)
+    signal.signal(signal.SIGINT, signal_handler.handler)
 
     app.run(host='0.0.0.0', port=5000)
