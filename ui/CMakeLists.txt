@@ -24,6 +24,7 @@ install(DIRECTORY
 install(PROGRAMS
   src/app.py
   src/ssh.py
+  src/streams.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
