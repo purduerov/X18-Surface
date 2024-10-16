@@ -17,7 +17,6 @@ def index():
     return render_template("index.html")
 
 
-
 def initialize_frontend_node():
     """
     Initialize the ROS node for the Flask server

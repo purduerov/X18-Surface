@@ -25,7 +25,7 @@ class Ssh:
         self.node = node
 
     def connect(self):
-        """ 
+        """
         Establish an SSH connection to the ROV
         """
         try:
