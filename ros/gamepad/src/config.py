@@ -2,57 +2,22 @@ MIN_ABS_DIFFERENCE = 0
 # New ranges for the triggers and sticks (Probably need to adjust these values)
 STICK_DEAD_ZONE = 0.09
 AXIS_RANGE = 1.0
+# Scale factors for the translational and rotational axes
+SCALE_TRANSLATIONAL_X = 1.0
+SCALE_TRANSLATIONAL_Y = 1.0
+SCALE_TRANSLATIONAL_Z = 1.0
+SCALE_ROTATIONAL_X = 1.0
+SCALE_ROTATIONAL_Y = 1.0
+SCALE_ROTATIONAL_Z = 1.0
+# Trim values for the translational axes
+TRIM_X = 0.0
+TRIM_Y = 0.0
+TRIM_Z = 0.0
 
+GAMEPAD_TIMEOUT = 20 # seconds
 
-
-
-'''x-axis is foward and backward, y-axis is side to side, z-axis is twisting'''
-JOY_AXIS = {
-    'X':1, 'Y':0, 'Z':2, 'WHEEL':3
-}
-
-JOY_AXIS_KEY = {
-    1:'X', 0:'Y', 2:'Z', 3:'WHEEL'
-}
-
-'''mappping from button identifier to pygame id'''
-JOY_BUTTON = {
-    'trigger':0, '2':1, '3':2, '4':3, '5':4, '6':5, '7':6, '8':7, '9':8, '10':9, '11':10, '12':11
-}
-
-'''mapping from pygame id button identifier i don't know why we need this'''
-JOY_BUTTON_KEY = {
-    0:'trigger', 1:'2', 2:'3', 3:'4', 4:'5', 5:'6', 6:'7', 7:'8', 8:'9', 9:'10', 10:'11', 11:'12'
-}
-
-'''dict to store the state of the axis as floats'''
-axis_state = {
-    'X':0.0,
-    'Y':0.0,
-    'Z':0.0,
-    'WHEEL':0.0
-}
-
-'''dict to store the state of the buttons as booleans'''
-button_state = {
-    'trigger':0,
-    '2':0,
-    '3':0,
-    '4':0,
-    '5':0,
-    '6':0,
-    '7':0,
-    '8':0,
-    '9':0,
-    '10':0,
-    '11':0,
-    '12':0
-}
-
-hat_state = [
-    0, 0
-]
-
+JOYSTICK_NAME = "Thrustmaster T.16000M"
+THROTTLE_NAME = "Thrustmaster TWCS Throttle"
 
 # Store the states of the throttle axies
 throttle_axis_state = {
@@ -90,6 +55,7 @@ throttle_hat_state = {
     1: 0
 }
 
+# Store the states of the joystick axes
 joystick_axis_state = {
     0: 0.0,
     1: 0.0,
@@ -97,6 +63,7 @@ joystick_axis_state = {
     3: 0.0
 }
 
+# Store the states of the joystick buttons
 joystick_button_state = {
     0: 0,
     1: 0,
@@ -114,9 +81,8 @@ joystick_button_state = {
     13: 0
 }
 
+# Stores the states of the joystick hats
 joystick_hat_state = {
     0: 0,
     1: 0
 }
-
-# Map throttle axis to desired axis
