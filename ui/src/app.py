@@ -11,9 +11,9 @@ import signal
 app = Flask(__name__)
 
 
-@app.route('/')
+@app.route("/")
 def index():
-    return render_template('index.html')
+    return render_template("index.html")
 
 
 def initialize_frontend_nodes():
@@ -43,12 +43,12 @@ def establish_camera_streams(node, rov_connection):
     Returns a boolean indicating if the camera streams started successfully
     """
     camera_streams = Streams(node, rov_connection)
-    camera_streams.run_camera_streams() 
+    camera_streams.run_camera_streams()
     return camera_streams
 
 
-if __name__ == '__main__':
-    """ 
+if __name__ == "__main__":
+    """
     Main function for running the ROV
     To build the program, run `scripts/build.sh`
     To run the program, run `scripts/run.sh`
@@ -67,7 +67,7 @@ if __name__ == '__main__':
         exit(1)
 
     # Establish the signal handler for closing the application
-    signal_handler = SignalHandler(node, rov_connection, camera_streams) 
+    signal_handler = SignalHandler(node, rov_connection, camera_streams)
     signal.signal(signal.SIGINT, signal_handler.close_application)
 
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host="0.0.0.0", port=5000)

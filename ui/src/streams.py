@@ -8,7 +8,6 @@ class Streams:
         self.rov_connection = rov_connection
         self.attempted = False
 
-
     def run_camera_streams(self):
         """
         Starts the camera streams on the ROV
@@ -22,11 +21,13 @@ class Streams:
             return True
 
         self.node.get_logger().info("Starting camera streams...")
-        self.rov_connection.exec_command("cd cameras2 && nohup ./mediamtx >> /dev/null 2>&1 &")
+        self.rov_connection.exec_command(
+            "cd cameras2 && nohup ./mediamtx >> /dev/null 2>&1 &"
+        )
 
         # check if the camera streams are running
         __, stdout, __ = self.rov_connection.exec_command("ps aux | grep mediamtx")
-        response = stdout.read().decode("utf-8") 
+        response = stdout.read().decode("utf-8")
         if "./mediamtx" not in response:
             if self.attempted == False:
                 self.attempted = True
@@ -40,7 +41,6 @@ class Streams:
         self.node.get_logger().info("Camera streams started")
         self.node.get_logger().warning("Camera streams can take a few minutes to start")
         return True
-
 
     def close_camera_streams(self):
         """

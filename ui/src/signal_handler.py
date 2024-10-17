@@ -9,7 +9,6 @@ class SignalHandler:
         self.rov_connection = rov_connection
         self.camera_streams = camera_streams
         self.shutdown = None
-        
 
     def close_application(self, signal, frame):
         """
@@ -21,11 +20,11 @@ class SignalHandler:
         if self.shutdown:
             return
         self.shutdown = True
-        
+
         try:
             if self.node is not None:
-                self.node.get_logger().info("Closing application...")  
-            
+                self.node.get_logger().info("Closing application...")
+
             if self.camera_streams == True:
                 result = self.camera_streams.close_camera_streams()
                 if result == False:
@@ -35,16 +34,15 @@ class SignalHandler:
 
             if self.rov_connection is not None:
                 self.rov_connection.close()
-            
+
             if self.node is not None:
                 self.node.destroy_node()
 
             rclpy.shutdown()
-            
+
         except Exception as e:
             if self.node is not None:
                 self.node.get_logger().error("Error during shutdown: " + str(e))
-        
+
         print("Application closed")
         exit(0)
-    
