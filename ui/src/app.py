@@ -8,7 +8,6 @@ import rclpy
 import signal
 
 
-
 app = Flask(__name__)
 
 
@@ -60,18 +59,14 @@ if __name__ == '__main__':
 
     rov_connection = establish_rov_connection(node)
     if rov_connection is None:
-        node.get_logger().error("ERROR: Could not establish connection to ROV")
         exit(1)
 
     streams = establish_camera_streams(node, rov_connection)
     if streams is None:
-        node.get_logger().error("ERROR: Could not start camera streams")
         exit(1)
 
-    # Initialize SignalHandler with the created objects
-    signal_handler = SignalHandler(node, rov_connection, streams)
-
-    # Register the handler for SIGINT (Ctrl+C)
-    signal.signal(signal.SIGINT, signal_handler.handler)
+    # Establish the signal handler for closing the application
+    signal_handler = SignalHandler(node, rov_connection, streams) 
+    signal.signal(signal.SIGINT, signal_handler.close_application)
 
     app.run(host='0.0.0.0', port=5000)

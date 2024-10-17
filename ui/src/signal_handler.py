@@ -2,6 +2,7 @@ import signal
 import time
 import rclpy
 
+
 class SignalHandler:
     def __init__(self, node, rov_connection, cam_streams):
         self.node = node
@@ -10,7 +11,7 @@ class SignalHandler:
         self.shutdown = None
         
 
-    def handler(self, signal, frame):
+    def close_application(self, signal, frame):
         """
         Closing the application
         Triggered when the user presses Ctrl+C
@@ -46,13 +47,4 @@ class SignalHandler:
         
         print("Application closed")
         exit(0)
-        
-    #######
-    #Chat GPT Closure code
-    #def __init__(self, data):
-    #    self.data = data
-
-    #def handler(self, signum, frame):
-    #    print(f"Signal {signum} received with data: {self.data}")
-    #    self.data = "Data updated after signal"
-    #####
+    
