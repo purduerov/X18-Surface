@@ -14,7 +14,6 @@ class Streams:
         Starts the camera streams on the ROV
         Returns a boolean indicating if the camera streams started successfully
         """
-
         # check if the camera streams are already running
         __, stdout, __ = self.rov_connection.exec_command("ps aux | grep mediamtx")
         response = stdout.read().decode("utf-8")

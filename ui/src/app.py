@@ -22,7 +22,7 @@ def initialize_frontend_nodes():
     Returns the node object
     """
     rclpy.init()
-    node = rclpy.create_node('flask_server')
+    node = rclpy.create_node("flask_server")
     node.get_logger().info("Flask server started")
     return node
 
