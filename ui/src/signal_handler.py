@@ -15,7 +15,7 @@ class SignalHandler:
         """
         Closing the application
         Triggered when the user presses Ctrl+C
-        Camera streams are closed and the SSH connection is closed
+        Camera streams are closed, SSH connection is closed, and the ROS node is destroyed
         """
 
         if self.shutdown:
@@ -26,11 +26,11 @@ class SignalHandler:
             if self.node is not None:
                 self.node.get_logger().info("Closing application...")  
             
-            if self.camera_streams is True:
+            if self.camera_streams == True:
                 result = self.camera_streams.close_camera_streams()
-                if result is False:
+                if result == False:
                     if self.node is not None:
-                        self.node.get_logger().error("Trying again...")
+                        self.node.get_logger().warning("Trying again...")
                     result = self.camera_streams.close_camera_streams()
 
             if self.rov_connection is not None:
