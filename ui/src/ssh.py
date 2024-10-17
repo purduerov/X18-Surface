@@ -43,20 +43,4 @@ class Ssh:
             self.rov_connection.close()
             self.node.get_logger().info("ROV connection closed")
 
-
-###############################
-### Testing File Code Below ### 
-###############################
-
-# def main():
-#     ssh = Ssh()
-#     ssh.connect()
-#     time.sleep(10)
-#     ssh.close()
-    
-
-# if __name__ == "__main__":
-#     main()
-
-
         

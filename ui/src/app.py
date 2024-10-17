@@ -40,10 +40,11 @@ def establish_rov_connection(node):
 def establish_camera_streams(node, rov_connection):
     """
     Starts the camera streams on the ROV
+    Returns a boolean indicating if the camera streams started successfully
     """
-    streams = Streams(node, rov_connection)
-    streams.run_camera_streams() 
-    return streams
+    camera_streams = Streams(node, rov_connection)
+    camera_streams.run_camera_streams() 
+    return camera_streams
 
 
 if __name__ == '__main__':
@@ -61,12 +62,12 @@ if __name__ == '__main__':
     if rov_connection is None:
         exit(1)
 
-    streams = establish_camera_streams(node, rov_connection)
-    if streams is None:
+    camera_streams = establish_camera_streams(node, rov_connection)
+    if camera_streams is False:
         exit(1)
 
     # Establish the signal handler for closing the application
-    signal_handler = SignalHandler(node, rov_connection, streams) 
+    signal_handler = SignalHandler(node, rov_connection, camera_streams) 
     signal.signal(signal.SIGINT, signal_handler.close_application)
 
     app.run(host='0.0.0.0', port=5000)
