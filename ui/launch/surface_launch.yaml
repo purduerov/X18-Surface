@@ -5,7 +5,7 @@ launch:
     exec: app.py
     namespace: rov
 
-# - node:
-#     pkg: gamepad
-#     exec: sender.py
-#     namespace: rov
+- node:
+    pkg: gamepad
+    exec: sender.py
+    namespace: rov
