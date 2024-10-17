@@ -52,3 +52,71 @@ button_state = {
 hat_state = [
     0, 0
 ]
+
+
+# Store the states of the throttle axies
+throttle_axis_state = {
+    0: 0.0,
+    1: 0.0,
+    2: 0.0,
+    3: 0.0,
+    4: 0.0,
+    5: 0.0,
+    6: 0.0,
+    7: 0.0
+}
+
+# Store the states of the throttle buttons
+throttle_button_state = {
+    0: 0,
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 0,
+    6: 0,
+    7: 0,
+    8: 0,
+    9: 0,
+    10: 0,
+    11: 0,
+    12: 0,
+    13: 0
+}
+
+# Store the state of throttle hats
+throttle_hat_state = {
+    0: 0,
+    1: 0
+}
+
+joystick_axis_state = {
+    0: 0.0,
+    1: 0.0,
+    2: 0.0,
+    3: 0.0
+}
+
+joystick_button_state = {
+    0: 0,
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 0,
+    6: 0,
+    7: 0,
+    8: 0,
+    9: 0,
+    10: 0,
+    11: 0,
+    12: 0,
+    13: 0
+}
+
+joystick_hat_state = {
+    0: 0,
+    1: 0
+}
+
+# Map throttle axis to desired axis

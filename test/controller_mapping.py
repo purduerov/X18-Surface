@@ -146,8 +146,8 @@ def state_logger():
         print(f"Axis {axis} = {state}", end='  ')
     print()
 
-    for button, state in button_state.items():
-        print(f"Button {button} = {state}")
+    # for button, state in button_state.items():
+    #     print(f"Button {button} = {state}")
     
     
 
@@ -165,6 +165,8 @@ if __name__ == '__main__':
         except KeyboardInterrupt:
             pygame.quit()
             sys.exit(0)
+        except:
+            pass
         time.sleep(1)
 
 
