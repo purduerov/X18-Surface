@@ -1,82 +1,47 @@
-import paramiko
+from paramiko import SSHClient, AutoAddPolicy
 import os
 from dotenv import load_dotenv
-import time
+
 
 load_dotenv(dotenv_path=f"/workspaces/X17-Surface/.env")
-
-# # TODO
-#     # Make closing a function
-#     # Function for establishing camera stream connections
-#     # Function for Gamepad Connections
 
 
 class Ssh:
     def __init__(self, node):
-        self.ssh_hostname = os.getenv("HOST_IP")  # The IP address of the PI
-        print(self.ssh_hostname)
-        self.ssh_password = os.getenv("HOST_PASSWORD")  # The Password of the PI
-        print(self.ssh_password)
-        self.ssh_username = os.getenv("HOST_USERNAME")  # The username of the PI
-        print(self.ssh_username)
-
-        self.ssh_client = None  # Variable for the SSH client object
-        self.connection = None  # Variable for checking if connection is present
+        self.ssh_hostname = os.getenv("ROV_IP") # The IP address of the Pi
+        self.ssh_password = os.getenv("ROV_PASSWORD") # The password of the Pi
+        self.ssh_username = os.getenv("ROV_USERNAME") # The username of the Pi
+        self.rov_connection = None 
         self.node = node
 
     def connect(self):
         """
-        Establish an SSH connection to the ROV
+        Establishes an SSH connection to the ROV
+        Returns the SSH client object
         """
         try:
-            self.ssh_client = paramiko.SSHClient()
-            # Add device to known hosts so it can connect.
-            # if not present gives error - AttributeError: 'NoneType' object has no attribute 'time'
-            self.ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-            # Connect to the host
-            self.ssh_client.connect(
-                self.ssh_hostname,
-                username=self.ssh_username,
-                password=self.ssh_password,
-            )
-            if self.ssh_client is not None:
-                self.node.get_logger().info("SSH Connection Established")
-
-                print("SSH Connection Established")
-                self.connection = True
-                self.ssh_client.exec_command("ls")
+            self.rov_connection = SSHClient()
+            # add device to known hosts so it can connect
+            self.rov_connection.set_missing_host_key_policy(AutoAddPolicy())
+            self.rov_connection.connect(self.ssh_hostname, username=self.ssh_username, password=self.ssh_password)
+            if self.rov_connection is not None: 
+                self.node.get_logger().info("SSH connection established") 
+                return self.rov_connection
             else:
-                print("ERROR: SSH Connection Failed")
+                self.node.get_logger().error("SSH connection failed")
+                return None
 
         except Exception as e:
+            self.node.get_logger().error(f"ERROR: {e}")
             print(f"ERROR: {e}")
+            return None
 
     def close(self):
         """
-        Close the SSH connection to the ROV
+        Closes the SSH connection to the ROV
         """
-        # This is a program to stop ros2 and more
+        if self.rov_connection is not None:
+            self.rov_connection.close()
+            self.node.get_logger().info("ROV connection closed")
 
-        # if self.ssh_client is not None:
-        #     self.ssh_client.exec_command(
-        #         "ps aux | grep ros2 | awk '{print $2}' | xargs kill -9 && tmux kill-session -t ros2_session")
-
-        # closing the ssh connection
-        if self.ssh_client is not None:
-            self.ssh_client.close()
-            print("SSH connection closed")
-
-
-###############################
-### Testing File Code Below ###
-###############################
-
-# def main():
-#     ssh = Ssh()
-#     ssh.connect()
-#     time.sleep(10)
-#     ssh.close()
-
-
-# if __name__ == "__main__":
-#     main()
+        

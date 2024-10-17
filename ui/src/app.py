@@ -2,24 +2,23 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for
 from ssh import Ssh
-
-# Import rlcpy for logging
+from streams import Streams
+from signal_handler import SignalHandler
 import rclpy
+import signal
+
 
 app = Flask(__name__)
 
 
-@app.route("/")
+@app.route('/')
 def index():
-
-    # TODO: Add the four camera streams to the index.html file
-
-    return render_template("index.html")
+    return render_template('index.html')
 
 
-def initialize_frontend_node():
+def initialize_frontend_nodes():
     """
-    Initialize the ROS node for the Flask server
+    Initializes the ROS node for the Flask server
     Returns the node object
     """
     rclpy.init()
@@ -28,25 +27,47 @@ def initialize_frontend_node():
     return node
 
 
-def connect(node):
+def establish_rov_connection(node):
     """
-    Connects to the ROV
+    Establishes a connection to the ROV
+    Return the SSH client object
     """
-    ssh = Ssh()
-    ssh.connect(node)
-    ssh.close()
+    ssh = Ssh(node)
+    rov_connection = ssh.connect()
+    return rov_connection
 
 
-if __name__ == "__main__":
+def establish_camera_streams(node, rov_connection):
+    """
+    Starts the camera streams on the ROV
+    Returns a boolean indicating if the camera streams started successfully
+    """
+    camera_streams = Streams(node, rov_connection)
+    camera_streams.run_camera_streams() 
+    return camera_streams
 
-    # Initialize the frontend ROS node
-    node = initialize_frontend_node()
+
+if __name__ == '__main__':
+    """ 
+    Main function for running the ROV
+    To build the program, run `scripts/build.sh`
+    To run the program, run `scripts/run.sh`
+    """
+    node = initialize_frontend_nodes()
     if node is None:
         print("ERROR: Could not initialize ROS node")
         exit(1)
 
-    # Connect to the ROV
-    connect(node)
+    rov_connection = establish_rov_connection(node)
+    if rov_connection is None:
+        exit(1)
 
-    # Run the flask app
-    app.run(host="0.0.0.0", port=5000)
+    camera_streams = establish_camera_streams(node, rov_connection)
+    if camera_streams is False:
+        exit(1)
+
+    # Establish the signal handler for closing the application
+    signal_handler = SignalHandler(node, rov_connection, camera_streams) 
+    signal.signal(signal.SIGINT, signal_handler.close_application)
+
+    app.run(host='0.0.0.0', port=5000)
