@@ -13,7 +13,7 @@ app = Flask(__name__)
 load_dotenv(dotenv_path=f"/workspaces/X17-Surface/.env")   
 
 
-@app.route('/')
+@app.route("/")
 def index():
     rov_ip = os.getenv("ROV_IP")
     return render_template('index.html', rov_ip=rov_ip)
@@ -25,7 +25,7 @@ def initialize_frontend_nodes():
     Returns the node object
     """
     rclpy.init()
-    node = rclpy.create_node('flask_server')
+    node = rclpy.create_node("flask_server")
     node.get_logger().info("Flask server started")
     return node
 
@@ -73,3 +73,4 @@ if __name__ == '__main__':
     signal.signal(signal.SIGINT, signal_handler.close_application)
 
     app.run(host='0.0.0.0', port=5000)
+
