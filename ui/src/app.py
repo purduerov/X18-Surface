@@ -13,7 +13,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("index.html", rov_ip=os.getenv("ROV_IP"))
 
 
 def initialize_frontend_nodes():
