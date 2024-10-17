@@ -35,7 +35,7 @@ class Controller:
         self.pitch_lock = False
         self.tools = [0, 0, 0, 0, 0]
 
-        # Mapping variables
+        # Mapping variables (TO CHANGE MAPPING: GO TO getMessage() AND MAKE YOUR CHANGES THERE)
         self.mapping = 0 # 0, 1, 2, 3
 
         # Initialize the ros node
@@ -115,21 +115,22 @@ class Controller:
         for event in pygame.event.get():
             self.process_event(event)
 
+
     def correct_raw(self, raw):
         '''Corrects the raw value from the gamepad to be in the range [-1.0, 1.0]'''
         if raw > 0:
             if raw >= STICK_DEAD_ZONE:
-                return -raw
+                return raw
             elif raw > 1:
-                return -1
+                return 1
             else:
                 return 0
         
         if raw < 0:
             if raw <= -STICK_DEAD_ZONE:
-                return -raw
+                return raw
             elif raw < -1:
-                return 1
+                return -1
             else:
                 return 0
 
@@ -163,7 +164,7 @@ class Controller:
         # Check if the event is a joydeviceremoved event
         elif event.type == pygame.JOYDEVICEREMOVED:
             # Try to reconnect the gamepad
-            self.node.get_logger().info('Gamepad disconnected. Attempting to reconnect...')
+            self.node.get_logger().info('Controller disconnected. Attempting to reconnect...')
             if not self.reconnect():
                 self.node.get_logger().info("\nNo gamepad found, exiting")
                 pygame.quit()
@@ -183,14 +184,25 @@ class Controller:
 
         t = Twist()
 
-        # Set linear velocities
-        t.linear.x = -(self.throttle_axis_state[2] * SCALE_TRANSLATIONAL_X + TRIM_X) * self.reverse
-        t.linear.y = -(self.throttle_axis_state[5] * SCALE_TRANSLATIONAL_Y + TRIM_Y) * self.reverse
-        t.linear.z = -(self.throttle_axis_state[1] * SCALE_TRANSLATIONAL_Y + TRIM_Y) * self.reverse
-        # Set angular velocities
-        t.angular.x = -(self.joystick_axis_state[1] * SCALE_ROTATIONAL_X) * self.reverse
-        t.angular.y = -(self.joystick_axis_state[0] * SCALE_ROTATIONAL_Y) * self.reverse
-        t.angular.z = -(self.joystick_axis_state[2] * SCALE_ROTATIONAL_Z) * self.reverse
+        if self.mapping == 0:
+            # Set linear velocities
+            t.linear.x = -(self.throttle_axis_state[2] * SCALE_TRANSLATIONAL_X + TRIM_X) * self.reverse
+            t.linear.y = -(self.throttle_axis_state[5] * SCALE_TRANSLATIONAL_Y + TRIM_Y) * self.reverse
+            t.linear.z = -(self.throttle_axis_state[1] * SCALE_TRANSLATIONAL_Y + TRIM_Y) * self.reverse
+            # Set angular velocities
+            t.angular.x = -(self.joystick_axis_state[1] * SCALE_ROTATIONAL_X) * self.reverse
+            t.angular.y = -(self.joystick_axis_state[0] * SCALE_ROTATIONAL_Y) * self.reverse
+            t.angular.z = -(self.joystick_axis_state[2] * SCALE_ROTATIONAL_Z) * self.reverse
+
+        elif self.mapping == 1:
+            # Set linear velocities
+            t.linear.x = -(self.throttle_axis_state[2] * SCALE_TRANSLATIONAL_X + TRIM_X) * self.reverse
+            t.linear.y = -(self.throttle_axis_state[5] * SCALE_TRANSLATIONAL_Y + TRIM_Y) * self.reverse
+            t.linear.z = -(self.throttle_axis_state[1] * SCALE_TRANSLATIONAL_Y + TRIM_Y) * self.reverse
+            # Set angular velocities
+            t.angular.x = -(self.joystick_axis_state[1] * SCALE_ROTATIONAL_X) * self.reverse
+            t.angular.y = -(self.joystick_axis_state[0] * SCALE_ROTATIONAL_Y) * self.reverse
+            t.angular.z = -(self.joystick_axis_state[2] * SCALE_ROTATIONAL_Z) * self.reverse
 
         new_msg = RovVelocityCommand()
         new_msg.twist = t
