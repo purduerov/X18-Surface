@@ -6,14 +6,16 @@ import time
 
 # ROS
 import rclpy
+from rclpy.node import Node
 from std_msgs.msg import String, Bool, Empty
 from shared_msgs.msg import RovVelocityCommand, ToolsCommandMsg
 from geometry_msgs.msg import Twist
 
 from config import *
 
-class Controller:
+class Controller(Node):
     def __init__(self):
+        super().__init__("gp_pub")
         # Pygame variables
         self.joystick = None
         self.throttle = None
@@ -37,17 +39,13 @@ class Controller:
 
         # Mapping variables (TO CHANGE MAPPING: GO TO getMessage() AND MAKE YOUR CHANGES THERE)
         self.mapping = 1 # 0, 1, 2, 3
-
-        # Initialize the ros node
-        rclpy.init()
-        self.node = rclpy.create_node('gp_pub')
         
         try:
             self.init_pygame()
         except:
-            self.node.get_logger().info('Controllers not found. Please make sure both the joystick and throttle are connected')
+            self.get_logger().info('Controllers not found. Please make sure both the joystick and throttle are connected')
             if not self.reconnect():
-                self.node.get_logger().info("\nNo gamepad found, exiting")
+                self.get_logger().info("\nNo gamepad found, exiting")
                 pygame.quit()
                 sys.exit(0)
         
@@ -58,19 +56,7 @@ class Controller:
         # Create the timers
         self.data_thread = self.node.create_timer(0.1, self.pub_data)
         self.gamepad_thread = self.node.create_timer(0.001, self.update)
-
-        self.node.get_logger().info('Controllers initialized')
-
-        rclpy.spin(self.node)
-
-        self.data_thread.destroy()
-        self.gamepad_thread.destroy()
-
-        # Stop the pygame library
-        pygame.quit()
-
-        self.node.destroy_node()
-        rclpy.shutdown()
+        self.get_logger().info('Controllers initialized')
 
 
     def init_pygame(self):
@@ -95,7 +81,7 @@ class Controller:
         reconnected = False
         i = GAMEPAD_TIMEOUT
         while i >= 0 and not reconnected:
-            self.node.get_logger().info('Gamepad disconnected, reconnect within {:2} seconds'.format(i))
+            self.get_logger().info('Gamepad disconnected, reconnect within {:2} seconds'.format(i))
             try:
                 self.init_pygame()
                 reconnected = True
@@ -104,7 +90,7 @@ class Controller:
                 i -= 1
 
         if reconnected:
-            self.node.get_logger().info('Controllers reconnected')
+            self.get_logger().info('Controllers reconnected')
             
         return reconnected
 
@@ -164,9 +150,9 @@ class Controller:
         # Check if the event is a joydeviceremoved event
         elif event.type == pygame.JOYDEVICEREMOVED:
             # Try to reconnect the gamepad
-            self.node.get_logger().info('Controller disconnected. Attempting to reconnect...')
+            self.get_logger().info('Controller disconnected. Attempting to reconnect...')
             if not self.reconnect():
-                self.node.get_logger().info("\nNo gamepad found, exiting")
+                self.get_logger().info("\nNo gamepad found, exiting")
                 pygame.quit()
                 sys.exit(0)
 
@@ -223,5 +209,13 @@ class Controller:
         return tm
 
 
-if __name__ == '__main__':
+def main():
+    rclpy.init(args=None)
     controller = Controller()
+    rclpy.spin(controller.node)
+    controller.node.destroy_node()
+    rclpy.shutdown()
+
+
+if __name__ == '__main__':
+    main()
