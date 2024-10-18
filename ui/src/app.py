@@ -6,14 +6,16 @@ from streams import Streams
 from signal_handler import SignalHandler
 import rclpy
 import signal
+from dotenv import load_dotenv
 
 
 app = Flask(__name__)
+load_dotenv(dotenv_path=f"/workspaces/X17-Surface/.env")   
 
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("index.html", rov_ip=os.getenv("ROV_IP"))
 
 
 def initialize_frontend_nodes():
