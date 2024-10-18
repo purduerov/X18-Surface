@@ -36,7 +36,7 @@ class Controller:
         self.tools = [0, 0, 0, 0, 0]
 
         # Mapping variables (TO CHANGE MAPPING: GO TO getMessage() AND MAKE YOUR CHANGES THERE)
-        self.mapping = 0 # 0, 1, 2, 3
+        self.mapping = 1 # 0, 1, 2, 3
 
         # Initialize the ros node
         rclpy.init()
@@ -194,14 +194,15 @@ class Controller:
             t.angular.y = -(self.joystick_axis_state[0] * SCALE_ROTATIONAL_Y) * self.reverse
             t.angular.z = -(self.joystick_axis_state[2] * SCALE_ROTATIONAL_Z) * self.reverse
 
-        elif self.mapping == 1:
+        else:
             # Set linear velocities
-            t.linear.x = -(self.throttle_axis_state[2] * SCALE_TRANSLATIONAL_X + TRIM_X) * self.reverse
-            t.linear.y = -(self.throttle_axis_state[5] * SCALE_TRANSLATIONAL_Y + TRIM_Y) * self.reverse
-            t.linear.z = -(self.throttle_axis_state[1] * SCALE_TRANSLATIONAL_Y + TRIM_Y) * self.reverse
+            t.linear.x = -(self.joystick_axis_state[1] * SCALE_TRANSLATIONAL_X + TRIM_X) * self.reverse
+            t.linear.y = (self.joystick_axis_state[0] * SCALE_TRANSLATIONAL_Y + TRIM_Y) * self.reverse
+            t.linear.z = -(self.throttle_axis_state[2] * SCALE_TRANSLATIONAL_Y + TRIM_Y) * self.reverse 
+
             # Set angular velocities
-            t.angular.x = -(self.joystick_axis_state[1] * SCALE_ROTATIONAL_X) * self.reverse
-            t.angular.y = -(self.joystick_axis_state[0] * SCALE_ROTATIONAL_Y) * self.reverse
+            t.angular.x = 0.0 # no pitch
+            t.angular.y = 0.0 # no roll
             t.angular.z = -(self.joystick_axis_state[2] * SCALE_ROTATIONAL_Z) * self.reverse
 
         new_msg = RovVelocityCommand()
