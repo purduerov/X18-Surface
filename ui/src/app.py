@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 
 
 app = Flask(__name__)
-load_dotenv(dotenv_path=f"/workspaces/X17-Surface/.env")   
+load_dotenv(dotenv_path=f"/workspaces/X17-Surface/.env")
 
 
 @app.route("/")
