@@ -186,6 +186,7 @@ class Controller(Node):
     def getMessage(self):
         '''Returns a RovVelocityCommand message based on the current gamepad state'''
 
+
         t = Twist()
 
         if self.mapping == 0:
@@ -236,6 +237,7 @@ class Controller(Node):
         return tm
 
 
+
 def main():
     rclpy.init(args=None)
     controller = Controller()
@@ -243,6 +245,6 @@ def main():
     controller.destroy_node()
     rclpy.shutdown()
 
-
 if __name__ == '__main__':
     main()
+

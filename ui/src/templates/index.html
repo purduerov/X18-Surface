@@ -5,10 +5,14 @@
 </head>
 <body>
     <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr); height: 100vh;">
-        <iframe src="http://192.168.4.110:8889/camera_1" scrolling="no" style="width: 100%; height: 100%;"></iframe>
-        <iframe src="http://192.168.4.110:8889/camera_2" scrolling="no" style="width: 100%; height: 100%;"></iframe>
-        <iframe src="http://192.168.4.110:8889/camera_2" scrolling="no" style="width: 100%; height: 100%;"></iframe>
-        <iframe src="http://192.168.4.110:8889/camera_1" scrolling="no" style="width: 100%; height: 100%;"></iframe>
+        <!-- The IP under src should match the IP of the pi -->
+         <!-- To find the ip: 
+         1. check NetGear for the IP address. 
+         2. Change only the IP address, the port REMAINS 8889
+         3. Delete the extra camera output frames if duplicates -->
+
+        <iframe src="http://{{ rov_ip }}:8889/camera_1" scrolling="no" style="width: 100%; height: 100%;"></iframe>
+        <iframe src="http://{{ rov_ip }}:8889/camera_2" scrolling="no" style="width: 100%; height: 100%;"></iframe>
     </div>
 </body>
 </html>
