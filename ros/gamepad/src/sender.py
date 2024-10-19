@@ -136,10 +136,7 @@ class Controller(Node):
             # Check if the event is from the joystick or the throttle
             if event.joy == self.joystick_id:
                 self.joystick_button_state[event.button] = 1
-                if event.button == self.joystick_button_state[0]:
-                    self.tools[0] = not self.tools[0]
-                elif event.button == self.joystick_button_state[1]:
-                    self.tools[2] = not self.tools[2]
+                
             elif event.joy == self.throttle_id:
                 self.throttle_button_state[event.button] = 1
 
@@ -150,6 +147,20 @@ class Controller(Node):
                 self.joystick_button_state[event.button] = 0
             elif event.joy == self.throttle_id:
                 self.throttle_button_state[event.button] = 0
+
+        self.changed_trigger = False
+        if self.joystick_button_state[0] == 1 and self.changed_trigger == False:
+            self.tools[0] = not self.tools[0]
+            self.changed_trigger = True
+        if self.joystick_button_state[0] == 0:
+            self.changed_trigger = False
+        self.change_buttom = False
+        if self.joystick_button_state[1] == 1 and self.change_buttom == False:
+            self.tools[2] = not self.tools[2]
+            self.change_buttom = True
+        if self.joystick_button_state[1] == 0:
+            self.change_buttom = False
+        
 
         # Check if the event is a joydeviceremoved event
         elif event.type == pygame.JOYDEVICEREMOVED:
