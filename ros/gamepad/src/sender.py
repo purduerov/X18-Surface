@@ -6,265 +6,245 @@ import time
 
 # ROS
 import rclpy
+from rclpy.node import Node
 from std_msgs.msg import String, Bool, Empty
 from shared_msgs.msg import RovVelocityCommand, ToolsCommandMsg
 from geometry_msgs.msg import Twist
 
 from config import *
 
+class Controller(Node):
+    def __init__(self):
+        super().__init__("gp_pub")
+        # Pygame variables
+        self.joystick = None
+        self.throttle = None
+        self.joystick_id = 0
+        self.throttle_id = 0
 
-tools = [0, 0, 0, 0, 0]
+        # Joystick and throttle states
+        self.joystick_axis_state = joystick_axis_state
+        self.joystick_button_state = joystick_button_state
+        self.throttle_axis_state = throttle_axis_state
+        self.throttle_button_state = throttle_button_state
 
-SCALE_TRANSLATIONAL_X = 1.0
-SCALE_TRANSLATIONAL_Y = 1.0
-SCALE_TRANSLATIONAL_Z = 1.0
+        # Pilot variables
+        self.reverse = 1
+        self.lockout = True
+        self.is_fine = 0
+        self.is_pool_centric = False
+        self.depth_lock = False
+        self.pitch_lock = False
+        self.tools = [0, 0, 0, 0, 0]
 
-SCALE_ROTATIONAL_X = 1.0
-SCALE_ROTATIONAL_Y = 1.0
-SCALE_ROTATIONAL_Z = 1.0
-
-TRIM_X = 0.0
-TRIM_Y = 0.0
-TRIM_Z = 0.0
-
-REVERSE = 1
-LOCKOUT = True
-# is fine = 0 = std_mode
-# is_fine = 1 = fine_mode
-# is_fine = 2 = yeet mode
-is_fine = 0
-is_pool_centric = False
-depth_lock = False
-pitch_lock = False
-GAMEPAD_TIMEOUT = 20  # seconds
-
-
-def getMessage():
-    """Returns a RovVelocityCommand message based on the current gamepad state"""
-    global gamepad_state
-    global is_fine
-    global is_pool_centric
-    global pitch_lock
-    global depth_lock
-
-    t = Twist()
-
-    t.linear.x = -(gamepad_state["LSY"] * SCALE_TRANSLATIONAL_X + TRIM_X) * REVERSE
-    t.linear.y = -(gamepad_state["LSX"] * SCALE_TRANSLATIONAL_Y + TRIM_Y) * REVERSE
-    t.linear.z = (
-        (gamepad_state["RT"] - gamepad_state["LT"]) / 2.0
-    ) * SCALE_TRANSLATIONAL_Z + TRIM_Z
-
-    if gamepad_state["LB"] == 1:
-        x = 1 * SCALE_ROTATIONAL_X
-    elif gamepad_state["RB"] == 1:
-        x = -1 * SCALE_ROTATIONAL_X
-    else:
-        x = 0.0
-
-    t.angular.x = -x
-    t.angular.y = (-gamepad_state["RSY"] * SCALE_ROTATIONAL_Y) * REVERSE
-    t.angular.z = -gamepad_state["RSX"] * SCALE_ROTATIONAL_Z
-
-    new_msg = RovVelocityCommand()
-    new_msg.twist = t
-    new_msg.is_fine = is_fine
-    new_msg.is_pool_centric = is_pool_centric
-    new_msg.depth_lock = depth_lock
-    new_msg.pitch_lock = pitch_lock
-
-    return new_msg
-
-
-def getTools():
-    """Returns a ToolsCommandMsg message based on the current gamepad state"""
-    global tools
-
-    tm = ToolsCommandMsg()
-    tm.tools = [i for i in tools]
-
-    return tm
-
-
-def correct_raw(raw, abbv):
-    """Corrects the raw value from the gamepad to be in the range [-1.0, 1.0]"""
-    # Separate the sign from the value
-    sign = (raw >= 0) * 2 - 1
-    raw = abs(raw)
-
-    # Check if the input is a trigger or a stick
-    if abbv == "LT" or abbv == "RT":
-        dead_zone = TRIGGER_DEAD_ZONE
-        value_range = TRIGGER_RANGE
-    else:
-        dead_zone = STICK_DEAD_ZONE
-        value_range = STICK_RANGE
-
-    if raw < dead_zone:
-        return 0.0
-
-    # Remove dead zone and scale the value
-    raw -= dead_zone
-    raw *= value_range / (value_range - dead_zone)
-    raw = 1.0 if raw > value_range else raw / value_range
-    corrected = round(raw, 3)
-    corrected *= sign
-    return corrected
-
-
-def process_event(event):
-    """Processes a pygame event"""
-    global tools
-    global is_fine
-    global gamepad_state
-    global is_pool_centric
-    global depth_lock
-    global pitch_lock
-
-    # Button pressed down events
-    if event.type == pygame.JOYBUTTONDOWN:
-        gamepad_state[JOY_BUTTON[event.button]] = 1
-        if event.button == JOY_BUTTON_KEY["A"]:
-            tools[0] = not tools[0]
-
-        elif event.button == JOY_BUTTON_KEY["B"]:
-            tools[1] = not tools[1]
-
-        elif event.button == JOY_BUTTON_KEY["X"]:
-            tools[2] = not tools[2]
-
-        elif event.button == JOY_BUTTON_KEY["Y"] and LOCKOUT:
-            tools[3] = not tools[3]
-
-        elif event.button == JOY_BUTTON_KEY["MENU"]:
-            is_pool_centric = not is_pool_centric
-
-    # Button released events
-    elif event.type == pygame.JOYBUTTONUP:
-        gamepad_state[JOY_BUTTON[event.button]] = 0
-
-    # DPAD buttons
-    elif event.type == pygame.JOYHATMOTION:
-        if event.value[1] == 1:
-            if is_fine < 3:
-                is_fine += 1
-        elif event.value[1] == -1:
-            if is_fine > 0:
-                is_fine -= 1
-        else:
-            pass
-        if event.value[0] == -1:
-            pitch_lock = not pitch_lock
-        elif event.value[0] == 1:
-            depth_lock = not depth_lock
-            is_pool_centric = True
-        else:
-            pass
-
-    # Joysticks
-    elif event.type == pygame.JOYAXISMOTION:
-        gamepad_state[JOY_AXIS[event.axis]] = correct_raw(
-            event.value, JOY_AXIS[event.axis]
-        )
-
-    # If the gamepad is disconnected, try to reconnect it
-    elif event.type == pygame.JOYDEVICEREMOVED:
-        if not reconnect_gamepad():
-            node.get_logger().info("\nNo gamepad found, exiting")
-            pygame.quit()
-            rclpy.shutdown()
-            sys.exit(0)
-
-
-def pub_data():
-    """Publishes the data to the rov_velocity topic and the tools topic"""
-    # Get a message to publish for the rov_velocity topic
-    pub.publish(getMessage())
-    # Get a message to publish for the tools topic
-    pub_tools.publish(getTools())
-
-
-def update_gamepad():
-    """Updates the gamepad state"""
-    # Get all the events from pygame and process them
-    for event in pygame.event.get():
-        process_event(event)
-
-
-def init_pygame():
-    """Initializes pygame and the joystick"""
-    global joystick
-    pygame.init()
-    pygame.joystick.init()
-    assert pygame.joystick.get_count() == 1
-    joystick = pygame.joystick.Joystick(0)
-
-
-def reconnect_gamepad():
-    """Tries to reconnect the gamepad"""
-    global joystick
-    reconnected = False
-    i = GAMEPAD_TIMEOUT
-    while i >= 0 and not reconnected:
+        # Mapping variables (TO CHANGE MAPPING: GO TO getMessage() AND MAKE YOUR CHANGES THERE)
+        self.mapping = 1 # 0, 1, 2, 3
+        
         try:
-            node.get_logger().info(
-                "Gamepad disconnected, reconnect within {:2} seconds".format(i)
-            )
-            pygame.init()
-            pygame.joystick.init()
-            # make sure there is only one joystick
-            if pygame.joystick.get_count() == 1:
-                # get the first joystick
-                joystick = pygame.joystick.Joystick(0)
-                reconnected = True
-            else:
-                pygame.quit()
-                assert False
+            self.init_pygame()
         except:
-            # wait 1 second
-            pygame.time.wait(1000)
-            i -= 1
+            self.get_logger().info('Controllers not found. Please make sure both the joystick and throttle are connected')
+            if not self.reconnect():
+                self.get_logger().info("\nNo gamepad found, exiting")
+                pygame.quit()
+                sys.exit(0)
+        
+        # Create the publishers
+        self.pub = self.create_publisher(RovVelocityCommand, '/rov_velocity', 10)
+        self.pub_tools = self.create_publisher(ToolsCommandMsg, 'tools', 10)
 
-    if reconnected:
-        node.get_logger().info("\nGamepad reconnected")
-        joystick = pygame.joystick.Joystick(0)
+        # Create the timers
+        self.data_thread = self.create_timer(0.1, self.pub_data)
+        self.gamepad_thread = self.create_timer(0.001, self.update)
+        self.get_logger().info('Controllers initialized')
 
-    return reconnected
+
+    def init_pygame(self):
+        '''Initializes pygame and the joystick'''
+        pygame.init()
+        pygame.joystick.init()
+        # Should be two joysticks
+        assert pygame.joystick.get_count() == 2
+
+        # Determine which joystick is the joystick and which is the throttle
+        for i in range(pygame.joystick.get_count()):
+            if pygame.joystick.Joystick(i).get_name() == JOYSTICK_NAME:
+                self.joystick = pygame.joystick.Joystick(i)
+                self.joystick_id = i
+            if pygame.joystick.Joystick(i).get_name() == THROTTLE_NAME:
+                self.throttle = pygame.joystick.Joystick(i)
+                self.throttle_id = i
 
 
-if __name__ == "__main__":
-    global pub, pub_tools, data_thread, gamepad_thread, node
+    def reconnect(self):
+        '''Tries to reconnect the gamepad'''
+        reconnected = False
+        i = GAMEPAD_TIMEOUT
+        while i >= 0 and not reconnected:
+            self.get_logger().info('Gamepad disconnected, reconnect within {:2} seconds'.format(i))
+            try:
+                self.init_pygame()
+                reconnected = True
+            except:
+                pygame.time.wait(1000) # Wait 1 second
+                i -= 1
 
-    # Initialize the ros node
-    rclpy.init()
-    node = rclpy.create_node("gp_pub")
+        if reconnected:
+            self.get_logger().info('Controllers reconnected')
+            
+        return reconnected
 
-    try:
-        init_pygame()
-    except:
-        node.get_logger().info("No gamepad found, please connect a gamepad")
-        if not reconnect_gamepad():
-            node.get_logger().info("\nNo gamepad found, exiting")
-            pygame.quit()
-            sys.exit(0)
 
-    # Create the publishers
-    pub = node.create_publisher(RovVelocityCommand, "/rov_velocity", 10)
-    pub_tools = node.create_publisher(ToolsCommandMsg, "tools", 10)
+    def update(self):
+        '''Updates the gamepad state'''
+        # Get all the events from pygame and process them
+        for event in pygame.event.get():
+            self.process_event(event)
 
-    # Create the timers
-    data_thread = node.create_timer(0.1, pub_data)
-    gamepad_thread = node.create_timer(0.001, update_gamepad)
 
-    print("ready")
+    def correct_raw(self, raw):
+        '''Corrects the raw value from the gamepad to be in the range [-1.0, 1.0]'''
+        if raw > 0:
+            if raw >= STICK_DEAD_ZONE:
+                return raw
+            elif raw > 1:
+                return 1
+            else:
+                return 0
+        
+        if raw < 0:
+            if raw <= -STICK_DEAD_ZONE:
+                return raw
+            elif raw < -1:
+                return -1
+            else:
+                return 0
 
-    rclpy.spin(node)
 
-    data_thread.destroy()
-    gamepad_thread.destroy()
+    def process_event(self, event):
+        '''Processes a pygame event'''
+        # Check if the event is a joyaxismotion event
+        if event.type == pygame.JOYAXISMOTION:
+            # Check if the event is from the joystick or the throttle
+            if event.joy == self.joystick_id:
+                self.joystick_axis_state[event.axis] = self.correct_raw(event.value)
+            elif event.joy == self.throttle_id:
+                self.throttle_axis_state[event.axis] = self.correct_raw(event.value)
 
-    # Stop the pygame library
-    pygame.quit()
+        # Check if the event is a joybuttondown event
+        elif event.type == pygame.JOYBUTTONDOWN:
+            # Check if the event is from the joystick or the throttle
+            if event.joy == self.joystick_id:
+                self.joystick_button_state[event.button] = 1
+                
+            elif event.joy == self.throttle_id:
+                self.throttle_button_state[event.button] = 1
 
-    node.destroy_node()
+        # Check if the event is a joybuttonup event
+        elif event.type == pygame.JOYBUTTONUP:
+            # Check if the event is from the joystick or the throttle
+            if event.joy == self.joystick_id:
+                self.joystick_button_state[event.button] = 0
+            elif event.joy == self.throttle_id:
+                self.throttle_button_state[event.button] = 0
+
+        self.changed_trigger = False
+        if self.joystick_button_state[0] == 1 and self.changed_trigger == False:
+            self.tools[0] = not self.tools[0]
+            self.changed_trigger = True
+            
+        if self.joystick_button_state[0] == 0:
+            self.changed_trigger = False
+            
+        self.change_buttom = False
+        if self.joystick_button_state[1] == 1 and self.change_buttom == False:
+            self.tools[2] = not self.tools[2]
+            self.change_buttom = True
+            
+        if self.joystick_button_state[1] == 0:
+            self.change_buttom = False
+        
+
+        # Check if the event is a joydeviceremoved event
+        elif event.type == pygame.JOYDEVICEREMOVED:
+            # Try to reconnect the gamepad
+            self.get_logger().info('Controller disconnected. Attempting to reconnect...')
+            if not self.reconnect():
+                self.get_logger().info("\nNo gamepad found, exiting")
+                pygame.quit()
+                sys.exit(0)
+
+
+    def pub_data(self):
+        '''Publishes the data to the rov_velocity topic and the tools topic'''
+        # Get a message to publish for the rov_velocity topic
+        self.pub.publish(self.getMessage())
+        # Get a message to publish for the tools topic
+        self.pub_tools.publish(self.getTools())
+
+
+    def getMessage(self):
+        '''Returns a RovVelocityCommand message based on the current gamepad state'''
+
+
+        t = Twist()
+
+        if self.mapping == 0:
+            # Set linear velocities
+            t.linear.x = -(self.throttle_axis_state[2] * SCALE_TRANSLATIONAL_X + TRIM_X) * self.reverse
+            t.linear.y = -(self.throttle_axis_state[5] * SCALE_TRANSLATIONAL_Y + TRIM_Y) * self.reverse
+            t.linear.z = -(self.throttle_axis_state[1] * SCALE_TRANSLATIONAL_Y + TRIM_Y) * self.reverse
+
+            # Set angular velocities
+            t.angular.x = -(self.joystick_axis_state[1] * SCALE_ROTATIONAL_X) * self.reverse
+            t.angular.y = -(self.joystick_axis_state[0] * SCALE_ROTATIONAL_Y) * self.reverse
+            t.angular.z = -(self.joystick_axis_state[2] * SCALE_ROTATIONAL_Z) * self.reverse
+
+            # Set PM 
+            # PM_grab = self.joystick_button_state[0]
+            # PM_pos = self.joystick_button_state[1]
+
+        else:
+            # Set linear velocities
+            t.linear.x = -(self.joystick_axis_state[1] * SCALE_TRANSLATIONAL_X + TRIM_X) * self.reverse
+            t.linear.y = (self.joystick_axis_state[0] * SCALE_TRANSLATIONAL_Y + TRIM_Y) * self.reverse
+            t.linear.z = -(self.throttle_axis_state[2] * SCALE_TRANSLATIONAL_Y + TRIM_Y) * self.reverse 
+
+            # Set angular velocities
+            t.angular.x = 0.0 # no pitch
+            t.angular.y = 0.0 # no roll
+            t.angular.z = -(self.joystick_axis_state[2] * SCALE_ROTATIONAL_Z) * self.reverse
+
+            # Set PM
+            # PM_grab = self.joystick_button_state[0]
+            # PM_pos = self.joystick_button_state[1]
+
+        new_msg = RovVelocityCommand()
+        new_msg.twist = t
+        new_msg.is_fine = self.is_fine
+        new_msg.is_pool_centric = self.is_pool_centric
+        new_msg.depth_lock = self.depth_lock
+        new_msg.pitch_lock = self.pitch_lock
+
+        return(new_msg)
+    
+    def getTools(self):
+        '''Returns a ToolsCommandMsg message based on the current gamepad state'''
+
+        tm = ToolsCommandMsg()
+        tm.tools = [i for i in self.tools]
+
+        return tm
+
+
+
+def main():
+    rclpy.init(args=None)
+    controller = Controller()
+    rclpy.spin(controller)
+    controller.destroy_node()
     rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
+
