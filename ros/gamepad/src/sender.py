@@ -136,6 +136,10 @@ class Controller(Node):
             # Check if the event is from the joystick or the throttle
             if event.joy == self.joystick_id:
                 self.joystick_button_state[event.button] = 1
+                if event.button == self.joystick_button_state[0]:
+                    self.tools[0] = not self.tools[0]
+                elif event.button == self.joystick_button_state[1]:
+                    self.tools[2] = not self.tools[2]
             elif event.joy == self.throttle_id:
                 self.throttle_button_state[event.button] = 1
 
@@ -175,10 +179,15 @@ class Controller(Node):
             t.linear.x = -(self.throttle_axis_state[2] * SCALE_TRANSLATIONAL_X + TRIM_X) * self.reverse
             t.linear.y = -(self.throttle_axis_state[5] * SCALE_TRANSLATIONAL_Y + TRIM_Y) * self.reverse
             t.linear.z = -(self.throttle_axis_state[1] * SCALE_TRANSLATIONAL_Y + TRIM_Y) * self.reverse
+
             # Set angular velocities
             t.angular.x = -(self.joystick_axis_state[1] * SCALE_ROTATIONAL_X) * self.reverse
             t.angular.y = -(self.joystick_axis_state[0] * SCALE_ROTATIONAL_Y) * self.reverse
             t.angular.z = -(self.joystick_axis_state[2] * SCALE_ROTATIONAL_Z) * self.reverse
+
+            # Set PM 
+            # PM_grab = self.joystick_button_state[0]
+            # PM_pos = self.joystick_button_state[1]
 
         else:
             # Set linear velocities
@@ -190,6 +199,10 @@ class Controller(Node):
             t.angular.x = 0.0 # no pitch
             t.angular.y = 0.0 # no roll
             t.angular.z = -(self.joystick_axis_state[2] * SCALE_ROTATIONAL_Z) * self.reverse
+
+            # Set PM
+            # PM_grab = self.joystick_button_state[0]
+            # PM_pos = self.joystick_button_state[1]
 
         new_msg = RovVelocityCommand()
         new_msg.twist = t
