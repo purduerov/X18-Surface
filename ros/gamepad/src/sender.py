@@ -50,12 +50,12 @@ class Controller(Node):
                 sys.exit(0)
         
         # Create the publishers
-        self.pub = self.node.create_publisher(RovVelocityCommand, '/rov_velocity', 10)
-        self.pub_tools = self.node.create_publisher(ToolsCommandMsg, 'tools', 10)
+        self.pub = self.create_publisher(RovVelocityCommand, '/rov_velocity', 10)
+        self.pub_tools = self.create_publisher(ToolsCommandMsg, 'tools', 10)
 
         # Create the timers
-        self.data_thread = self.node.create_timer(0.1, self.pub_data)
-        self.gamepad_thread = self.node.create_timer(0.001, self.update)
+        self.data_thread = self.create_timer(0.1, self.pub_data)
+        self.gamepad_thread = self.create_timer(0.001, self.update)
         self.get_logger().info('Controllers initialized')
 
 
@@ -152,12 +152,15 @@ class Controller(Node):
         if self.joystick_button_state[0] == 1 and self.changed_trigger == False:
             self.tools[0] = not self.tools[0]
             self.changed_trigger = True
+            
         if self.joystick_button_state[0] == 0:
             self.changed_trigger = False
+            
         self.change_buttom = False
         if self.joystick_button_state[1] == 1 and self.change_buttom == False:
             self.tools[2] = not self.tools[2]
             self.change_buttom = True
+            
         if self.joystick_button_state[1] == 0:
             self.change_buttom = False
         
@@ -177,7 +180,7 @@ class Controller(Node):
         # Get a message to publish for the rov_velocity topic
         self.pub.publish(self.getMessage())
         # Get a message to publish for the tools topic
-        # pub_tools.publish(self.getTools())
+        self.pub_tools.publish(self.getTools())
 
 
     def getMessage(self):
@@ -236,8 +239,8 @@ class Controller(Node):
 def main():
     rclpy.init(args=None)
     controller = Controller()
-    rclpy.spin(controller.node)
-    controller.node.destroy_node()
+    rclpy.spin(controller)
+    controller.destroy_node()
     rclpy.shutdown()
 
 
