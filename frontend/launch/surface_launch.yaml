@@ -1,7 +1,7 @@
 launch:
 
 - node:
-    pkg: ui
+    pkg: frontend
     exec: app.py
     namespace: rov
 
