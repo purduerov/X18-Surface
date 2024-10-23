@@ -6,6 +6,6 @@ launch:
     namespace: rov
 
 - node:
-    pkg: gamepad
+    pkg: controller
     exec: sender.py
     namespace: rov
