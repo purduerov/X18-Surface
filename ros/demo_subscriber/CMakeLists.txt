@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(demo_publisher)
+project(demo_subscriber)
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
@@ -12,7 +12,7 @@ ament_python_install_package(${PROJECT_NAME})
 
 install(
   PROGRAMS
-    src/demo_publisher.py
+    src/demo_subscriber.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
