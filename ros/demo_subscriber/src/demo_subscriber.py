@@ -8,29 +8,33 @@ import socketio
 
 sio = socketio.Client()
 
-# Create a subscriber node that will listen to messages published on the 'count' topic
+# Create a subscriber node that will listen to multiple ROS topics
 class SubscriberNode(Node):
     def __init__(self):
-        super().__init__('subscriber_node') # Initialize the node with a name
-        self.subscription = self.create_subscription(String, 'count', self.listener_callback, 10)
-        self.subscription  # prevent unused variable warning
+        super().__init__('subscriber_node')  # Initialize the node with a name
+        
+        # Dictionary to map topic names to their corresponding callback functions
+        self.topics = {
+            'count': self.count_callback
+            # Add more topics and their respective callbacks here
+        }
+        
+        # Subscribe to each topic in the topics dictionary
+        for topic_name, callback in self.topics.items():
+            self.create_subscription(String, topic_name, callback, 10)
 
-    def listener_callback(self, msg):
-        self.get_logger().info(f'Received: "{msg.data}"')
+    def count_callback(self, msg):
+        # General callback for all subscribed topics
+        self.get_logger().info(f'Received from count topic: "{msg.data}"')
         # Emit the received message to the frontend using SocketIO
         sio.emit('count', msg.data)
 
 def main():
     rclpy.init()
     subscriber_node = SubscriberNode()
+    
     # Connect to the SocketIO server
     sio.connect('http://127.0.0.1:5000')  # Adjust the URL if necessary
-
-    # Check if the connection was successful
-    if sio.connected:
-        subscriber_node.get_logger().info("Connected to SocketIO server")
-    else:
-        subscriber_node.get_logger().error("Failed to connect to SocketIO server")
 
     rclpy.spin(subscriber_node)
     subscriber_node.destroy_node()
