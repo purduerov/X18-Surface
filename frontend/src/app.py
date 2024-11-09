@@ -23,6 +23,11 @@ def index():
     return render_template("index.html", rov_ip=os.getenv("ROV_IP"))
 
 
+
+@app.route("/new-ui")
+def new_ui():
+    return render_template("new_index_proto.html", rov_ip=os.getenv("ROV_IP"))
+
 @app.route("/demo_ros_subscriber")
 def demo_ros_subscriber():
     return render_template("demo_ros_subscriber.html")
@@ -41,8 +46,6 @@ def handle_count(data):
     node.get_logger().info(f"Received count: {data}")
     # Forward the data to the client
     socketio.emit('count', data)
-
-
 
 def initialize_frontend_nodes():
     """
@@ -87,16 +90,15 @@ if __name__ == "__main__":
     To build the program, run `scripts/build.sh`
     To run the program, run `scripts/run.sh`
     """
-    node = initialize_frontend_nodes()
-    if node is None:
-        print("ERROR: Could not initialize ROS node")
-        exit(1)
+    # node = initialize_frontend_nodes()
+    # if node is None:
+    #     print("ERROR: Could not initialize ROS node")
+    #     exit(1)
 
     # Subscribe to ROS topics using subscriber.py
 
     # rov_connection = establish_rov_connection(node)
     # if rov_connection is None:
-    #     exit(1)
 
     # camera_streams = establish_camera_streams(node, rov_connection)
     # if camera_streams is False:
@@ -105,8 +107,6 @@ if __name__ == "__main__":
     # Establish the signal handler for closing the application
     # signal_handler = SignalHandler(node, rov_connection, camera_streams)
     # signal.signal(signal.SIGINT, signal_handler.close_application)
-
-    # app.run(host="0.0.0.0", port=5000)
 
     # Run the Flask app with SocketIO
     socketio.run(app, host="0.0.0.0", port=5000, allow_unsafe_werkzeug=True)

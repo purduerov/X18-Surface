@@ -6,20 +6,6 @@ launch:
     namespace: rov
 
 # - node:
-#     pkg: frontend
+#     pkg: controller
 #     exec: sender.py
 #     namespace: rov
-
-- node:
-    pkg: demo_publisher
-    exec: demo_publisher.py
-    namespace: rov
-
-
-- TimerAction:
-    period: 30.0  # Delay the demo_subscriber launch by 30 seconds
-    actions:
-    - node:
-        pkg: demo_subscriber
-        exec: demo_subscriber.py
-        namespace: rov

@@ -31,6 +31,7 @@ install(PROGRAMS
 
 install(DIRECTORY
   src/templates
+  src/static
   DESTINATION lib/${PROJECT_NAME}
 )
 
