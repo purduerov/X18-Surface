@@ -7,3 +7,7 @@ pygame==2.5.2
 python-dotenv==1.0.1
 setuptools==59.6.0
 flask==3.0.3
+flask-socketio==5.4.1
+requests==2.32.3
+websocket-client==1.8.0
+flask-cors==5.0.0
