@@ -18,6 +18,11 @@ def index():
     return render_template("index.html", rov_ip=os.getenv("ROV_IP"))
 
 
+@app.route("/new-ui")
+def new_ui():
+    return render_template("new_index_proto.html", rov_ip=os.getenv("ROV_IP"))
+
+
 def initialize_frontend_nodes():
     """
     Initializes the ROS node for the Flask server
@@ -55,21 +60,21 @@ if __name__ == "__main__":
     To build the program, run `scripts/build.sh`
     To run the program, run `scripts/run.sh`
     """
-    node = initialize_frontend_nodes()
-    if node is None:
-        print("ERROR: Could not initialize ROS node")
-        exit(1)
+    # node = initialize_frontend_nodes()
+    # if node is None:
+    #     print("ERROR: Could not initialize ROS node")
+    #     exit(1)
 
-    rov_connection = establish_rov_connection(node)
-    if rov_connection is None:
-        exit(1)
+    # rov_connection = establish_rov_connection(node)
+    # if rov_connection is None:
+    #     exit(1)
 
-    camera_streams = establish_camera_streams(node, rov_connection)
-    if camera_streams is False:
-        exit(1)
+    # camera_streams = establish_camera_streams(node, rov_connection)
+    # if camera_streams is False:
+    #     exit(1)
 
     # Establish the signal handler for closing the application
-    signal_handler = SignalHandler(node, rov_connection, camera_streams)
-    signal.signal(signal.SIGINT, signal_handler.close_application)
+    # signal_handler = SignalHandler(node, rov_connection, camera_streams)
+    # signal.signal(signal.SIGINT, signal_handler.close_application)
 
     app.run(host="0.0.0.0", port=5000)
