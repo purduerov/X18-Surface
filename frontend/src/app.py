@@ -62,13 +62,13 @@ class Frontend(Node):
 
         @self.socketio.on('count')
         def handle_count(data):
-            self.get_logger().info(f"Received count: {data}")
+            # self.get_logger().info(f"Flask received count: {data}")
             # Forward the data to the client
             self.socketio.emit('count', data)
 
         @self.socketio.on('rov_velocity')
         def handle_rov_velocity(data):
-            self.get_logger().info(f"Received rov_velocity: {data}")
+            # self.get_logger().info(f"Flask received rov_velocity: {data}")
             # Parse the data and forward it to the client
             self.socketio.emit('rov_velocity', data)
 

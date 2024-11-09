@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css')}}">
     <script src="static/scripts.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
+    <script src="static/socketio_listener.js"></script>
 </head>
 <body>
     <div id="vert-separator"></div></div>
@@ -32,8 +34,8 @@
     <div class="acceleration-display">Acceleration: 0m/s<sup>2</sup></w></div>
     <div class="ang-velocity-display">Angular Velocity: 0m</div>
     <div class="depth-display">Depth: 0m</div>
-    <div class="xyz-display">x: 0<br>y: 0<br>z: 0</div>
-    <div class="pry-display">Pitch: 0<br>Roll: 0<br>Yaw: 0</div>
+    <div class="xyz-display" id="linear-command">x: 0<br>y: 0<br>z: 0</div>
+    <div class="pry-display" id="angular-command">Pitch: 0<br>Roll: 0<br>Yaw: 0</div>
     <div class="thruster-display" id="thrust-value1">Thrust: 0.00</div>
     <div class="thruster-display" id="thrust-value2">Thrust: 0.00</div>
     <div class="thruster-display" id="thrust-value3">Thrust: 0.00</div>

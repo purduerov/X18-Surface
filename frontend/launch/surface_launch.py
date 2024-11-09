@@ -10,10 +10,15 @@ def generate_launch_description():
             namespace='rov',
         ),
         Node(
-            package='demo_publisher',
-            executable='demo_publisher.py',
+            package='controller',
+            executable='sender.py',
             namespace='rov',
         ),
+        # Node(
+        #     package='demo_publisher',
+        #     executable='demo_publisher.py',
+        #     namespace='rov',
+        # ),
         TimerAction(
             period=5.0,  # Delay for n seconds
             actions=[
