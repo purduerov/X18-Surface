@@ -15,7 +15,7 @@ def generate_launch_description():
             namespace='rov',
         ),
         TimerAction(
-            period=5.0,  # Delay for 30 seconds
+            period=5.0,  # Delay for n seconds
             actions=[
                 Node(
                     package='demo_subscriber',

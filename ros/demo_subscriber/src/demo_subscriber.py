@@ -4,6 +4,7 @@
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String
+from shared_msgs.msg import RovVelocityCommand
 import socketio
 
 sio = socketio.Client()
@@ -15,19 +16,26 @@ class SubscriberNode(Node):
         
         # Dictionary to map topic names to their corresponding callback functions
         self.topics = {
-            'count': self.count_callback
+            'count': self.count_callback,
+            'rov_velocity': self.rov_velocity_callback
             # Add more topics and their respective callbacks here
         }
         
         # Subscribe to each topic in the topics dictionary
-        for topic_name, callback in self.topics.items():
-            self.create_subscription(String, topic_name, callback, 10)
+        self.create_subscription(String, 'count', self.count_callback, 10)
+        self.create_subscription(RovVelocityCommand, 'rov_velocity', self.rov_velocity_callback, 10)
 
     def count_callback(self, msg):
         # General callback for all subscribed topics
         self.get_logger().info(f'Received from count topic: "{msg.data}"')
         # Emit the received message to the frontend using SocketIO
         sio.emit('count', msg.data)
+
+    def rov_velocity_callback(self, msg):
+        # General callback for all subscribed topics
+        self.get_logger().info(f'Received from rov_velocity topic: "{msg.data}"')
+        # Emit the received message to the frontend using SocketIO
+        sio.emit('rov_velocity', msg.data)
 
 def main():
     rclpy.init()
