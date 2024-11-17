@@ -150,4 +150,73 @@ if __name__ == "__main__":
 
 ## Running the Publisher node
 
+1. Source the workspace
+
+    #### Linux (or WSL)
+    ```bash
+    source /opt/ros/humble/setup.bash
+    ```
+
+    #### MacOS
+    ```bash
+    . ~/ros2_install/ros2-osx/setup.bash
+    ```
+
+    #### Windows
+    ```cmd
+    call C:\dev\ros2\local_setup.bat
+    ```
+
+    You may need to adjust the path to the setup file based on your ROS 2 installation.
+
+2. Build the workspace
+
+    We use colcon to build the workspace. Run the following command in the root of your workspace:
+
+    ```bash
+    colcon build
+    ```
+
+3. Source the installed workspace
+
+    ```bash
+    source install/setup.bash
+    ```
+
+4. Run the publisher node
+
+    ```bash
+    ros2 run publisher_node demo_publisher.py
+    ```
+
+    Replace `publisher_node` with the name of the package containing the publisher node. 
+    Replace `demo_publisher.py` with the name of the Python script containing the publisher node.
+
+5. Verify that the publisher node is running and publishing messages.
+
+    - You can view the active ROS nodes on your ROS network using the following command:
+
+    ```bash
+    ros2 node list
+    ```
+
+    - You can view all the topics being published on the ROS network using the following command:
+
+    ```bash
+    ros2 topic list
+    ```
+
+    - You can view the messages being published on the `/count` topic using the following command:
+
+    ```bash
+    ros2 topic echo /count
+    ```
+
 ## Troubleshooting
+
+- If you encounter any issues while running the publisher node, check the following:
+    - Make sure the ROS 2 environment is properly set up.
+    - Verify that the message type in the publisher matches the message type expected by any subscribers.
+    - Check the topic name and ensure it matches the topic name expected by any subscribers.
+    - Inspect the logs for any error messages that might indicate the cause of the issue.
+    - Ensure that the ROS 2 client library is correctly initialized and shut down.

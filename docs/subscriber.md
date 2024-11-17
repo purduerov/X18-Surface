@@ -162,13 +162,13 @@ if __name__ == "__main__":
     source /opt/ros/humble/setup.bash
     ```
 
-    #### Windows
-    ```cmd
+    #### MacOS
+    ```bash
     . ~/ros2_install/ros2-osx/setup.bash
     ```
 
-    #### MacOS
-    ```bash
+    #### Windows
+    ```cmd
     call C:\dev\ros2\local_setup.bat
     ```
 
@@ -198,6 +198,8 @@ if __name__ == "__main__":
     Replace `demo_subscriber.py` with the name of the Python script containing the subscriber node.
 
 5. Verify that the subscriber node is running and receiving messages from the publisher node.
+
+    - The subscriber node should start listening to the `/count` topic and print the messages received from the publisher node to the console.
 
     - You can view the active ROS nodes on your ROS nework using the following command:
 
