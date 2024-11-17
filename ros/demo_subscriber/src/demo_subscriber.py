@@ -4,7 +4,7 @@
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String
-from shared_msgs.msg import RovVelocityCommand
+from shared_msgs.msg import RovVelocityCommand, ImuMsg
 import socketio
 import json
 
@@ -18,13 +18,15 @@ class SubscriberNode(Node):
         # Dictionary to map topic names to their corresponding callback functions
         self.topics = {
             # 'count': self.count_callback,
-            'rov_velocity': self.rov_velocity_callback
+            'rov_velocity': self.rov_velocity_callback,
             # Add more topics and their respective callbacks here
+            'surface_imu': self.rov_imu_callback
         }
         
         # Subscribe to each topic in the topics dictionary
         # self.create_subscription(String, 'count', self.count_callback, 10)
         self.create_subscription(RovVelocityCommand, '/rov_velocity', self.rov_velocity_callback, 10)
+        self.create_subscription(ImuMsg, '/surface_imu', self.rov_imu_callback, 10)
 
     # def count_callback(self, msg):
     #     # General callback for all subscribed topics
@@ -40,6 +42,13 @@ class SubscriberNode(Node):
         # self.get_logger().info(f'Received from rov_velocity topic: "{msg}"')
         # Emit the received message to the frontend using SocketIO
         sio.emit('rov_velocity', msg_json)
+    
+    def rov_imu_callback(self, msg):
+        msg_dict = rosmsg_to_dict(msg)
+
+        msg_json = json.dumps(msg_dict)
+
+        sio.emit('surface_imu', msg_json)
 
 
 def rosmsg_to_dict(msg):

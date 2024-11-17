@@ -71,6 +71,10 @@ class Frontend(Node):
             # self.get_logger().info(f"Flask received rov_velocity: {data}")
             # Parse the data and forward it to the client
             self.socketio.emit('rov_velocity', data)
+        
+        @self.socketio.on('surface_imu')
+        def handle_surface_imu(data):
+            self.socketio.emit('surface_imu', data)
 
 
 def main():
