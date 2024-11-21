@@ -43,7 +43,7 @@ class Frontend(Node):
         # The new UI
         @self.app.route("/new-ui")
         def new_ui():
-            return render_template("new_index_proto.html")
+            return render_template("innovative_ui.html")
         
         # The demo subscriber page
         @self.app.route("/demo-subscriber")
