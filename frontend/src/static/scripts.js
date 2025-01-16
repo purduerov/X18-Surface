@@ -22,6 +22,7 @@ const sliderValue5 = document.getElementById('sliderValue5');
 const sliderValue6 = document.getElementById('sliderValue6');
 const sliderValue7 = document.getElementById('sliderValue7');
 const sliderValue8 = document.getElementById('sliderValue8');
+const scaleCanvas = 0.75;
 
 function colorToAngle(angle){
   if(angle < 0){
@@ -46,7 +47,7 @@ function drawSpeedo(angle, canvas){
 
   const centerX = canvas.width / 2;
   const centerY = canvas.height;
-  const radius = 100;
+  const radius = 100 * scaleCanvas;
 
   let startAngle = 0;
   let endAngle = 0;
