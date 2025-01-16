@@ -125,7 +125,3 @@ slider8.addEventListener('input', function(){
   sliderValue8.textContent = angle;
   drawSpeedo(angle, speedo8);
 });
-
-
-
-
