@@ -10,87 +10,70 @@
 </head>
 <body>
     <div class="default-container">
-        <div class="left-container"></div>
+        <div class="left-container">
+            <div class="camera-item" id="camera1">
+                <iframe src="https://www.youtube.com/watch?v=Z5LyWP5L46c" scrolling="no" style="width: 100%; height: 100%;"></iframe>
+            </div>
+            <div class="camera-item" id="camera2">
+                <iframe src="http://{{ rov_ip }}:8889/camera_1" scrolling="no" style="width: 100%; height: 100%;"></iframe>
+            </div>
+            <div class="camera-item" id="camera3">
+                <iframe src="http://{{ rov_ip }}:8889/camera_1" scrolling="no" style="width: 100%; height: 100%;"></iframe>
+            </div>
+        </div>
         <div class="middle-container">
             <div class="speedo-grid">
-                <div class="speedo-container">
-                    <canvas id="speedo1" width="200" height="100"></canvas>
-                    <br>
-                    <label for="slider1">Velocity</label>
-                    <input type="range" id="slider1" min="-90" max="90" value="0">
-                    <span id="sliderValue1">00</span>°
+                <div>
+                    <canvas id="speedo1" width="300" height="150"></canvas>
                 </div>
-                <div class="speedo-container">
-                    <canvas id="speedo2" width="200" height="100"></canvas>
-                    <br>
-                    <label for="slider2">Velocity</label>
-                    <input type="range" id="slider2" min="-90" max="90" value="0">
-                    <span id="sliderValue2">00</span>°
+                <div>
+                    <canvas id="speedo2" width="300" height="150"></canvas>
                 </div>
-                <div class="speedo-container">
-                    <canvas id="speedo3" width="200" height="100"></canvas>
-                    <br>
-                    <label for="slider3">Velocity</label>
-                    <input type="range" id="slider3" min="-90" max="90" value="0">
-                    <span id="sliderValue3">00</span>°
+                <div>
+                    <canvas id="speedo3" width="300" height="150"></canvas>
                 </div>
-                <div class="speedo-container">
-                    <canvas id="speedo4" width="200" height="100"></canvas>
-                    <br>
-                    <label for="slider4">Velocity</label>
-                    <input type="range" id="slider4" min="-90" max="90" value="0">
-                    <span id="sliderValue4">00</span>°
+                <div>
+                    <canvas id="speedo4" width="300" height="150"></canvas>
+                    
                 </div>
-                <div class="speedo-container">
-                    <canvas id="speedo5" width="200" height="100"></canvas>
-                    <br>
-                    <label for="slider5">Velocity</label>
-                    <input type="range" id="slider5" min="-90" max="90" value="0">
-                    <span id="sliderValue5">00</span>°
+                <div>
+                    <canvas id="speedo5" width="300" height="150"></canvas>
+                    
                 </div>
-                <div class="speedo-container">
-                    <canvas id="speedo6" width="200" height="100"></canvas>
-                    <br>
-                    <label for="slider6">Velocity</label>
-                    <input type="range" id="slider6" min="-90" max="90" value="0">
-                    <span id="sliderValue6">00</span>°
+                <div>
+                    <canvas id="speedo6" width="300" height="150"></canvas>
+                    
                 </div>
-                <div class="speedo-container">
-                    <canvas id="speedo7" width="200" height="100"></canvas>
-                    <br>
-                    <label for="slider7">Velocity</label>
-                    <input type="range" id="slider7" min="-90" max="90" value="0">
-                    <span id="sliderValue7">00</span>°
+                <div>
+                    <canvas id="speedo7" width="300" height="150"></canvas>
+                    
                 </div>
-                <div class="speedo-container">
-                    <canvas id="speedo8" width="200" height="100"></canvas>
-                    <br>
-                    <label for="slider8">Velocity</label>
-                    <input type="range" id="slider8" min="-90" max="90" value="0">
-                    <span id="sliderValue8">00</span>°
+                <div>
+                    <canvas id="speedo8" width="300" height="150"></canvas>
+                    
                 </div>
             </div>
             <div id ="thruster-data" class="data-container">
-                <div id="velocity-data" class="grid-item">&lt0, 0, 0&gt m/s</div>
-                <div id="pra-data" class="grid-item">&lt0, 0, 0&gt</div>
+                <div id="velocity-data" class="grid-item">&lt00.00, 00.00, 00.00&gt m/s</div>
+                <div id="pra-data" class="grid-item">&lt00.00, 00.00, 00.00&gt &deg</div>
             </div>
         </div>
         <div class="right-container">
             <div id="internal-data" class="data-container">
-                <div id="pressure-data" class="grid-item">0 psi</div>
-                <div id="temp-data" class="grid-item">0&deg C</div>
+                <div id="pressure-data" class="grid-item">00.00 psi</div>
+                <div id="temp-data" class="grid-item">00.00&deg C</div>
                 <div id="humidity-data" class="grid-item">50%</div>
             </div>
             <div id="electrical-data" class="data-container">
-                <div id="current-data" class="grid-item">0 A</div>
-                <div id="voltage-data" class="grid-item">0 V</div>
+                <div id="current-data" class="grid-item">00.00 A</div>
+                <div id="voltage-data" class="grid-item">00.00 V</div>
             </div>
             <div id="inertial-data" class="data-container">
-                <div id="accel-data" class="grid-item">&lt0, 0, 0&gt m/s^2</div>
-                <div id="angular-data" class="grid-item">&lt0, 0, 0&gt rad/s</div>
+                <div id="accel-data" class="grid-item">&lt00.00, 00.00, 00.00&gt m/s^2</div>
+                <div id="angular-data" class="grid-item">&lt00.00, 00.00, 00.00&gt &deg/s</div>
             </div>
             <div id="external-data" class="data-container">
-                <div id="accel-data" class="grid-item">0 m</div>
+                <div id="depth-data" class="grid-item">00.00 m</div>
             </div>
         </div>
     </div>

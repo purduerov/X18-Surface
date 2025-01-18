@@ -43,7 +43,7 @@ class Frontend(Node):
         # The new UI
         @self.app.route("/new-ui")
         def new_ui():
-            return render_template("innovative_ui.html")
+            return render_template("innovative_ui.html", ros_ip=os.getenv("ROV_IP"))
         
         # The demo subscriber page
         @self.app.route("/demo-subscriber")
