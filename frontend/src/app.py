@@ -36,14 +36,14 @@ class Frontend(Node):
     # Function to setup the routes for the Flask app
     def setup_routes(self):
         # 4 Camera streams
-        @self.app.route("/")
+        @self.app.route("/four-streams")
         def index():
             return render_template("index.html", rov_ip=os.getenv("ROV_IP"))
         
         # The new UI
-        @self.app.route("/new-ui")
+        @self.app.route("/")
         def new_ui():
-            return render_template("innovative_ui.html", ros_ip=os.getenv("ROV_IP"))
+            return render_template("innovative_ui.html", rov_ip=os.getenv("ROV_IP"))
         
         # The demo subscriber page
         @self.app.route("/demo-subscriber")

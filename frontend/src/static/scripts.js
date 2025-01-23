@@ -1,14 +1,15 @@
+//list of speedometer elements from the html
+const speedoList = [
+  document.getElementById('speedo1'), document.getElementById('speedo2'), document.getElementById('speedo3'),
+  document.getElementById('speedo4'), document.getElementById('speedo5'), document.getElementById('speedo6'),
+  document.getElementById('speedo7'), document.getElementById('speedo8')
+];
+//list of camera stream elements from the html
+const streamList = [
+  document.getElementById('stream1'), document.getElementById('stream2'), document.getElementById('stream3')
+];
 
-const speedo1 = document.getElementById('speedo1');
-const speedo2 = document.getElementById('speedo2');
-const speedo3 = document.getElementById('speedo3');
-const speedo4 = document.getElementById('speedo4');
-const speedo5 = document.getElementById('speedo5');
-const speedo6 = document.getElementById('speedo6');
-const speedo7 = document.getElementById('speedo7');
-const speedo8 = document.getElementById('speedo8');
-
-
+//function to decide if the shaded area in the speedometer should be red or green based on the angle
 function colorToAngle(angle){
   if(angle < 0){
     return `rgb(200, 0, 0)`
@@ -19,17 +20,24 @@ function colorToAngle(angle){
   }
 }
 
-function drawSpeedo(angle, canvas){
+//uses canvas to draw a speedometer based on a given thruster velocity
+function drawSpeedo(velo, canvas){
+  //convert thruster velocity to angle
+  const angle = velo * (90/127)
+
+  //set canavs to 2d and then clear it
   const speedo = canvas.getContext('2d');
-  
   speedo.clearRect(0, 0, canvas.width, canvas.height);
 
+  //define canvas line characteristics
   speedo.lineWidth = 2;
   speedo.strokeStyle = 'white';
 
+  //define canvas arc characteristics
   const arcColor = colorToAngle(angle);
   speedo.fillStyle = arcColor;
 
+  //set centers and radius
   const centerX = canvas.width / 2;
   const centerY = canvas.height;
   const radius = 100;
@@ -37,6 +45,7 @@ function drawSpeedo(angle, canvas){
   let startAngle = 0;
   let endAngle = 0;
 
+  //determine start and end angle by the sign of the angle
   if(angle >= 0){
     startAngle = 3 * Math.PI / 2; 
     endAngle = startAngle + (angle * Math.PI / 180);
@@ -45,11 +54,13 @@ function drawSpeedo(angle, canvas){
     startAngle = endAngle + (angle * Math.PI / 180);
   }
 
+  //draw the shaded
   speedo.beginPath();
   speedo.arc(centerX, centerY, radius, startAngle, endAngle);
   speedo.lineTo(centerX, centerY);
   speedo.fill();
 
+  //draw the lines
   speedo.beginPath();
   speedo.arc(centerX, centerY, radius, Math.PI, 2 * Math.PI);
   speedo.stroke();
@@ -57,11 +68,12 @@ function drawSpeedo(angle, canvas){
 
 }
 
-drawSpeedo(75, speedo1);
-drawSpeedo(-60, speedo2);
-drawSpeedo(35, speedo3);
-drawSpeedo(20, speedo4);
-drawSpeedo(-16, speedo5);
-drawSpeedo(-85, speedo6);
-drawSpeedo(-30, speedo7);
-drawSpeedo(67, speedo8);
+//generated a random number between -127 and 127
+function genRand(){
+  return Math.random() * 258 - 127;
+}
+
+//generated speedometers with random velocities
+for(var i = 0; i < 8; i++){
+  drawSpeedo(genRand(), speedoList[i]);
+}
