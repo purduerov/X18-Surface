@@ -41,6 +41,17 @@ socket.on('connect', function() {
 
 socket.on('disconnect', function() {
     console.log("Socket disconnected");
+
+    // Set all nodes to inactive
+    ['surface-node-table', 'core-node-table'].forEach(tableId => {
+        const table = document.getElementById(tableId).getElementsByTagName('tbody')[0];
+        const rows = table.getElementsByTagName('tr');
+        for (let row of rows) {
+            const statusCell = row.getElementsByTagName('td')[1];
+            statusCell.className = 'inactive';
+            statusCell.textContent = 'inactive';
+        }
+    });
 });
 
 // Handle the 'heartbeat' event
