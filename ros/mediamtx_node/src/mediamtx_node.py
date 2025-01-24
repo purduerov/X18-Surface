@@ -19,6 +19,8 @@ class MediaMTXNode(Node):
         # Create publisher to publish ip address to the topic /surface_ip
         self.publisher = self.create_publisher(String, 'surface_ip', 10)
         self.timer = self.create_timer(1.0, self.publish_ip_address)
+        self.ip_pub_count = 0
+        self.ip_pub_count_max = 10
 
         # Create a subscriber to listen to the topic /surface_ip
         self.create_subscription(String, 'surface_ip', self.ip_callback, 10)
@@ -33,6 +35,10 @@ class MediaMTXNode(Node):
         self.get_logger().info(f"Publishing IP address: {ip}")
         msg.data = ip
         self.publisher.publish(msg)
+        self.ip_pub_count += 1
+        if self.ip_pub_count >= self.ip_pub_count_max:
+            self.get_logger().info("Stopping publishing IP address")
+            self.timer.cancel()
 
     def get_local_ip(self):
         try:
