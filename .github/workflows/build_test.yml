@@ -17,36 +17,35 @@ jobs:
       runs-on: ubuntu-22.04
 
       steps:
-        # Check out the repository
+
         - name: Checkout code
-        uses: actions/checkout@v4
+          uses: actions/checkout@v4
 
         # Set up ROS 2 (Jazzy)
         - name: Set up ROS 2
-        uses: ros-tooling/setup-ros@v0.7
-        with:
-          required-ros-distributions: humble
+          uses: ros-tooling/setup-ros@v0.7
+          with:
+            required-ros-distributions: humble
 
         # Install dependencies from requirements.txt
         - name: Install dependencies
-        run: |
-          sudo apt-get -y update
-          sudo apt-get -y install python3-pip
-          pip3 install -r requirements.txt
+          run: |
+            sudo apt-get -y update
+            sudo apt-get -y install python3-pip
+            pip3 install -r requirements.txt
 
         # Run the build script
         - name: Build
-        run: |
-          chmod +x scripts/build.sh
-          scripts/build.sh
+          run: |
+            chmod +x scripts/build.sh
+            scripts/build.sh
 
         # Run the run script
         - name: Run
-        run: |
-          chmod +x scripts/run.sh
-          scripts/run.sh
+          run: |
+            chmod +x scripts/run.sh
+            scripts/run.sh
 
         # Success message
         - name: Success
-        run: echo "Success!"
-      
+          run: echo "Success!"
