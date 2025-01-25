@@ -51,7 +51,10 @@ jobs:
         - name: Run
           run: |
             chmod +x scripts/run.sh
-            scripts/run.sh
+            scripts/run.sh &
+            sleep 30  # Wait for nodes to start
+            ros2 node list | grep -q "/rov/frontend" || { echo "Node not found"; exit 1; }
+            pkill -f ros2
 
         # Success message
         - name: Success
