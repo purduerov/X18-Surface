@@ -23,7 +23,10 @@ fi
 # Source the .env file
 source .env
 
-# Check if the environment variables from a list exist (lists do not have commas in bash. ex: env_vars=("VAR1" "VAR2"))
+# Check if the environment variables from a list exist (lists do not have commas in bash ex: env_vars=("VAR1" "VAR2"))
+### --------------------------- ###
+# ADD ENVIRONMENT VARIABLES HERE  #
+### --------------------------- ###
 env_vars=("FLASK_PORT")
 
 for var in "${env_vars[@]}"; do
