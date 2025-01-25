@@ -17,7 +17,7 @@ if [ ! -f ./ros/mediamtx_node/src/mediamtx ]; then
 
         # 4. Move the mediamtx binary to the target directory
         echo "Moving mediamtx"
-        mv mediamtx ./ros/mediamtx_node/src/mediamtx
+        mv mediamtx ./ros/mediamtx_node/src/
 
         # (Optional) 5. Cleanup
         echo "Cleaning up..."
@@ -33,7 +33,7 @@ if [ ! -f ./ros/mediamtx_node/src/mediamtx ]; then
 
         # 4. Move the mediamtx binary to the target directory
         echo "Moving mediamtx"
-        mv mediamtx ./ros/mediamtx_node/src/mediamtx
+        mv mediamtx ./ros/mediamtx_node/src/
 
         # # (Optional) 5. Cleanup
         echo "Cleaning up..."

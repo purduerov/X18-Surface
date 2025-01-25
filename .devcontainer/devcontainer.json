@@ -7,7 +7,7 @@
     "customizations": {
         "vscode": {
             "extensions": [
-                "ms-iot.vscode-ros",          // ROS extension
+                "ms-iot.vscode-ros@prerelease", // ROS extension (pre-release version)
                 "ms-python.python",           // Python extension (if needed)
                 "ms-azuretools.vscode-docker" // Docker extension
             ],
@@ -23,5 +23,5 @@
         "--network", "host"     // Use host network
     ],
     "remoteUser": "root",
-    "postCreateCommand": "echo 'source /opt/ros/humble/setup.bash' >> /root/.bashrc"
+    "postCreateCommand": "echo 'source /opt/ros/humble/setup.bash' >> /root/.bashrc && echo 'export ROS_DOMAIN_ID=69' >> /root/.bashrc"
 }
