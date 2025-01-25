@@ -57,7 +57,7 @@ jobs:
             source /opt/ros/humble/setup.bash
             . install/setup.bash
             ros2 node list
-            nodes=("rov/frontend" "rov/heartbeat_nonitor" "rov/mediamtx_node")
+            nodes=("rov/frontend" "rov/heartbeat_monitor" "rov/mediamtx_node")
             for node in "${nodes[@]}"; do
               ros2 node list | grep -q "/$node" || { echo "Node $node not found"; exit 1; }
             done
