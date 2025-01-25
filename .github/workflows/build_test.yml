@@ -56,12 +56,11 @@ jobs:
             export ROS_DOMAIN_ID=69
             source /opt/ros/humble/setup.bash
             . install/setup.bash
-            nodes=("rov/frontend" "rov/controller" "rov/mediamtx_node")
+            ros2 node list
+            nodes=("rov/frontend" "rov/heartbeat_nonitor" "rov/mediamtx_node")
             for node in "${nodes[@]}"; do
               ros2 node list | grep -q "/$node" || { echo "Node $node not found"; exit 1; }
             done
-            pkill -f ros2
-
-        # Success message
+            pkill -f ros2 || true    # Success message
         - name: Success
           run: echo "Success!"
