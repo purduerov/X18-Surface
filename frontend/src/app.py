@@ -36,7 +36,7 @@ class Frontend(Node):
     # Function to setup the routes for the Flask app
     def setup_routes(self):
         # 4 Camera streams
-        @self.app.route("/four-streams")
+        @self.app.route("/big-stream")
         def index():
             return render_template("index.html", rov_ip=os.getenv("ROV_IP"))
         

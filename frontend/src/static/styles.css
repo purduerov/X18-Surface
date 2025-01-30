@@ -1,8 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Exo:wght@300;400;500&display=swap'); /*Imported Font*/
 
 :root{
-    --fonty-sizey: 60px;
+    --fonty-sizey: 45px;
 }
+
 .default-container{ /*Container for whole webpage*/
     display: flex;
     justify-content: space-between; /*Tommy is going to fix this with borders*/
@@ -14,23 +15,25 @@
 }
 
 .left-container{
-    width: 49%;
+    width: 29%;
     display: grid;
     grid-template-rows: repeat(3, 1fr);
     height: 100%;
 }
 
+
 .middle-container{
     width: 20%;
+    height: 100%;
     display: grid;
     grid-template-rows: 60% 40%;
 }
 
 .right-container{
-    width: 30%;
+    width: 50%;
     height: 100%;
     display: grid;
-    grid-template-rows: repeat(4, 1fr);
+    grid-template-rows: 60% 10% 10% 10% 10%; 
 }
 
 .speedo-grid{
@@ -39,8 +42,8 @@
     grid-template-columns: repeat(2,1fr);
     place-items: center;
     background-color: rgb(5, 25, 51);
+    border-bottom: 3px solid white;
 }
-
 
 .data-container{
     justify-items: center;
@@ -69,16 +72,23 @@
     border: none;
 }
 
+#task-data{
+    font-size: calc(var(--fonty-sizey) * 2)
+}
 
 #thruster-data{
     grid-template-rows: repeat(2, 1fr);
     font-size: calc(var(--fonty-sizey) * 0.33);
-    border-top: 3px solid white /*Temp border*/
+
 }
 
 #thruster-data > div {
     border-bottom: 3px solid white;
     border-right: none;
+}
+
+#thruster-data:last-child{
+    border-bottom: none;
 }
 
 #internal-data{
@@ -97,7 +107,7 @@
 }
 
 #inertial-data > div {
-    border-bottom: 3px solid white;
+    border-bottom: none;
     border-right: none;
 }
 

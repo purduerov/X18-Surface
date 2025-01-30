@@ -11,7 +11,7 @@
 <body>
     <div class="default-container">
         <div class="left-container">
-            <iframe id=stream1 src="http://{{ rov_ip}}:8899/camera_1" scrolling="no" style="width: 100%; height: 100%;"></iframe>
+            <iframe id=stream1 src="https://www.youtube.com/embed/Z5LyWP5L46c" scrolling="no" style="width: 100%; height: 100%;"></iframe>
             <iframe id=stream2 src="http://{{ rov_ip }}:8889/camera_2" scrolling="no" style="width: 100%; height: 100%;"></iframe>
             <iframe id=stream3 src="http://{{ rov_ip }}:8889/camera_3" scrolling="no" style="width: 100%; height: 100%;"></iframe>
         </div>
@@ -48,26 +48,29 @@
                 </div>
             </div>
             <div id ="thruster-data" class="data-container">
-                <div id="velocity-data" class="grid-item">&lt00.00, 00.00, 00.00&gt m/s</div>
-                <div id="pra-data" class="grid-item">&lt00.00, 00.00, 00.00&gt &deg</div>
+                <div id="velocity-data" class="grid-item">Linear Command<br>&lt00.00, 00.00, 00.00&gt m/s</div>
+                <div id="pra-data" class="grid-item">Angular Command<br>&lt00.00, 00.00, 00.00&gt &deg</div>
             </div>
         </div>
         <div class="right-container">
+            <div id="task-data" class="data-container">
+                Tasks
+            </div>
             <div id="internal-data" class="data-container">
-                <div id="pressure-data" class="grid-item">00.00 psi</div>
-                <div id="temp-data" class="grid-item">00.00&deg C</div>
-                <div id="humidity-data" class="grid-item">50%</div>
+                <div id="pressure-data" class="grid-item">Pressure<br>00.00 psi</div>
+                <div id="temp-data" class="grid-item">Temperature<br>00.00&deg C</div>
+                <div id="humidity-data" class="grid-item">Humidity<br>50%</div>
             </div>
             <div id="electrical-data" class="data-container">
-                <div id="current-data" class="grid-item">00.00 A</div>
-                <div id="voltage-data" class="grid-item">00.00 V</div>
+                <div id="current-data" class="grid-item">Current<br>00.00 A</div>
+                <div id="voltage-data" class="grid-item">Voltage<br>00.00 V</div>
             </div>
             <div id="inertial-data" class="data-container">
-                <div id="accel-data" class="grid-item">&lt00.00, 00.00, 00.00&gt m/s^2</div>
-                <div id="angular-data" class="grid-item">&lt00.00, 00.00, 00.00&gt &deg/s</div>
+                <div id="accel-data" class="grid-item">Acceleration : &lt00.00, 00.00, 00.00&gt m/s^2</div>
+                <div id="angular-data" class="grid-item">Angular Velocity : &lt00.00, 00.00, 00.00&gt &deg/s</div>
             </div>
             <div id="external-data" class="data-container">
-                <div id="depth-data" class="grid-item">00.00 m</div>
+                <div id="depth-data" class="grid-item">Depth : 00.00 m</div>
             </div>
         </div>
     </div>
