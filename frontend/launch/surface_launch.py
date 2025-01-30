@@ -26,6 +26,16 @@ def generate_launch_description():
                     package='demo_subscriber',
                     executable='demo_subscriber.py',
                     namespace='rov',
+                ),
+                Node(
+                    package='demo_subscriber',
+                    executable='depth_sensor.py',
+                    namespace='rov'
+                ),
+                Node(
+                    package='demo_subscriber',
+                    executable='temp_subscriber.py',
+                    namespace='rov'
                 )
             ]
         ),

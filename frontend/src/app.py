@@ -76,6 +76,18 @@ class Frontend(Node):
         def handle_surface_imu(data):
             self.socketio.emit('surface_imu', data)
 
+        @self.socketio.on('depth')
+        def handle_rov_depth(data):
+            self.socketio.emit('depth', data)
+        
+        @self.socketio.on('water_temp')
+        def handle_water_temp(data):
+            self.socketio.emit('water_temp', data)
+        
+        @self.socketio.on('pi_temp')
+        def handle_ip_temp(data):
+            self.socketio.emit('pi_temp', data)
+
 
 def main():
     rclpy.init()
