@@ -13,58 +13,61 @@ on:
 
 jobs:
   build:
-     # The type of runner that the job will run on
-      runs-on: ubuntu-22.04
+    # The type of runner that the job will run on
+    runs-on: ubuntu-22.04
 
-      steps:
+    steps:
 
-        - name: Checkout code
-          uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-        # Set up ROS 2 (Jazzy)
-        - name: Set up ROS 2
-          uses: ros-tooling/setup-ros@v0.7
-          with:
-            required-ros-distributions: humble
+      # Set up ROS 2 (Jazzy)
+      - name: Set up ROS 2
+        uses: ros-tooling/setup-ros@v0.7
+        with:
+          required-ros-distributions: humble
 
-        # Install dependencies from requirements.txt
-        - name: Install dependencies
-          run: |
-            sudo apt-get update && sudo apt-get install -y python3-pip
-            sudo pip3 install -r requirements.txt
-            sudo apt-get update && sudo apt-get install -y wget
+      # Install dependencies from requirements.txt
+      - name: Install dependencies
+        run: |
+          sudo apt-get update && sudo apt-get install -y python3-pip
+          sudo pip3 install -r requirements.txt
+          sudo apt-get update && sudo apt-get install -y wget
 
-        # Run the install MediaMTX script
-        - name: Install MediaMTX
-          run: |
-            chmod +x scripts/install_mediamtx.sh
-            scripts/install_mediamtx.sh
+      # Run the install MediaMTX script
+      - name: Install MediaMTX
+        run: |
+          chmod +x scripts/install_mediamtx.sh
+          scripts/install_mediamtx.sh
 
-        # Build the ROS workspace
-        - name: Build workspace
-          run: |
-            chmod +x scripts/build.sh
-            scripts/build.sh
+      # Build the ROS workspace
+      - name: Build workspace
+        run: |
+          chmod +x scripts/build.sh
+          scripts/build.sh
 
-        # Run the build script
-        - name: Start ROS 2 nodes
-          run: |
-            chmod +x scripts/run.sh
-            scripts/run.sh
-            sleep 15  # Give nodes time to start
+      # Run the build script
+      - name: Start ROS 2 nodes
+        run: |
+          chmod +x scripts/run.sh
+          scripts/run.sh
+          sleep 15  # Give nodes time to start
 
-        - name: Check ROS 2 nodes
-          run: |
-            source /opt/ros/foxy/setup.bash
-            nodes=("rov/frontend" "rov/heartbeat_monitor" "rov/mediamtx_node")
-            echo "Listing ROS 2 nodes:"
-            ros2 node list
-            for node in "${nodes[@]}"; do
-              if ! ros2 node list | grep -q "/$node"; then
-                echo "Node $node not found"
-                exit 1
-              fi
-            done
+      - name: Check ROS 2 nodes
+        run: |
+          export ROS_DOMAIN_ID=69
+          source install/setup.bash
+          nodes=("rov/frontend" "rov/heartbeat_monitor" "rov/mediamtx_node")
+          echo "Listing ROS 2 nodes:"
+          ros2 node list >> nodes.txt
+          for node in "${nodes[@]}"; do
+            if grep -q "$node" nodes.txt; then
+              echo "$node is running"
+            else
+              echo "$node is not running"
+            exit 1
+            fi
+          done
 
-        - name: Success
-          run: echo "Success!"
+      - name: Success
+        run: echo "Success!"
