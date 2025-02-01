@@ -4,7 +4,8 @@ log/
 .env
 build
 install
-.vscode/
+.vscode/*
+!.vscode/settings.json
 .idea/
 .DS_Store
 ros/mediamtx_node/src/mediamtx
