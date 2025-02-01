@@ -7,7 +7,6 @@
     "customizations": {
         "vscode": {
             "extensions": [
-                "ms-iot.vscode-ros@prerelease", // ROS extension (pre-release version)
                 "ms-python.python",           // Python extension (if needed)
                 "ms-azuretools.vscode-docker" // Docker extension
             ],
