@@ -27,11 +27,11 @@ def generate_launch_description():
                     executable='heartbeat_monitor.py',
                     namespace='rov',
                 ),
-                # Node(
-                #     package='demo_subscriber',
-                #     executable='demo_subscriber.py',
-                #     namespace='rov',
-                # )
+                Node(
+                    package='ui_subscriber',
+                    executable='ui_subscriber.py',
+                    namespace='rov',
+                )
             ]
         ),
 
