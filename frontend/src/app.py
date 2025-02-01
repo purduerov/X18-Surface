@@ -87,6 +87,10 @@ class Frontend(Node):
         @self.socketio.on('pi_temp')
         def handle_ip_temp(data):
             self.socketio.emit('pi_temp', data)
+        
+        @self.socketio.on('leak_sensor')
+        def handle_leak_sensor(data):
+            self.socketio.emit('leak_sensor', data)
 
 
 def main():
