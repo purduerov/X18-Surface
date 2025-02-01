@@ -38,7 +38,9 @@ class Frontend(Node):
 
     def run_flask(self):
         port = int(os.getenv("FLASK_PORT", 5013))
-        self.socketio.run(self.app, host="0.0.0.0", port=port, allow_unsafe_werkzeug=True)
+        self.socketio.run(
+            self.app, host="0.0.0.0", port=port, allow_unsafe_werkzeug=True
+        )
 
     # Function to setup the routes for the Flask app
     def setup_routes(self):
@@ -46,7 +48,7 @@ class Frontend(Node):
         @self.app.route("/")
         def index():
             return render_template("index.html", rov_ip=os.getenv("ROV_IP"))
-        
+
         # The new UI
         @self.app.route("/new-ui")
         def new_ui():
@@ -56,7 +58,7 @@ class Frontend(Node):
         @self.app.route("/node-status")
         def node_status():
             return render_template("node_status.html")
-        
+
     # Function to setup the socketio events
     def setup_socketio_events(self):
         @self.socketio.on("connect")

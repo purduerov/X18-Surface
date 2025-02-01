@@ -1,6 +1,7 @@
 from rclpy.node import Node
 from std_msgs.msg import Header
 
+
 class HeartbeatHelper:
     def __init__(self, node: Node, topic_name="heartbeat", timer_period=5.0):
         """This class is used to publish a heartbeat message on a given topic at a given interval"""
@@ -21,9 +22,9 @@ class HeartbeatHelper:
         """Stop the heartbeat timer"""
         self.timer.cancel()
         self.node.destroy_publisher(self.publisher)
-        self.node.get_logger().info(f'Heartbeat stopped for {self.node.get_name()}')
+        self.node.get_logger().info(f"Heartbeat stopped for {self.node.get_name()}")
 
     def start_heartbeat(self):
         """Start the heartbeat timer"""
         self.timer = self.node.create_timer(self.timer_period, self.publish_heartbeat)
-        self.node.get_logger().info(f'Heartbeat started for {self.node.get_name()}')
+        self.node.get_logger().info(f"Heartbeat started for {self.node.get_name()}")
