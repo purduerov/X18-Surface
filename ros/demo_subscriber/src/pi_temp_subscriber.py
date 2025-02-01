@@ -11,34 +11,23 @@ import json
 sio = socketio.Client()
 
 # Create a subscriber node that will listen to multiple ROS topics
-class TempSubscriber(Node):
+class PiTempSubscriber(Node):
     def __init__(self):
-        super().__init__('temp_subscriber')  
+        super().__init__('pi_temp_subscriber')  
         
         # Dictionary to map topic names to their corresponding callback functions
         self.topics = {
             'pi_temp': self.rov_pi_temp_callback,
-            # Add more topics and their respective callbacks here
-            'water_temp': self.rov_water_temp_callback
         }
         
         # Subscribe to each topic in the topics dictionary
-        # Change Float32 to TempMsg in the future?
         self.create_subscription(Float32, '/pi_temp', self.rov_pi_temp_callback, 10) 
-        self.create_subscription(Float32, '/water_temp', self.rov_water_temp_callback, 10)
-
 
     def rov_pi_temp_callback(self, msg):
         msg_dict = rosmsg_to_dict(msg)
         msg_json = json.dumps(msg_dict)
         # self.get_logger().info(f'Received from pi_temp topic: "{msg}"')
         sio.emit('pi_temp', msg_json)
-
-    def rov_water_temp_callback(self, msg):
-        msg_dict = rosmsg_to_dict(msg)
-        msg_json = json.dumps(msg_dict)
-        # self.get_logger().info(f'Received from water_temp topic: "{msg}"')
-        sio.emit('water_temp', msg_json)
 
 
 def rosmsg_to_dict(msg):
@@ -68,13 +57,13 @@ def rosmsg_to_dict(msg):
 
 def main():
     rclpy.init()
-    temp_subscriber_node = TempSubscriber()
+    pi_temp_subscriber_node = PiTempSubscriber()
     
     # Connect to the SocketIO server
     sio.connect('http://127.0.0.1:5000')  # Adjust the URL if necessary
 
-    rclpy.spin(temp_subscriber_node)
-    temp_subscriber_node.destroy_node()
+    rclpy.spin(pi_temp_subscriber_node)
+    pi_temp_subscriber_node.destroy_node()
     rclpy.shutdown()
 
 if __name__ == "__main__":
