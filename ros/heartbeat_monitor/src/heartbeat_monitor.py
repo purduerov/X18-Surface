@@ -41,14 +41,14 @@ class HeartbeatMonitor(Node):
         # Emit the heartbeat status for each surface node
         for node_name, last_seen in self.expected_surface_nodes.items():
             if current_time - last_seen > timeout:
-                self.get_logger().warn(f'No heartbeat from {node_name}')
+                # self.get_logger().warn(f'No heartbeat from {node_name}')
                 sio.emit('heartbeat', json.dumps({'node': node_name, 'status': 'inactive', 'location': 'surface'}))
             else:
                 sio.emit('heartbeat', json.dumps({'node': node_name, 'status': 'active', 'location': 'surface'}))
         # Emit the heartbeat status for each core node
         for node_name, last_seen in self.expected_core_nodes.items():
             if current_time - last_seen > timeout:
-                self.get_logger().warn(f'No heartbeat from {node_name}')
+                # self.get_logger().warn(f'No heartbeat from {node_name}')
                 sio.emit('heartbeat', json.dumps({'node': node_name, 'status': 'inactive', 'location': 'core'}))
             else:
                 sio.emit('heartbeat', json.dumps({'node': node_name, 'status': 'active', 'location': 'core'}))
