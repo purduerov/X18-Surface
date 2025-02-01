@@ -14,6 +14,7 @@ install(
   PROGRAMS
     src/mediamtx_node.py
     src/mediamtx
+    src/mediamtx.yml
   DESTINATION lib/${PROJECT_NAME}
 )
 
