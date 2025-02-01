@@ -47,14 +47,11 @@ jobs:
           scripts/build.sh
 
       # Run the build script
-      - name: Start ROS 2 nodes
+      - name: Start and check ROS 2 nodes
         run: |
           chmod +x scripts/run.sh
           scripts/run.sh
           sleep 15  # Give nodes time to start
-
-      - name: Check ROS 2 nodes
-        run: |
           export ROS_DOMAIN_ID=69
           source install/setup.bash
           nodes=("rov/frontend" "rov/heartbeat_monitor" "rov/mediamtx_node")
