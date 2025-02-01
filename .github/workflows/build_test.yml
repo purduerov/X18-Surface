@@ -69,9 +69,7 @@ jobs:
           done
           # Kill ROS 2 nodes
           echo "Killing ROS 2 nodes:"
-          ros2 lifecycle set /rov/frontend shutdown
-          ros2 lifecycle set /rov/heartbeat_monitor shutdown
-          ros2 lifecycle set /rov/mediamtx_node shutdown
+          pkill -f ros2 || true    # Success message
 
       - name: Success
         run: echo "Success!"
