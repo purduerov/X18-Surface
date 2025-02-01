@@ -1,15 +1,11 @@
 paths:
   camera_1:
-    protocols: [rtsp]
 
   camera_2:
-    protocols: [rtsp]
 
   camera_3:
-    protocols: [rtsp]
 
   camera_4:
-    protocols: [rtsp]
 
 rtspAddress: ":8554"
 webrtc: yes

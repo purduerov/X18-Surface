@@ -69,7 +69,7 @@ class MediaMTXNode(Node):
             
             # Start the MediaMTX server process
             self.get_logger().info("Starting MediaMTX server process")
-            self.process = subprocess.Popen(["install/mediamtx_node/lib/mediamtx_node/mediamtx"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            self.process = subprocess.Popen(["install/mediamtx_node/lib/mediamtx_node/mediamtx", "install/mediamtx_node/lib/mediamtx_node/mediamtx.yml"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
             while True:
                 for line in self.process.stdout:
