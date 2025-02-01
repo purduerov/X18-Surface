@@ -40,26 +40,31 @@ jobs:
             chmod +x scripts/install_mediamtx.sh
             scripts/install_mediamtx.sh
 
-        # Run the build script
-        - name: Build
+        # Build the ROS workspace
+        - name: Build workspace
           run: |
             chmod +x scripts/build.sh
             scripts/build.sh
 
-        # Run the run script
-        - name: Run
+        # Run the build script
+        - name: Start ROS 2 nodes
           run: |
             chmod +x scripts/run.sh
-            scripts/run.sh &
-            sleep 15  # Wait for nodes to start
-            export ROS_DOMAIN_ID=69
-            source /opt/ros/humble/setup.bash
-            . install/setup.bash
-            ros2 node list
+            scripts/run.sh
+            sleep 5  # Give nodes time to start
+
+        - name: Check ROS 2 nodes
+          run: |
+            source /opt/ros/foxy/setup.bash
             nodes=("rov/frontend" "rov/heartbeat_monitor" "rov/mediamtx_node")
+            echo "Listing ROS 2 nodes:"
+            ros2 node list
             for node in "${nodes[@]}"; do
-              ros2 node list | grep -q "/$node" || { echo "Node $node not found"; exit 1; }
+              if ! ros2 node list | grep -q "/$node"; then
+                echo "Node $node not found"
+                exit 1
+              fi
             done
-            pkill -f ros2 || true    # Success message
+
         - name: Success
           run: echo "Success!"
