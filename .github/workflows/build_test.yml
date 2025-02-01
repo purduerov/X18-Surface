@@ -57,6 +57,7 @@ jobs:
           nodes=("rov/frontend" "rov/heartbeat_monitor" "rov/mediamtx_node")
           echo "Listing ROS 2 nodes:"
           ros2 node list >> nodes.txt
+          cat nodes.txt
           for node in "${nodes[@]}"; do
             if grep -q "$node" nodes.txt; then
               echo "$node is running"
