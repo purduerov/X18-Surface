@@ -1,75 +1,87 @@
 #!/usr/bin/env python3
 import os
 from flask import Flask, render_template, request, redirect, url_for
-from ssh import Ssh
-from streams import Streams
-from signal_handler import SignalHandler
 import rclpy
+from rclpy.node import Node
+from std_msgs.msg import String
 import signal
+from flask_socketio import SocketIO
 from dotenv import load_dotenv
+import threading
+from flask_cors import CORS
+from utils.heartbeat_helper import HeartbeatHelper
 
 
-app = Flask(__name__)
-load_dotenv(dotenv_path=f"/workspaces/X17-Surface/.env")
+class Frontend(Node):
+    def __init__(self):
+        super().__init__("frontend")
+        self.get_logger().info("Frontend node started")
+
+        # Setup the heartbeat helper
+        self.heartbeat_helper = HeartbeatHelper(self)
+
+        # Setup the flask app
+        self.app = Flask(__name__)
+        CORS(self.app)
+        self.socketio = SocketIO(self.app)
+        load_dotenv(dotenv_path=f"/workspaces/X17-Surface/.env")
+
+        # Setup the routes
+        self.setup_routes()
+
+        # Setup the socketio events
+        self.setup_socketio_events()
+
+        # Run the Flask app with SocketIO
+        flask_thread = threading.Thread(target=self.run_flask)
+        flask_thread.start()
+
+    def run_flask(self):
+        port = int(os.getenv("FLASK_PORT", 5013))
+        self.socketio.run(self.app, host="0.0.0.0", port=port, allow_unsafe_werkzeug=True)
+
+    # Function to setup the routes for the Flask app
+    def setup_routes(self):
+        # 4 Camera streams
+        @self.app.route("/")
+        def index():
+            return render_template("index.html", rov_ip=os.getenv("ROV_IP"))
+        
+        # The new UI
+        @self.app.route("/new-ui")
+        def new_ui():
+            return render_template("new_index_proto.html")
+
+        # Node status page
+        @self.app.route("/node-status")
+        def node_status():
+            return render_template("node_status.html")
+        
+    # Function to setup the socketio events
+    def setup_socketio_events(self):
+        @self.socketio.on("connect")
+        def connect():
+            self.get_logger().info("SocketIO connected")
+
+        @self.socketio.on("disconnect")
+        def disconnect():
+            self.get_logger().info("SocketIO disconnected")
+
+        # General-purpose event handler
+        @self.socketio.on("*")  # Using '*' to catch all events
+        def handle_all_events(event, data=None):
+            # self.get_logger().info(f"Flask received event: {event}, data: {data}")
+            # Forward the event and its data back to the client
+            self.socketio.emit(event, data)
 
 
-@app.route("/")
-def index():
-    return render_template("index.html", rov_ip=os.getenv("ROV_IP"))
-
-
-def initialize_frontend_nodes():
-    """
-    Initializes the ROS node for the Flask server
-    Returns the node object
-    """
+def main():
     rclpy.init()
-    node = rclpy.create_node("flask_server")
-    node.get_logger().info("Flask server started")
-    return node
-
-
-def establish_rov_connection(node):
-    """
-    Establishes a connection to the ROV
-    Return the SSH client object
-    """
-    ssh = Ssh(node)
-    rov_connection = ssh.connect()
-    return rov_connection
-
-
-def establish_camera_streams(node, rov_connection):
-    """
-    Starts the camera streams on the ROV
-    Returns a boolean indicating if the camera streams started successfully
-    """
-    camera_streams = Streams(node, rov_connection)
-    camera_streams.run_camera_streams()
-    return camera_streams
+    frontend = Frontend()
+    rclpy.spin(frontend)
+    frontend.destroy_node()
+    rclpy.shutdown()
 
 
 if __name__ == "__main__":
-    """
-    Main function for running the ROV
-    To build the program, run `scripts/build.sh`
-    To run the program, run `scripts/run.sh`
-    """
-    node = initialize_frontend_nodes()
-    if node is None:
-        print("ERROR: Could not initialize ROS node")
-        exit(1)
-
-    rov_connection = establish_rov_connection(node)
-    if rov_connection is None:
-        exit(1)
-
-    camera_streams = establish_camera_streams(node, rov_connection)
-    if camera_streams is False:
-        exit(1)
-
-    # Establish the signal handler for closing the application
-    signal_handler = SignalHandler(node, rov_connection, camera_streams)
-    signal.signal(signal.SIGINT, signal_handler.close_application)
-
-    app.run(host="0.0.0.0", port=5000)
+    main()

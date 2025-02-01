@@ -7,3 +7,4 @@ install
 .vscode/
 .idea/
 .DS_Store
+ros/mediamtx_node/src/mediamtx
