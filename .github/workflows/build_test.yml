@@ -50,9 +50,10 @@ jobs:
       - name: Start and check ROS 2 nodes
         run: |
           chmod +x scripts/run.sh
-          scripts/run.sh
+          scripts/run.sh &
           sleep 15  # Give nodes time to start
           export ROS_DOMAIN_ID=69
+          source /opt/ros/humble/setup.bash
           source install/setup.bash
           nodes=("rov/frontend" "rov/heartbeat_monitor" "rov/mediamtx_node")
           echo "Listing ROS 2 nodes:"
@@ -63,9 +64,14 @@ jobs:
               echo "$node is running"
             else
               echo "$node is not running"
-            exit 1
+              exit 1
             fi
           done
+          # Kill ROS 2 nodes
+          echo "Killing ROS 2 nodes:"
+          ros2 lifecycle set /rov/frontend shutdown
+          ros2 lifecycle set /rov/heartbeat_monitor shutdown
+          ros2 lifecycle set /rov/mediamtx_node shutdown
 
       - name: Success
         run: echo "Success!"
