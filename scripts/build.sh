@@ -13,29 +13,32 @@ if [ ! -f ./ros/mediamtx_node/src/mediamtx ]; then
     fi
 fi
 
-# Verify that the .env file contains all the necessary environment variables
+
+# Create .env file if it does not exist
 if [ ! -f .env ]; then
-    echo "The .env file does not exist"
-    echo "Please create a .env file with the necessary environment variables"
-    exit 1
+    echo "The .env file does not exist. Creating a new .env file."
+    touch .env
+else
+    # Source the .env file if it exists
+    source .env
 fi
 
-# Source the .env file
-source .env
 
 # Check if the environment variables from a list exist (lists do not have commas in bash ex: env_vars=("VAR1" "VAR2"))
 ### --------------------------- ###
 # ADD ENVIRONMENT VARIABLES HERE  #
 ### --------------------------- ###
 env_vars=("FLASK_PORT")
+env_vars_default=("5013")
 
-for var in "${env_vars[@]}"; do
+for i in "${!env_vars[@]}"; do
+    var="${env_vars[$i]}"
+    default="${env_vars_default[$i]}"
     if [ -z "${!var}" ]; then
-        echo "Environment variable $var is not set"
-        exit 1
+        echo "Environment variable $var is not set. Using the default value: $default"
+        echo "$var=$default" >> .env
     fi
 done
-
 
 # Build the ROS 2 workspace
 source /opt/ros/humble/setup.bash

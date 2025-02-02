@@ -19,7 +19,6 @@
         "source=${localWorkspaceFolder}/,target=/workspace,type=bind"
     ],
     "runArgs": [
-        "--env-file", ".env",
         "--network", "bridge",
         "--env", "ROS_DOMAIN_ID=69" // Set ROS_DOMAIN_ID
     ],
