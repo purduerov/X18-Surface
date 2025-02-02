@@ -15,6 +15,7 @@ class MediaMTXNode(Node):
     def __init__(self):
         super().__init__("mediamtx_node")
 
+        # Setup heartbeat
         self.heartbeat_helper = HeartbeatHelper(self)
 
         # Create publisher to publish ip address to the topic /surface_ip

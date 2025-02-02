@@ -1,5 +1,5 @@
 {
-    "name": "X17 Dev Container",
+    "name": "X17-Surface Dev Container",
     "build": {
         "dockerfile": "Dockerfile",
         "context": ".."
@@ -19,7 +19,9 @@
         "source=${localWorkspaceFolder}/,target=/workspace,type=bind"
     ],
     "runArgs": [
-        "--network", "host"     // Use host network
+        "--env-file", ".env",
+        "--network", "bridge",
+        "--env", "ROS_DOMAIN_ID=69" // Set ROS_DOMAIN_ID
     ],
     "remoteUser": "root",
     "postCreateCommand": "echo 'source /opt/ros/humble/setup.bash' >> /root/.bashrc && echo 'export ROS_DOMAIN_ID=69' >> /root/.bashrc"
