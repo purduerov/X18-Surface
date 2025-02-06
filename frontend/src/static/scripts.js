@@ -1,3 +1,5 @@
+var socket = io();
+
 //list of speedometer elements from the html
 const speedoList = [
   document.getElementById('speedo1'), document.getElementById('speedo2'), document.getElementById('speedo3'),
@@ -77,3 +79,14 @@ function genRand(){
 for(var i = 0; i < 8; i++){
   drawSpeedo(genRand(), speedoList[i]);
 }
+
+socket.on('depth', function(msg) {
+  msg = JSON.parse(msg);
+  document.getElementById("depth-data").innerHTML = "Depth : " + msg.Float64.toFixed(2);
+});
+
+socket.on('pi_temp', function(msg) {
+  msg = JSON.parse(msg);
+  document.getElementById("temp-data").innerHTML = "Temperature: <br>" + msg.Float32.toFixed(2);
+});
+

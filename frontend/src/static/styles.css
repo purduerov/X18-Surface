@@ -45,6 +45,12 @@
     border-bottom: 3px solid white;
 }
 
+.thruster-label{
+    display: grid;
+    justify-items: center;
+    font-size: calc(var(--fonty-sizey) * 0.5);
+}
+
 .data-container{
     justify-items: center;
     align-items:center;
@@ -78,7 +84,7 @@
 
 #thruster-data{
     grid-template-rows: repeat(2, 1fr);
-    font-size: calc(var(--fonty-sizey) * 0.33);
+    font-size: calc(var(--fonty-sizey) * 0.5);
 
 }
 
@@ -103,7 +109,7 @@
 
 #inertial-data{
     grid-template-rows: repeat(2, 1fr);
-    font-size: calc(var(--fonty-sizey) * 0.33);
+    font-size: calc(var(--fonty-sizey) * 0.5);
 }
 
 #inertial-data > div {
