@@ -82,12 +82,12 @@ for(var i = 0; i < 8; i++){
 
 socket.on('depth', function(msg) {
   msg = JSON.parse(msg);
-  document.getElementById("depth-data").innerHTML = "Depth : " + msg.Float64.toFixed(2);
+  document.getElementById("depth-data").innerHTML = "Depth : " + msg.toFixed(2);
 });
 
 socket.on('pi_temp', function(msg) {
   msg = JSON.parse(msg);
-  document.getElementById("temp-data").innerHTML = "Temperature: <br>" + msg.Float32.toFixed(2);
+  document.getElementById("temp-data").innerHTML = "Temperature: <br>" + msg.toFixed(2);
 });
 
 socket.on('leak_sensor', function(msg){
@@ -100,3 +100,13 @@ socket.on('leak_sensor', function(msg){
   }
   
 });
+
+socket.on('surface_imu', function(msg){
+  msg = JSON.parse(msg);
+
+  document.getElementById("accel-data").innerHTML = "Acceleration : &lt" + msg.accel[0].toFixed(2) + ", " + msg.accel[1].toFixed(2) + ", " + msg.accel[2].toFixed(2) + "&gt m/s";
+
+  document.getElementById("pry-data").innerHTML = "Gyro : &lt" + msg.gyro[0].toFixed(2) + ", " + msg.gyro[1].toFixed(2) + ", " + msg.gyro[2].toFixed(2) + "&gt &deg";
+});
+
+
