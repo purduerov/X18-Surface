@@ -7,9 +7,11 @@ const speedoList = [
   document.getElementById('speedo7'), document.getElementById('speedo8')
 ];
 //list of camera stream elements from the html
-const streamList = [
+const streams = [
   document.getElementById('stream1'), document.getElementById('stream2'), document.getElementById('stream3')
 ];
+
+const task1_1 = document.getElementById('task-1-1');
 
 //function to decide if the shaded area in the speedometer should be red or green based on the angle
 function colorToAngle(angle){
@@ -80,6 +82,14 @@ for(var i = 0; i < 8; i++){
   drawSpeedo(genRand(), speedoList[i]);
 }
 
+task1_1.addEventListener("click", function() {
+  var temp = streams[0].src;
+  streams[0].src = streams[1].src;
+  streams[1].src = temp;
+  streams[0].load;
+  streams[1].load;
+});
+
 socket.on('depth', function(msg) {
   msg = JSON.parse(msg);
   document.getElementById("depth-data").innerHTML = "Depth : " + msg.toFixed(2);
@@ -108,5 +118,6 @@ socket.on('surface_imu', function(msg){
 
   document.getElementById("pry-data").innerHTML = "Gyro : &lt" + msg.gyro[0].toFixed(2) + ", " + msg.gyro[1].toFixed(2) + ", " + msg.gyro[2].toFixed(2) + "&gt &deg";
 });
+
 
 

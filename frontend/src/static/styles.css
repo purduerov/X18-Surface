@@ -33,7 +33,7 @@
     width: 50%;
     height: 100%;
     display: grid;
-    grid-template-rows: 60% 10% 10% 10% 10%; 
+    grid-template-rows: 30% 30% 10% 10% 10% 10%; 
 }
 
 .speedo-grid{
@@ -48,7 +48,7 @@
 .thruster-label{
     display: grid;
     justify-items: center;
-    font-size: calc(var(--fonty-sizey) * 0.5);
+    font-size: calc(var(--fonty-sizey) * 0.25);
 }
 
 .data-container{
@@ -78,8 +78,9 @@
     border: none;
 }
 
-#task-data{
-    font-size: calc(var(--fonty-sizey) * 2)
+.task-data{
+    font-size: calc(var(--fonty-sizey) * 2);
+    grid-template-columns: repeat(3, 1fr);
 }
 
 #thruster-data{

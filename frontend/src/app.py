@@ -41,7 +41,7 @@ class Frontend(Node):
             return render_template("index.html", rov_ip=os.getenv("ROV_IP"))
         
         # The new UI
-        @self.app.route("/")
+        @self.app.route("/ui")
         def new_ui():
             return render_template("innovative_ui.html", rov_ip=os.getenv("ROV_IP"))
         
