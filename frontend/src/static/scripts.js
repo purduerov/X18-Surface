@@ -90,3 +90,13 @@ socket.on('pi_temp', function(msg) {
   document.getElementById("temp-data").innerHTML = "Temperature: <br>" + msg.Float32.toFixed(2);
 });
 
+socket.on('leak_sensor', function(msg){
+  msg = JSON.parse(msg);
+
+  var leak = Boolean(msg.Bool);
+
+  if(leak){
+    document.body.style.backgroundColor = "red";
+  }
+  
+});
