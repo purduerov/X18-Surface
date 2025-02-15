@@ -11,7 +11,11 @@ const streams = [
   document.getElementById('stream1'), document.getElementById('stream2'), document.getElementById('stream3')
 ];
 
-const task1_1 = document.getElementById('task-1-1');
+const taskInfo = [
+  document.getElementById("task-1.1-info"), document.getElementById("task-1.2-info"), document.getElementById("task-1.3-info"),
+  document.getElementById("task-2.1-info"), document.getElementById("task-2.2-info"), document.getElementById("task-3.1-info")
+];
+
 
 //function to decide if the shaded area in the speedometer should be red or green based on the angle
 function colorToAngle(angle){
@@ -77,27 +81,68 @@ function genRand(){
   return Math.random() * 258 - 127;
 }
 
+function hideTasks(){
+  for(var i = 0; i < 6; i++){
+    taskInfo[i].classList.add("hidden")
+  }
+}
+
 //generated speedometers with random velocities
 for(var i = 0; i < 8; i++){
   drawSpeedo(genRand(), speedoList[i]);
 }
 
-task1_1.addEventListener("click", function() {
+document.getElementById('inertial-data').addEventListener("click", function() {
+  hideTasks();
+  
+  document.getElementById("task-2-and-3").classList.remove("hidden");
+  document.getElementById("task-1").classList.remove("hidden");
+});
+
+document.getElementById('task-1.1').addEventListener("click", function() {
   var temp = streams[0].src;
   streams[0].src = streams[1].src;
   streams[1].src = temp;
   streams[0].load;
   streams[1].load;
+
+  hideTasks();
+
+  document.getElementById("task-2-and-3").classList.add("hidden");
+  taskInfo[0].classList.remove("hidden");
 });
+
+document.getElementById('task-1.2').addEventListener("click", function() {
+  hideTasks();
+
+  document.getElementById("task-2-and-3").classList.add("hidden");
+  taskInfo[1].classList.remove("hidden");
+});
+
+document.getElementById('task-1.3').addEventListener("click", function() {
+  hideTasks();
+
+  document.getElementById("task-2-and-3").classList.add("hidden");
+  taskInfo[2].classList.remove("hidden");
+});
+
+document.getElementById('task-2.1').addEventListener("click", function() {
+  hideTasks();
+
+  document.getElementById("task-1").classList.add("hidden");
+  taskInfo[3].classList.remove("hidden");
+});
+
+
 
 socket.on('depth', function(msg) {
   msg = JSON.parse(msg);
-  document.getElementById("depth-data").innerHTML = "Depth : " + msg.toFixed(2);
+  document.getElementById("depth-data").innerHTML = "Depth : " + msg.data.toFixed(2);
 });
 
 socket.on('pi_temp', function(msg) {
   msg = JSON.parse(msg);
-  document.getElementById("temp-data").innerHTML = "Temperature: <br>" + msg.toFixed(2);
+  document.getElementById("temp-data").innerHTML = "Temperature: <br>" + msg.data.toFixed(2) + "&deg C";
 });
 
 socket.on('leak_sensor', function(msg){

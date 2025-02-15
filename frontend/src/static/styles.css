@@ -83,6 +83,14 @@
     grid-template-columns: repeat(3, 1fr);
 }
 
+.task-info{
+    font-size: calc(var(--fonty-sizey) * 0.5);
+}
+
+.hidden{
+    display: none;
+}
+
 #thruster-data{
     grid-template-rows: repeat(2, 1fr);
     font-size: calc(var(--fonty-sizey) * 0.5);
