@@ -16,6 +16,8 @@ const taskInfo = [
   document.getElementById("task-2.1-info"), document.getElementById("task-2.2-info"), document.getElementById("task-3.1-info")
 ];
 
+const rightContainer = document.getElementsByClassName('right-container');
+
 
 //function to decide if the shaded area in the speedometer should be red or green based on the angle
 function colorToAngle(angle){
@@ -87,6 +89,14 @@ function hideTasks(){
   }
 }
 
+function showTasks(i){
+  hideTasks();
+  document.getElementById("task-2-and-3").classList.add("hidden");
+  document.getElementById("task-1").classList.add("hidden");
+  taskInfo[i].classList.remove("hidden");
+  rightContainer[0].style.gridTemplateRows = '60% 10% 10% 10% 10%';
+}
+
 //generated speedometers with random velocities
 for(var i = 0; i < 8; i++){
   drawSpeedo(genRand(), speedoList[i]);
@@ -94,47 +104,45 @@ for(var i = 0; i < 8; i++){
 
 document.getElementById('inertial-data').addEventListener("click", function() {
   hideTasks();
-  
   document.getElementById("task-2-and-3").classList.remove("hidden");
   document.getElementById("task-1").classList.remove("hidden");
+  rightContainer[0].style.gridTemplateRows = '30% 30% 10% 10% 10% 10%';
 });
 
+/* implementation to switch the camera streams
+var temp = streams[0].src;
+streams[0].src = streams[1].src;
+streams[1].src = temp;
+streams[0].load;
+streams[1].load;
+*/
+
 document.getElementById('task-1.1').addEventListener("click", function() {
-  var temp = streams[0].src;
-  streams[0].src = streams[1].src;
-  streams[1].src = temp;
-  streams[0].load;
-  streams[1].load;
-
-  hideTasks();
-
-  document.getElementById("task-2-and-3").classList.add("hidden");
-  taskInfo[0].classList.remove("hidden");
+  showTasks(0);
 });
 
 document.getElementById('task-1.2').addEventListener("click", function() {
-  hideTasks();
+  showTasks(1);
 
-  document.getElementById("task-2-and-3").classList.add("hidden");
-  taskInfo[1].classList.remove("hidden");
 });
 
 document.getElementById('task-1.3').addEventListener("click", function() {
-  hideTasks();
+  showTasks(2);
 
-  document.getElementById("task-2-and-3").classList.add("hidden");
-  taskInfo[2].classList.remove("hidden");
+
 });
 
 document.getElementById('task-2.1').addEventListener("click", function() {
-  hideTasks();
-
-  document.getElementById("task-1").classList.add("hidden");
-  taskInfo[3].classList.remove("hidden");
+  showTasks(3);
 });
 
+document.getElementById('task-2.2').addEventListener("click", function() {
+  showTasks(4);
+});
 
-
+document.getElementById('task-3.1').addEventListener("click", function() {
+  showTasks(5);
+});
 socket.on('depth', function(msg) {
   msg = JSON.parse(msg);
   document.getElementById("depth-data").innerHTML = "Depth : " + msg.data.toFixed(2);
