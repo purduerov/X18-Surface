@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css')}}">
+    <script src="static/scripts.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
+</head>
+<body>
+    <div class="default-container">
+        <div class="left-container">
+            <iframe id=stream1 src="https://www.youtube.com/embed/Z5LyWP5L46c" scrolling="no" style="width: 100%; height: 100%;"></iframe>
+            <iframe id=stream2 src="https://www.youtube.com/embed/ELXyBv8G23I" scrolling="no" style="width: 100%; height: 100%;"></iframe>
+            <iframe id=stream3 src="http://{{ rov_ip }}:8889/camera_3" scrolling="no" style="width: 100%; height: 100%;"></iframe>
+        </div>
+        <div class="middle-container">
+            <div class="speedo-grid">
+                <div>
+                    <canvas id="speedo1" width="300" height="150"></canvas>
+                </div>
+                <div>
+                    <canvas id="speedo2" width="300" height="150"></canvas>
+                </div>
+                <div>
+                    <div class="thruster-label">1</div>
+                    <canvas id="speedo3" width="300" height="150"></canvas>
+                </div>
+                <div>
+                    <div class="thruster-label">2</div>
+                    <canvas id="speedo4" width="300" height="150"></canvas>
+                    
+                </div>
+                <div>
+                    <div class="thruster-label">3</div>
+                    <canvas id="speedo5" width="300" height="150"></canvas>
+                    
+                </div>
+                <div>
+                    <div class="thruster-label">4</div>
+                    <canvas id="speedo6" width="300" height="150"></canvas>
+                    
+                </div>
+                <div>
+                    <div class="thruster-label">5</div>
+                    <canvas id="speedo7" width="300" height="150"></canvas>
+                    <div class="thruster-label">7</div>
+
+                </div>
+                <div>
+                    <div class="thruster-label">6</div>
+                    <canvas id="speedo8" width="300" height="150"></canvas>
+                    <div class="thruster-label">8</div>
+                </div>
+                
+            </div>
+            <div id ="thruster-data" class="data-container">
+                <div id="velocity-data" class="grid-item">Linear Command<br>&lt00.00, 00.00, 00.00&gt m/s</div>
+                <div id="angular-data" class="grid-item">Angular Command<br>&lt00.00, 00.00, 00.00&gt &deg/s</div>
+            </div>
+        </div>
+        <div class="right-container">
+            <div id="task-1" class="data-container task-data">
+                <div id="task-1.1" class="grid-item">1.1</div>
+                <div id="task-1.2" class="grid-item">1.2</div>
+                <div id="task-1.3" class="grid-item">1.3</div>
+            </div>  
+            <div id="task-2.1-info" class="data-container hidden">
+                This is the information for Task 2.1
+            </div>
+            <div id="task-2.2-info" class="data-container hidden">
+                This is the information for Task 2.2
+            </div>
+            <div id="task-3.1-info" class="data-container hidden">
+                This is the information for Task 3.1
+            </div>
+            <div id="task-2-and-3" class="data-container task-data">
+                <div id="task-2.1" class="grid-item">2.1</div>
+                <div id="task-2.2" class="grid-item">2.2</div>
+                <div id="task-3.1" class="grid-item">3.1</div>
+            </div>    
+            <div id="task-1.1-info" class="data-container hidden">
+                This is the information for Task 1.1
+            </div>
+            <div id="task-1.2-info" class="data-container hidden">
+                This is the information for Task 1.2
+            </div>
+            <div id="task-1.3-info" class="data-container hidden">
+                This is the information for Task 1.3
+            </div>
+            <div id="internal-data" class="data-container">
+                <div id="pressure-data" class="grid-item">Pressure<br>00.00 psi</div>
+                <div id="temp-data" class="grid-item">Temperature<br>00.00&deg C</div>
+                <div id="humidity-data" class="grid-item">Humidity<br>50%</div>
+            </div>
+            <div id="electrical-data" class="data-container">
+                <div id="current-data" class="grid-item">Current<br>00.00 A</div>
+                <div id="voltage-data" class="grid-item">Voltage<br>00.00 V</div>
+            </div>
+            <div id="inertial-data" class="data-container">
+                <div id="accel-data" class="grid-item">Acceleration : &lt00.00, 00.00, 00.00&gt m/s^2</div>
+                <div id="pry-data" class="grid-item">Gyro : &lt00.00, 00.00, 00.00&gt &deg</div>
+            </div>
+            <div id="external-data" class="data-container">
+                <div id="depth-data" class="grid-item">Depth : 00.00 m</div>
+            </div>
+        </div>
+    </div>
+</body>

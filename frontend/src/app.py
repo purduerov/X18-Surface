@@ -19,7 +19,7 @@ class Frontend(Node):
 
         # Setup the heartbeat helper
         self.heartbeat_helper = HeartbeatHelper(self)
-
+    
         # Setup the flask app
         self.app = Flask(__name__)
         CORS(self.app)
@@ -47,18 +47,27 @@ class Frontend(Node):
         # 4 Camera streams
         @self.app.route("/")
         def index():
-            return render_template("index.html", rov_ip=os.getenv("ROV_IP"))
-
-        # The new UI
-        @self.app.route("/new-ui")
-        def new_ui():
-            return render_template("new_index_proto.html")
+            return render_template("index.html")
 
         # Node status page
         @self.app.route("/node-status")
         def node_status():
             return render_template("node_status.html")
 
+        @self.app.route("/big-stream")
+        def index():
+            return render_template("index.html", rov_ip=os.getenv("ROV_IP"))
+        
+        # The new UI
+        @self.app.route("/ui")
+        def new_ui():
+            return render_template("innovative_ui.html", rov_ip=os.getenv("ROV_IP"))
+        
+        # The demo subscriber page
+        @self.app.route("/demo-subscriber")
+        def demo_subscriber():
+            return render_template("demo_ros_subscriber.html")
+        
     # Function to setup the socketio events
     def setup_socketio_events(self):
         @self.socketio.on("connect")
@@ -75,7 +84,6 @@ class Frontend(Node):
             # self.get_logger().info(f"Flask received event: {event}, data: {data}")
             # Forward the event and its data back to the client
             self.socketio.emit(event, data)
-
 
 def main():
     rclpy.init()
