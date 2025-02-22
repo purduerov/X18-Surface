@@ -1,16 +1,15 @@
 #!/usr/bin/env python3
 import os
 from flask import Flask, render_template, request, redirect, url_for
-from ssh import Ssh
-from streams import Streams
-from signal_handler import SignalHandler
 import rclpy
 from rclpy.node import Node
+from std_msgs.msg import String
 import signal
 from flask_socketio import SocketIO
 from dotenv import load_dotenv
 import threading
 from flask_cors import CORS
+from utils.heartbeat_helper import HeartbeatHelper
 
 
 class Frontend(Node):
@@ -18,6 +17,9 @@ class Frontend(Node):
         super().__init__("frontend")
         self.get_logger().info("Frontend node started")
 
+        # Setup the heartbeat helper
+        self.heartbeat_helper = HeartbeatHelper(self)
+    
         # Setup the flask app
         self.app = Flask(__name__)
         CORS(self.app)
@@ -31,11 +33,27 @@ class Frontend(Node):
         self.setup_socketio_events()
 
         # Run the Flask app with SocketIO
-        self.socketio.run(self.app, host="0.0.0.0", port=5000, allow_unsafe_werkzeug=True)
+        flask_thread = threading.Thread(target=self.run_flask)
+        flask_thread.start()
+
+    def run_flask(self):
+        port = int(os.getenv("FLASK_PORT", 5013))
+        self.socketio.run(
+            self.app, host="0.0.0.0", port=port, allow_unsafe_werkzeug=True
+        )
 
     # Function to setup the routes for the Flask app
     def setup_routes(self):
         # 4 Camera streams
+        @self.app.route("/")
+        def index():
+            return render_template("index.html")
+
+        # Node status page
+        @self.app.route("/node-status")
+        def node_status():
+            return render_template("node_status.html")
+
         @self.app.route("/big-stream")
         def index():
             return render_template("index.html", rov_ip=os.getenv("ROV_IP"))
@@ -55,43 +73,17 @@ class Frontend(Node):
         @self.socketio.on("connect")
         def connect():
             self.get_logger().info("SocketIO connected")
-        
+
         @self.socketio.on("disconnect")
         def disconnect():
             self.get_logger().info("SocketIO disconnected")
 
-        @self.socketio.on('count')
-        def handle_count(data):
-            # self.get_logger().info(f"Flask received count: {data}")
-            # Forward the data to the client
-            self.socketio.emit('count', data)
-
-        @self.socketio.on('rov_velocity')
-        def handle_rov_velocity(data):
-            # self.get_logger().info(f"Flask received rov_velocity: {data}")
-            # Parse the data and forward it to the client
-            self.socketio.emit('rov_velocity', data)
-        
-        @self.socketio.on('surface_imu')
-        def handle_surface_imu(data):
-            self.socketio.emit('surface_imu', data)
-
-        @self.socketio.on('depth')
-        def handle_rov_depth(data):
-            self.socketio.emit('depth', data)
-        
-        @self.socketio.on('water_temp')
-        def handle_water_temp(data):
-            self.socketio.emit('water_temp', data)
-        
-        @self.socketio.on('pi_temp')
-        def handle_ip_temp(data):
-            self.socketio.emit('pi_temp', data)
-        
-        @self.socketio.on('leak_sensor')
-        def handle_leak_sensor(data):
-            self.socketio.emit('leak_sensor', data)
-
+        # General-purpose event handler
+        @self.socketio.on("*")  # Using '*' to catch all events
+        def handle_all_events(event, data=None):
+            # self.get_logger().info(f"Flask received event: {event}, data: {data}")
+            # Forward the event and its data back to the client
+            self.socketio.emit(event, data)
 
 def main():
     rclpy.init()

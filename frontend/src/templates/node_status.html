@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ROS 2 Node Status</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    h1 {
+      text-align: center;
+    }
+    .table-container {
+      display: flex;
+      justify-content: space-around;
+    }
+    .node-table {
+      width: 45%;
+      border-collapse: collapse;
+    }
+    .node-table th, .node-table td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    }
+    .node-table th {
+      background-color: #f4f4f4;
+    }
+    .active {
+      color: green;
+    }
+    .inactive {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <h1>ROS 2 Node Status</h1>
+  <div class="table-container">
+    <table class="node-table" id="surface-node-table">
+      <thead>
+        <tr>
+          <th colspan="2">Surface Nodes</th>
+        </tr>
+        <tr>
+          <th>Node Name</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Surface Node rows will be dynamically added here -->
+      </tbody>
+    </table>
+    <table class="node-table" id="core-node-table">
+      <thead>
+        <tr>
+          <th colspan="2">Core Nodes</th>
+        </tr>
+        <tr>
+          <th>Node Name</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Core Node rows will be dynamically added here -->
+      </tbody>
+    </table>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.0/socket.io.js"></script>
+  <script src="static/socketio/socketio_heartbeat_listener.js"></script>
+  
+</body>
+</html>

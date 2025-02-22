@@ -3,40 +3,37 @@ from launch_ros.actions import Node
 from launch.actions import TimerAction
 
 def generate_launch_description():
-    return LaunchDescription([
-        Node(
-            package='frontend',
-            executable='app.py',
-            namespace='rov',
-        ),
-        Node(
-            package='controller',
-            executable='sender.py',
-            namespace='rov',
-        ),
-        # Node(
-        #     package='demo_publisher',
-        #     executable='demo_publisher.py',
-        #     namespace='rov',
-        # ),
-        TimerAction(
-            period=5.0,  # Delay for n seconds
-            actions=[
-                Node(
-                    package='demo_subscriber',
-                    executable='demo_subscriber.py',
-                    namespace='rov',
-                ),
-                Node(
-                    package='demo_subscriber',
-                    executable='depth_sensor.py',
-                    namespace='rov'
-                ),
-                Node(
-                    package='demo_subscriber',
-                    executable='temp_subscriber.py',
-                    namespace='rov'
-                )
-            ]
-        ),
-    ])
+    return LaunchDescription(
+        [
+            Node(
+                package="frontend",
+                executable="app.py",
+                namespace="rov",
+            ),
+            # Node(
+            #     package='controller',
+            #     executable='sender.py',
+            #     namespace='rov',
+            # ),
+            Node(
+                package="mediamtx_node",
+                executable="mediamtx_node.py",
+                namespace="rov",
+            ),
+            TimerAction(
+                period=5.0,  # Delay for n seconds
+                actions=[
+                    Node(
+                        package="heartbeat_monitor",
+                        executable="heartbeat_monitor.py",
+                        namespace="rov",
+                    )
+                    # Node(
+                    #     package='ui_subscriber',
+                    #     executable='ui_subscriber.py',
+                    #     namespace='rov',
+                    # )
+                ],
+            ),
+        ]
+    )
