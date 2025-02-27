@@ -87,6 +87,22 @@
     font-size: calc(var(--fonty-sizey) * 0.5);
 }
 
+.sub-task{
+    grid-template-columns: 10% 10% 80%;
+}
+
+#task-1\.2\.1{
+    grid-template-rows: repeat(3, 1fr);
+}
+
+#task-1\.2\.1{
+    grid-template-rows: repeat(3, 1fr);
+}
+
+#task-1\.2-info{
+    grid-template-rows: repeat(2, 1fr);
+}
+
 .hidden{
     display: none;
 }
