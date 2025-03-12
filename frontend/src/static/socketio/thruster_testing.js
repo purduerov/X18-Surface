@@ -245,7 +245,7 @@ socket.on('heartbeat', function(msg) {
 });
 
 // Update final thrust display when a "final_thrust" message is received
-socket.on('/final_thrust', function(msg) {
+socket.on('final_thrust', function(msg) {
   console.log("Final thrust message received:", msg);
   updateFinalThrustDisplay(msg);
 });

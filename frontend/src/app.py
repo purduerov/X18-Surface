@@ -108,16 +108,20 @@ class Frontend(Node):
         # General-purpose event handler
         @self.socketio.on("*")  # Using '*' to catch all events
         def handle_all_events(event, data=None):
+            # Handle frontend events
             if event.startswith("frontend-"):
                 # self.get_logger().info(f"Handling frontend event: {event}, data: {data}")
                 # Handle the event
                 handle_frontend_event(self, event, data)
-            elif not event.startswith("request_logs") and not event.startswith("clear_logs"):
-                # Don't forward log-related events, they're handled by log_helper
-                self.socketio.emit(event, data)
+            
+            # Ignore heartbeat events
+            elif event.startswith("heartbeat") or event.startswith("request_logs") or event.startswith("clear_logs"):
+                # self.get_logger().info(f"Unhandled event: {event}, data: {data}")
+                return
+
+            # Forward all other events
             else:
-                # self.get_logger().info(f"Emitting to frontend: {event}, data: {data}")
-                # Forward the event and its data back to the client
+                # self.get_logger().info(f"Unhandled event: {event}, data: {data}")
                 self.socketio.emit(event, data)
 
 def main():

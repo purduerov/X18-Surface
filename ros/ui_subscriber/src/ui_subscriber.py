@@ -31,7 +31,7 @@ class UISubscriber(Node):
             "rov_velocity": RovVelocityCommand,
             "heartbeat": Header,
             # Core published topics
-            "/final_thrust": FinalThrustMsg,
+            "final_thrust": FinalThrustMsg,
         }
 
         # Subscribe to each topic in the topics dictionary
