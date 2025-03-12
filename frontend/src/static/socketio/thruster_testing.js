@@ -39,6 +39,7 @@ function updateCoreStatus() {
   // Get the most recent heartbeat time
   const lastHeartbeat = Math.max(
     coreLastHeartbeat['ROV_main'] || 0,
+    coreLastHeartbeat['thrust_control'] || 0,
     coreLastHeartbeat['thrust_to_spi'] || 0
   );
   
@@ -232,7 +233,7 @@ socket.on('heartbeat', function(msg) {
     
     // Only track core nodes
     if (data.location === 'core' && 
-        (data.node === 'ROV_main' || data.node === 'thrust_to_spi')) {
+        (data.node === 'ROV_main' || data.node === 'thrust_control' || data.node === 'thrust_to_spi')) {
       if (data.status === 'active') {
         coreLastHeartbeat[data.node] = Date.now();
         updateCoreStatus();

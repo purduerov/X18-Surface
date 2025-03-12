@@ -11,6 +11,7 @@ from flask_cors import CORS
 from utils.heartbeat_helper import HeartbeatHelper
 from frontend_handler import handle_frontend_event
 import sys
+from log_helper import LogHelper
 
 class Frontend(Node):
     def __init__(self):
@@ -26,11 +27,20 @@ class Frontend(Node):
         self.socketio = SocketIO(self.app)
         load_dotenv(dotenv_path=f"/workspaces/X17-Surface/.env")
 
+        # Setup the log helper
+        self.log_helper = LogHelper(self.socketio, self.get_logger())
+
         # Setup the routes
         self.setup_routes()
 
         # Setup the socketio events
         self.setup_socketio_events()
+
+        # Setup log-related socket events
+        self.log_helper.setup_socket_events()
+        
+        # Start log monitoring
+        self.log_helper.start_log_monitor()
 
         # Run the Flask app with SocketIO
         self.flask_thread = threading.Thread(target=self.run_flask)
@@ -50,7 +60,7 @@ class Frontend(Node):
         # Default Route
         @self.app.route("/")
         def index():
-            return redirect(url_for("ui"), code=302)
+            return redirect(url_for("new_ui"), code=302)
         
         # Main UI
         @self.app.route("/ui")
@@ -80,6 +90,11 @@ class Frontend(Node):
         def node_status():
             return render_template("node_status.html", active_page='node-status')
         
+        # Logs page
+        @self.app.route("/logs")
+        def logs():
+            return render_template("logs.html", active_page='logs')
+                
     # Function to setup the socketio events
     def setup_socketio_events(self):
         @self.socketio.on("connect")
@@ -97,6 +112,9 @@ class Frontend(Node):
                 # self.get_logger().info(f"Handling frontend event: {event}, data: {data}")
                 # Handle the event
                 handle_frontend_event(self, event, data)
+            elif not event.startswith("request_logs") and not event.startswith("clear_logs"):
+                # Don't forward log-related events, they're handled by log_helper
+                self.socketio.emit(event, data)
             else:
                 # self.get_logger().info(f"Emitting to frontend: {event}, data: {data}")
                 # Forward the event and its data back to the client
@@ -109,6 +127,7 @@ def main():
     # Silent exit on SIGINT - just terminate immediately
     def silent_exit(sig, frame):
         # Exit without any logging or cleanup
+        frontend.log_helper.stop_log_monitor()
         os._exit(0)  # Use os._exit() to exit immediately without cleanup
     
     # Register the signal handler
@@ -122,6 +141,7 @@ def main():
         os._exit(0)
     finally:
         # This will only run if spin() returns normally, not after os._exit()
+        frontend.log_helper.stop_log_monitor()
         sys.exit(0)
 
 if __name__ == "__main__":

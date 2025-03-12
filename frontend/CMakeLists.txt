@@ -24,6 +24,7 @@ install(DIRECTORY
 install(PROGRAMS
   src/app.py
   src/frontend_handler.py
+  src/log_helper.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

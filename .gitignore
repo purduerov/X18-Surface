@@ -1,6 +1,7 @@
 __pycache__/
 ui/__pycache__
 log/
+logs/
 .env
 build
 install
