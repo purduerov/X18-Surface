@@ -88,9 +88,6 @@ class Frontend(Node):
         # General-purpose event handler
         @self.socketio.on("*")  # Using '*' to catch all events
         def handle_all_events(event, data=None):
-            # Ignore heartbeat events
-            if event == "heartbeat":
-                return
             if event.startswith("frontend-"):
                 # self.get_logger().info(f"Handling frontend event: {event}, data: {data}")
                 # Handle the event

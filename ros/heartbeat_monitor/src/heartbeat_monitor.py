@@ -103,8 +103,6 @@ class HeartbeatMonitor(Node):
             
         self.shutting_down = True
 
-        # Kill the MediaMTX server process if it exists
-
 
 def main(args=None):
     rclpy.init(args=args)
