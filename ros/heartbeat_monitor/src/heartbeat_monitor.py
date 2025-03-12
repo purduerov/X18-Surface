@@ -32,7 +32,7 @@ class HeartbeatMonitor(Node):
         self.expected_core_nodes = {
             "ROV_main": 0,
             "thrust_control": 0,
-            "thrust_to_spi": 0,
+            "thrust_to_uart": 0,
         }
 
     def heartbeat_callback(self, msg):
