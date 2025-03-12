@@ -53,7 +53,7 @@ class Controller(Node):
                 sys.exit(0)
 
         # Create the publishers
-        self.pub = self.create_publisher(RovVelocityCommand, "/rov_velocity", 10)
+        self.pub = self.create_publisher(RovVelocityCommand, "rov_velocity", 10)
         self.pub_tools = self.create_publisher(ToolsCommandMsg, "tools", 10)
 
         # Create the timers

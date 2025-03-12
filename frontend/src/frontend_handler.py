@@ -13,7 +13,7 @@ def handle_frontend_event(node, event, data):
         # Check if there is already a publisher for /final_thrust
         if node.final_thrust_pub is None:
             # Create a publisher for the /final_thrust topic
-            node.final_thrust_pub = node.create_publisher(FinalThrustMsg, "/final_thrust", 10)
+            node.final_thrust_pub = node.create_publisher(FinalThrustMsg, "final_thrust", 10)
         # Create a new message
         thrust_msg = FinalThrustMsg()
 
