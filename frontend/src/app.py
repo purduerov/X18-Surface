@@ -10,6 +10,7 @@ import threading
 from flask_cors import CORS
 from utils.heartbeat_helper import HeartbeatHelper
 from frontend_handler import handle_frontend_event
+import sys
 
 class Frontend(Node):
     def __init__(self):
@@ -97,11 +98,27 @@ class Frontend(Node):
                 # Forward the event and its data back to the client
                 self.socketio.emit(event, data)
 
-
 def main():
     rclpy.init()
     frontend = Frontend()
-    rclpy.spin(frontend)
+    
+    # Silent exit on SIGINT - just terminate immediately
+    def silent_exit(sig, frame):
+        # Exit without any logging or cleanup
+        os._exit(0)  # Use os._exit() to exit immediately without cleanup
+    
+    # Register the signal handler
+    signal.signal(signal.SIGINT, silent_exit)
+    signal.signal(signal.SIGTERM, silent_exit)
+    
+    try:
+        rclpy.spin(frontend)
+    except KeyboardInterrupt:
+        # Exit silently on KeyboardInterrupt too
+        os._exit(0)
+    finally:
+        # This will only run if spin() returns normally, not after os._exit()
+        sys.exit(0)
 
 if __name__ == "__main__":
     main()
