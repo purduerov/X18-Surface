@@ -1,16 +1,15 @@
 #!/usr/bin/env python3
 import os
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import String
 import signal
 from flask_socketio import SocketIO
 from dotenv import load_dotenv
 import threading
 from flask_cors import CORS
 from utils.heartbeat_helper import HeartbeatHelper
-
+from frontend_handler import handle_frontend_event
 
 class Frontend(Node):
     def __init__(self):
@@ -33,8 +32,11 @@ class Frontend(Node):
         self.setup_socketio_events()
 
         # Run the Flask app with SocketIO
-        flask_thread = threading.Thread(target=self.run_flask)
-        flask_thread.start()
+        self.flask_thread = threading.Thread(target=self.run_flask)
+        self.flask_thread.start()
+
+        # Setup publishers
+        self.final_thrust_pub = None
 
     def run_flask(self):
         port = int(os.getenv("FLASK_PORT", 5013))
@@ -55,7 +57,7 @@ class Frontend(Node):
             return render_template("node_status.html")
 
         @self.app.route("/big-stream")
-        def index():
+        def big_stream():
             return render_template("index.html", rov_ip=os.getenv("ROV_IP"))
         
         # The new UI
@@ -67,6 +69,11 @@ class Frontend(Node):
         @self.app.route("/demo-subscriber")
         def demo_subscriber():
             return render_template("demo_ros_subscriber.html")
+        
+        # The thrust testing page
+        @self.app.route("/thruster-testing")
+        def thrust_testing():
+            return render_template("thruster_testing.html")
         
     # Function to setup the socketio events
     def setup_socketio_events(self):
@@ -81,17 +88,23 @@ class Frontend(Node):
         # General-purpose event handler
         @self.socketio.on("*")  # Using '*' to catch all events
         def handle_all_events(event, data=None):
-            # self.get_logger().info(f"Flask received event: {event}, data: {data}")
-            # Forward the event and its data back to the client
-            self.socketio.emit(event, data)
+            # Ignore heartbeat events
+            if event == "heartbeat":
+                return
+            if event.startswith("frontend-"):
+                # self.get_logger().info(f"Handling frontend event: {event}, data: {data}")
+                # Handle the event
+                handle_frontend_event(self, event, data)
+            else:
+                # self.get_logger().info(f"Emitting to frontend: {event}, data: {data}")
+                # Forward the event and its data back to the client
+                self.socketio.emit(event, data)
+
 
 def main():
     rclpy.init()
     frontend = Frontend()
     rclpy.spin(frontend)
-    frontend.destroy_node()
-    rclpy.shutdown()
-
 
 if __name__ == "__main__":
     main()
