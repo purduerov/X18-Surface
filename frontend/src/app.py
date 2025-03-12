@@ -47,34 +47,38 @@ class Frontend(Node):
 
     # Function to setup the routes for the Flask app
     def setup_routes(self):
-        # 4 Camera streams
+        # Default Route
         @self.app.route("/")
         def index():
-            return render_template("index.html")
-
-        # Node status page
-        @self.app.route("/node-status")
-        def node_status():
-            return render_template("node_status.html")
-
-        @self.app.route("/big-stream")
-        def big_stream():
-            return render_template("index.html", rov_ip=os.getenv("ROV_IP"))
+            return redirect(url_for("ui"), code=302)
         
-        # The new UI
+        # Main UI
         @self.app.route("/ui")
         def new_ui():
-            return render_template("innovative_ui.html", rov_ip=os.getenv("ROV_IP"))
+            return render_template("innovative_ui.html")
         
-        # The demo subscriber page
-        @self.app.route("/demo-subscriber")
-        def demo_subscriber():
-            return render_template("demo_ros_subscriber.html")
+        ### -------- CAMERA PAGES -------- ###
+
+        @self.app.route("/all-cameras")
+        def all_cameras():
+            return render_template("all_cameras.html", active_page='all-cameras')
         
+        @self.app.route("/fullscreen-camera")
+        def fullscreen_camera():
+            camera = request.args.get('camera', '1')  # Default to camera 1 if not specified
+            return render_template("fullscreen_camera.html", active_page='fullscreen-camera', camera=camera)
+        
+        ### -------- DEBUG PAGES -------- ###
+
         # The thrust testing page
         @self.app.route("/thruster-testing")
         def thrust_testing():
-            return render_template("thruster_testing.html")
+            return render_template("thruster_testing.html", active_page='thruster-testing')
+        
+        # Node status page
+        @self.app.route("/node-status")
+        def node_status():
+            return render_template("node_status.html", active_page='node-status')
         
     # Function to setup the socketio events
     def setup_socketio_events(self):
