@@ -5,6 +5,64 @@ let sendInterval = null;
 let displayMode = "absolute";
 let NEUTRAL_VALUE = 127;
 
+// Connection status tracking
+let coreLastHeartbeat = {
+  'ROV_main': 0,
+  'thrust_to_spi': 0
+};
+
+// --------- CONNECTION STATUS FUNCTIONS --------- //
+
+// Update the frontend connection status display
+function updateFrontendStatus(connected) {
+  const indicator = document.getElementById('frontend-status-indicator');
+  const text = document.getElementById('frontend-status-text');
+  
+  if (connected) {
+    indicator.className = 'status-indicator status-connected';
+    text.textContent = 'Connected';
+  } else {
+    indicator.className = 'status-indicator status-disconnected';
+    text.textContent = 'Disconnected';
+  }
+}
+
+// Update the core connection status based on heartbeats
+function updateCoreStatus() {
+  const indicator = document.getElementById('core-status-indicator');
+  const text = document.getElementById('core-status-text');
+  
+  const now = Date.now();
+  const staleThreshold = 5000; // 5 seconds
+  const disconnectedThreshold = 10000; // 10 seconds
+  
+  // Get the most recent heartbeat time
+  const lastHeartbeat = Math.max(
+    coreLastHeartbeat['ROV_main'] || 0,
+    coreLastHeartbeat['thrust_to_spi'] || 0
+  );
+  
+  const timeSinceHeartbeat = now - lastHeartbeat;
+  
+  if (lastHeartbeat === 0) {
+    // No heartbeats received yet
+    indicator.className = 'status-indicator status-disconnected';
+    text.textContent = 'Disconnected';
+  } else if (timeSinceHeartbeat > disconnectedThreshold) {
+    indicator.className = 'status-indicator status-disconnected';
+    text.textContent = 'Disconnected';
+  } else if (timeSinceHeartbeat > staleThreshold) {
+    indicator.className = 'status-indicator status-stale';
+    text.textContent = 'Stale';
+  } else {
+    indicator.className = 'status-indicator status-connected';
+    text.textContent = 'Connected';
+  }
+}
+
+// Check core status every second
+setInterval(updateCoreStatus, 1000);
+
 // --------- PAGE SPECIFIC FUNCTIONS --------- //
 
 function updateAllValues() {
@@ -151,27 +209,44 @@ function toggleDisplayMode() {
     }
 }
 
-// --------- SOCKETIO FUNCTIONS --------- //
-// Handle socket connection and disconnection events
+// --------- SOCKET EVENT HANDLERS --------- //
+
+// Handle connection and disconnection events
 socket.on('connect', function() {
-    console.log("Socket connected");
+  console.log("Socket connected");
+  updateFrontendStatus(true);
 });
 
 socket.on('disconnect', function() {
-    console.log("Socket disconnected");
+  console.log("Socket disconnected");
+  updateFrontendStatus(false);
+  
+  // Optional: mark core as disconnected immediately on socket disconnect
+  // updateCoreStatus('disconnected');
 });
 
-// Handle the 'heartbeat' event
-// socket.on('heartbeat', function(msg) {
-//     // Turn the message into a JSON object
-//     msg = JSON.parse(msg);
-//     updateNodeStatus(msg.node, msg.status, msg.location);
-// });
+// Handle heartbeat events to track core status
+socket.on('heartbeat', function(msg) {
+  try {
+    const data = typeof msg === 'string' ? JSON.parse(msg) : msg;
+    
+    // Only track core nodes
+    if (data.location === 'core' && 
+        (data.node === 'ROV_main' || data.node === 'thrust_to_spi')) {
+      if (data.status === 'active') {
+        coreLastHeartbeat[data.node] = Date.now();
+        updateCoreStatus();
+      }
+    }
+  } catch (err) {
+    console.error('Error processing heartbeat:', err);
+  }
+});
 
-// Update final thrust display when a "final_thrust" message is received.
+// Update final thrust display when a "final_thrust" message is received
 socket.on('/final_thrust', function(msg) {
-    console.log("New message received:", msg);
-    updateFinalThrustDisplay(msg);
+  console.log("Final thrust message received:", msg);
+  updateFinalThrustDisplay(msg);
 });
 
 // Dummy send once function (can be modified as needed)
