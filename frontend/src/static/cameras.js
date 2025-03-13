@@ -25,6 +25,11 @@ document.addEventListener('DOMContentLoaded', function () {
         const newUrl = new URL(window.location);
         newUrl.searchParams.set('camera', cameraNumber);
         history.replaceState(null, '', newUrl);
+        
+        // Emit custom event for camera change
+        document.dispatchEvent(new CustomEvent('cameraChanged', {
+            detail: { camera: cameraNumber }
+        }));
     }
 
     // Add click handlers to all camera buttons
