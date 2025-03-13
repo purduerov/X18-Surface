@@ -226,7 +226,7 @@ class Frontend(Node):
             
             thumbnail_dir = os.path.join(os.getcwd(), 'videos', 'thumbnails')
             os.makedirs(thumbnail_dir, exist_ok=True)
-            thumbnail_path = os.path.join(thumbnail_dir, f"{hash(filename)}.jpg")
+            thumbnail_path = os.path.join(thumbnail_dir, f"{os.path.splitext(filename)[0]}.jpg")
             
             if not os.path.exists(thumbnail_path):
                 try:
@@ -236,7 +236,7 @@ class Frontend(Node):
                     ], check=True)
                 except Exception as e:
                     self.get_logger().error(f"Error generating thumbnail: {str(e)}")
-                    return send_file('static/default-thumbnail.jpg', mimetype='image/jpeg')
+                    abort(500)
             
             return send_file(thumbnail_path, mimetype='image/jpeg')
 
@@ -266,19 +266,22 @@ class Frontend(Node):
         @self.app.route('/api/recordings/<path:filename>', methods=['DELETE'])
         def delete_recording(filename):
             # Construct the absolute path
-            filename = os.path.join(os.getcwd(), 'videos', filename)
-            if not os.path.exists(filename):
+            filepath = os.path.join(os.getcwd(), 'videos', filename)
+            if not os.path.exists(filepath):
                 return jsonify({'success': False, 'message': 'Recording not found'})
             
             try:
                 # Delete the recording file
-                os.remove(filename)
-                
+                os.remove(filepath)
+                self.get_logger().info(f"Deleted recording: {filepath}")
+
                 # Delete the thumbnail if it exists
-                thumbnail_path = os.path.join(os.getcwd(), 'thumbnails', f"{hash(filename)}.jpg")
-                if os.path.exists(thumbnail_path):
-                    os.remove(thumbnail_path)
-                
+                name = os.path.splitext(filename)[0]
+                thumbnail_filepath = os.path.join(os.getcwd(), 'videos', 'thumbnails', f"{name}.jpg")
+                if os.path.exists(thumbnail_filepath):
+                    os.remove(thumbnail_filepath)
+                    self.get_logger().info(f"Deleted thumbnail: {thumbnail_filepath}")
+                    
                 return jsonify({'success': True})
             except Exception as e:
                 return jsonify({'success': False, 'message': str(e)})
