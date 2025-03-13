@@ -10,9 +10,6 @@ paths:
 rtspAddress: ":8554"
 webrtc: yes
 
-api: yes
-apiAddress: ":9997"  # Enable API on port 9997
-
 # Disable unused protocols
 rtmp: no
 srt: no
