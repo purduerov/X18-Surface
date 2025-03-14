@@ -16,9 +16,9 @@ from rclpy.node import Node
 
 # Local imports
 from utils.heartbeat_helper import HeartbeatHelper
-from frontend.src.frontend_utils.frontend_handler import handle_frontend_event
-from frontend.src.frontend_utils.log_helper import LogHelper
-from frontend.src.frontend_utils.recording_api import RecordingRoutes  # Import the new module
+from frontend_utils.frontend_handler import handle_frontend_event
+from frontend_utils.log_helper import LogHelper
+from frontend_utils.recording_api import RecordingRoutes  # Import the new module
 
 class Frontend(Node):
     def __init__(self):
@@ -32,11 +32,22 @@ class Frontend(Node):
         self.app = Flask(__name__)
         CORS(self.app)
         # Add a secret key for the session
+        self.app.secret_key = os.getenv("FLASK_SECRET_KEY", os.urandom(24).hex())
         self.socketio = SocketIO(self.app)
-        load_dotenv(dotenv_path=f"/workspaces/X17-Surface/.env")
+        load_dotenv(dotenv_path=os.path.join(os.getcwd(), ".env"))
 
         # Setup the log helper
         self.log_helper = LogHelper(self.socketio, self.get_logger())
+
+        # Get camera URLs from environment variables or use defaults
+        self.camera_urls = {
+            'camera1': os.getenv('CAMERA1_URL', 'http://localhost:8889/camera_1'),
+            'camera2': os.getenv('CAMERA2_URL', 'http://localhost:8889/camera_2'),
+            'camera3': os.getenv('CAMERA3_URL', 'http://localhost:8889/camera_3'),
+            'camera4': os.getenv('CAMERA4_URL', 'http://localhost:8889/camera_4')
+        }
+
+        self.get_logger().info(f"Camera URLs: {self.camera_urls}")
 
         ### ----- ROUTE SETUP ----- ###
         self.setup_routes()
@@ -45,7 +56,7 @@ class Frontend(Node):
         ### ----- SOCKETIO SETUP ----- ###
         self.setup_socketio_events()
         self.log_helper.setup_socket_events()
-    
+
         ### ----- START SERVICES ----- ###
         # Start flask
         self.flask_thread = threading.Thread(target=self.run_flask)
@@ -71,18 +82,18 @@ class Frontend(Node):
         # Main UI
         @self.app.route("/ui")
         def new_ui():
-            return render_template("innovative_ui.html")
+            return render_template("innovative_ui.html", camera_urls=self.camera_urls)
         
         ### -------- CAMERA PAGES -------- ###
 
         @self.app.route("/all-cameras")
         def all_cameras():
-            return render_template("all_cameras.html", active_page='all-cameras')
+            return render_template("all_cameras.html", active_page='all-cameras', camera_urls=self.camera_urls)
         
         @self.app.route("/fullscreen-camera")
         def fullscreen_camera():
             camera = request.args.get('camera', '1')  # Default to camera 1 if not specified
-            return render_template("fullscreen_camera.html", active_page='fullscreen-camera', camera=camera)
+            return render_template("fullscreen_camera.html", active_page='fullscreen-camera', camera=camera, camera_urls=self.camera_urls)
         
         ### -------- UTILITY PAGES -------- ###
 

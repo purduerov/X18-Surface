@@ -6,10 +6,14 @@
 <style>
   body {
     background-color: #212529;
-    margin: 0;
-    padding: 0;
     height: 100vh;
     overflow: hidden;
+  }
+  
+  /* Ensure navbar stays on top */
+  .navbar {
+    position: relative;
+    z-index: 1000; /* Higher z-index to stay above camera container */
   }
   
   .camera-container {
@@ -19,6 +23,7 @@
     right: 0;
     bottom: 0;
     overflow: hidden;
+    z-index: 10; /* Lower z-index than navbar */
   }
   
   iframe {
@@ -36,34 +41,17 @@
     background-color: rgba(0,0,0,0.5);
     padding: 10px;
     border-radius: 8px;
-    display: flex;
-    justify-content: center;
   }
   
   .btn-camera {
     width: 50px;
     height: 50px;
-    margin: 0 5px;
-    font-size: 1.2rem;
     font-weight: bold;
   }
   
   .btn-camera.active {
     border: 3px solid #fff;
     box-shadow: 0 0 10px rgba(255,255,255,0.5);
-  }
-  
-  .btn-record {
-    background-color: #dc3545;
-    color: white;
-    margin-left: 15px;
-    width: auto;
-    display: flex;
-    align-items: center;
-  }
-  
-  .btn-record.recording {
-    animation: pulse 1.5s infinite;
   }
   
   .record-icon {
@@ -73,6 +61,10 @@
     background-color: white;
     border-radius: 50%;
     margin-right: 8px;
+  }
+  
+  .btn-record.recording {
+    animation: pulse 1.5s infinite;
   }
   
   @keyframes pulse {
@@ -87,16 +79,16 @@
 
 {% block content %}
 <div class="camera-container">
-  <iframe id="camera-stream" src="http://localhost:8889/camera_1" scrolling="no"></iframe>
+  <iframe id="camera-stream" src="" scrolling="no"></iframe>
   
-  <div class="camera-controls">
-    <div class="btn-group">
-      <button class="btn btn-dark btn-camera" data-camera="1">1</button>
-      <button class="btn btn-dark btn-camera" data-camera="2">2</button>
-      <button class="btn btn-dark btn-camera" data-camera="3">3</button>
-      <button class="btn btn-dark btn-camera" data-camera="4">4</button>
+  <div class="camera-controls d-flex justify-content-center">
+    <div class="btn-group me-3">
+      <button class="btn btn-dark btn-camera fs-5" data-camera="1">1</button>
+      <button class="btn btn-dark btn-camera fs-5" data-camera="2">2</button>
+      <button class="btn btn-dark btn-camera fs-5" data-camera="3">3</button>
+      <button class="btn btn-dark btn-camera fs-5" data-camera="4">4</button>
     </div>
-    <button id="record-button" class="btn btn-record">
+    <button id="record-button" class="btn btn-danger d-flex align-items-center">
       <span class="record-icon"></span> Record
     </button>
   </div>
@@ -105,6 +97,18 @@
 
 {% block scripts %}
 {{ super() }}
+<script>
+  // Store camera URLs passed from the server
+  const cameraUrls = {
+    camera1: "{{ camera_urls.camera1|safe }}",
+    camera2: "{{ camera_urls.camera2|safe }}",
+    camera3: "{{ camera_urls.camera3|safe }}",
+    camera4: "{{ camera_urls.camera4|safe }}"
+  };
+  
+  // Pass camera URLs to the global scope for use in cameras.js
+  window.cameraUrls = cameraUrls;
+</script>
 <script src="static/cameras.js"></script>
 <script src="static/recording.js"></script>
 {% endblock %}
