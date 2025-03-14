@@ -1,5 +1,4 @@
 from shared_msgs.msg import FinalThrustMsg
-import json
 
 def handle_frontend_event(node, event, data):
 
