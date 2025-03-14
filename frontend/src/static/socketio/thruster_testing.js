@@ -116,6 +116,8 @@ function resetValues() {
         input.readOnly = false;
         checkbox.checked = false;
     }
+    // Send the reset values
+    sendThrusterValues();
 }
 
 function toggleSendValues() {
