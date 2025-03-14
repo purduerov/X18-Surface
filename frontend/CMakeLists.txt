@@ -26,15 +26,10 @@ install(PROGRAMS
   DESTINATION lib/${PROJECT_NAME}
 )
 
-install(PROGRAMS
-  src/frontend_utils/frontend_handler.py
-  src/frontend_utils/log_helper.py
-  src/frontend_utils/recording_api.py
-)
-
 install(DIRECTORY
   src/templates
   src/static
+  src/frontend_utils
   DESTINATION lib/${PROJECT_NAME}
 )
 
