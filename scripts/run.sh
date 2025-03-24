@@ -17,4 +17,4 @@ ln -sf "$LOG_FILE" "$LOG_DIR/latest.log"
 stdbuf -oL ros2 launch frontend surface_launch.py 2>&1 | (trap '' SIGINT; tee "$LOG_FILE")
 
 # Keep only the 10 most recent log files
-ls -t "$LOG_DIR"/ros_log_*.txt | tail -n +11 | xargs rm -f
+ls -t "$LOG_DIR"/ros_log_*.log | tail -n +11 | xargs rm -f
