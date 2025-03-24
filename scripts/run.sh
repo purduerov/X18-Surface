@@ -8,7 +8,7 @@ LOG_DIR="$(pwd)/logs"
 mkdir -p "$LOG_DIR"  # Ensure the logs directory exists
 
 # Create a timestamped log file
-LOG_FILE="$LOG_DIR/ros_log_$(date +'%Y-%m-%d_%H-%M-%S').txt"
+LOG_FILE="$LOG_DIR/ros_log_$(date +'%Y-%m-%d_%H-%M-%S').log"
 
 # Create a symlink to the latest log BEFORE starting ROS 2
 ln -sf "$LOG_FILE" "$LOG_DIR/latest.log"
