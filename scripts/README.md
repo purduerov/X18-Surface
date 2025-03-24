@@ -32,7 +32,7 @@ Builds the ROS 2 workspace using colcon.
 
 #### Usage:
 ```bash
-./build.sh
+./scripts/build.sh
 ```
 
 ### `clean.sh`
@@ -45,7 +45,7 @@ Cleans up build artifacts and temporary files from the workspace.
 
 #### Usage:
 ```bash
-./clean.sh [OPTION]
+./scripts/clean.sh [OPTION]
 ```
 
 #### Options:
@@ -66,7 +66,7 @@ Sets up the ROS 2 environment and installs the required dependencies for the X17
 
 #### Usage:
 ```bash
-./install.sh
+./scripts/install.sh
 ```
 
 ### `install_mediatmx.sh`
@@ -83,7 +83,7 @@ This script is run automatically by `install.sh` and `build.sh` if MediaMTX is n
 
 #### Usage:
 ```bash
-./install_mediatmx.sh
+./scripts/install_mediatmx.sh
 ```
 
 ### `run.sh`
