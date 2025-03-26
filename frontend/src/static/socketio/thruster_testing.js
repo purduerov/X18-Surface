@@ -37,11 +37,7 @@ function updateCoreStatus() {
   const disconnectedThreshold = 10000; // 10 seconds
   
   // Get the most recent heartbeat time
-  const lastHeartbeat = Math.max(
-    coreLastHeartbeat['ROV_main'] || 0,
-    coreLastHeartbeat['thrust_control'] || 0,
-    coreLastHeartbeat['thrust_to_spi'] || 0
-  );
+  const lastHeartbeat = coreLastHeartbeat['thrust_to_uart'] || 0;
   
   const timeSinceHeartbeat = now - lastHeartbeat;
   
@@ -234,10 +230,12 @@ socket.on('heartbeat', function(msg) {
     const data = typeof msg === 'string' ? JSON.parse(msg) : msg;
     
     // Only track core nodes
-    if (data.location === 'core' && 
-        (data.node === 'ROV_main' || data.node === 'thrust_control' || data.node === 'thrust_to_spi')) {
+    if (data.location === 'core' && data.node === 'thrust_to_uart') {
       if (data.status === 'active') {
         coreLastHeartbeat[data.node] = Date.now();
+        updateCoreStatus();
+      } else {
+        coreLastHeartbeat[data.node] = 0;
         updateCoreStatus();
       }
     }
