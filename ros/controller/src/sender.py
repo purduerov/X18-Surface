@@ -64,18 +64,26 @@ class Controller(Node):
     def init_pygame(self):
         """Initializes pygame and the joystick"""
         pygame.init()
+        # There should be two identical joystick devices
         pygame.joystick.init()
-        # Should be two joysticks
-        assert pygame.joystick.get_count() == 2
+        assert pygame.joystick.get_count() == 2, "There should be two identical joystick devices"
+        
+        # Determine left from right joystick
+        if (pygame.joystick.Joystick(0).get_button(10) == 1 and
+            pygame.joystick.Joystick(0).get_button(11) == 1):
+            self.left_joystick = pygame.joystick.Joystick(0)
+            self.right_joystick = pygame.joystick.Joystick(1)
+        elif (pygame.joystick.Joystick(1).get_button(10) == 1 and
+                pygame.joystick.Joystick(1).get_button(11) == 1):
+            self.left_joystick = pygame.joystick.Joystick(1)
+            self.right_joystick = pygame.joystick.Joystick(0)
+        else:
+            self.get_logger().error("Could not determine left and right joysticks."
+            " Please check the controller configuration.")
+            # Exit the program
+            pygame.quit()
+            sys.exit(0)
 
-        # Determine which joystick is the joystick and which is the throttle
-        for i in range(pygame.joystick.get_count()):
-            if pygame.joystick.Joystick(i).get_name() == JOYSTICK_NAME:
-                self.joystick = pygame.joystick.Joystick(i)
-                self.joystick_id = i
-            if pygame.joystick.Joystick(i).get_name() == THROTTLE_NAME:
-                self.throttle = pygame.joystick.Joystick(i)
-                self.throttle_id = i
 
     def reconnect(self):
         """Tries to reconnect the gamepad"""
