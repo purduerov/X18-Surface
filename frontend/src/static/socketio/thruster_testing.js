@@ -125,7 +125,7 @@ function toggleSendValues() {
         toggleBtn.textContent = "Stop Sending Values";
         toggleBtn.className = "btn btn-danger";
         sendOnceBtn.style.display = "none";
-        sendInterval = setInterval(sendThrusterValues, 500); // Adjust interval as needed
+        sendInterval = setInterval(sendThrusterValues, 1000); // Adjust interval as needed
     } else {
         // Stop continuous sending
         isSending = false;
