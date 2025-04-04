@@ -55,7 +55,7 @@ class UISubscriber(Node):
         if topic_name == "heartbeat":
             return
         # Log the received message
-        self.get_logger().info(f'Received from {topic_name} topic: "{msg}"')
+        # self.get_logger().info(f'Received from {topic_name} topic: "{msg}"')
         # Convert the ROS message to JSON
         msg_dict = rosmsg_to_dict(msg)
         # Log the dict

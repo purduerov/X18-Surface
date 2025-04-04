@@ -26,10 +26,7 @@ class MediaMTXNode(Node):
         self.publisher = self.create_publisher(String, "surface_ip", 10)
         self.timer = self.create_timer(1.0, self.publish_ip_address)
         self.ip_pub_count = 0
-        self.ip_pub_count_max = 1
-
-        # Create a subscriber to listen to the topic /surface_ip
-        self.create_subscription(String, "surface_ip", self.ip_callback, 10)
+        self.ip_pub_count_max = 10
 
         # Start the MediaMTX server process and monitor the process and watch for certain events and messages
         self.start_mediamtx_server()
@@ -56,11 +53,6 @@ class MediaMTXNode(Node):
         except Exception as e:
             return f"Error getting local IP: {e}"
 
-    def ip_callback(self, msg):
-        # Check if "STOP" was received, if so stop publishing the ip address
-        if msg.data == "STOP":
-            self.timer.cancel()
-            self.get_logger().info("Stopped publishing IP address")
 
     def start_mediamtx_server(self):
         def start_server():
