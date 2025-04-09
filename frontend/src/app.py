@@ -19,6 +19,7 @@ from utils.heartbeat_helper import HeartbeatHelper
 from frontend_utils.frontend_handler import handle_frontend_event
 from frontend_utils.log_helper import LogHelper
 from frontend_utils.recording_api import RecordingRoutes  # Import the new module
+from frontend_utils.controller_api import ControllerRoutes  # Import the new module
 
 class Frontend(Node):
     def __init__(self):
@@ -52,6 +53,7 @@ class Frontend(Node):
         ### ----- ROUTE SETUP ----- ###
         self.setup_routes()
         self.recording_routes = RecordingRoutes(self.app, self.get_logger())
+        self.controller_routes = ControllerRoutes(self.app, self.get_logger())
 
         ### ----- SOCKETIO SETUP ----- ###
         self.setup_socketio_events()
@@ -116,7 +118,11 @@ class Frontend(Node):
         @self.app.route("/recordings")
         def recordings_page():
             return render_template("recordings.html", active_page='recordings')
-                
+        
+        @self.app.route("/controller-mapping")
+        def controller_mapping():
+            return render_template("controller_mapping.html", active_page='controller-mapping')
+
     # Function to setup the socketio events
     def setup_socketio_events(self):
         @self.socketio.on("connect")

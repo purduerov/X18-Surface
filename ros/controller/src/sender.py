@@ -12,12 +12,13 @@ from shared_msgs.msg import RovVelocityCommand, ToolsCommandMsg
 from geometry_msgs.msg import Twist
 
 from config import *
-
+from config_reader import ConfigReader
 
 class Controller(Node):
     def __init__(self):
         super().__init__("gp_pub")
         # Pygame variables
+<<<<<<< Updated upstream
         self.joystick_1 = None
         self.joystick_2 = None
 
@@ -26,6 +27,23 @@ class Controller(Node):
         self.joystick_2_axis_state = joystick_axis_state
         self.joystick_1_button_state = joystick_button_state
         self.joystick_2_button_state = joystick_button_state
+=======
+        self.left_joystick
+        self.right_joystick
+
+        # Load configuration
+        self.config_reader = ConfigReader(logger=self.get_logger())
+        self.config = self.config_reader.load_config("default")
+        
+
+
+        # Joystick and throttle states
+        self.left_joystick_axis_state = joystick_axis_state
+        self.right_joystick_axis_state = joystick_axis_state
+
+        self.left_joystick_button_state = joystick_button_state
+        self.right_joystick_button_state = joystick_button_state
+>>>>>>> Stashed changes
 
         # Pilot variables
         self.reverse = 1
@@ -35,16 +53,17 @@ class Controller(Node):
         self.depth_lock = False
         self.pitch_lock = False
         self.tools = [0, 0, 0, 0, 0]
-
-        # Mapping variables (TO CHANGE MAPPING: GO TO getMessage() AND MAKE YOUR CHANGES THERE)
-        self.mapping = 1  # 0, 1, 2, 3
-
+        
         try:
             self.init_pygame()
         except:
+<<<<<<< Updated upstream
             self.get_logger().info(
                 "Controllers not found. Please make sure both joysticks are connected"
             )
+=======
+            self.get_logger().error("Could not initialize pygame. Exiting...")
+>>>>>>> Stashed changes
 
         # Create the publishers
         self.pub = self.create_publisher(RovVelocityCommand, "rov_velocity", 10)
@@ -81,26 +100,26 @@ class Controller(Node):
         #     pygame.quit()
         #     sys.exit(0)
 
+    def apply_config(self, config):
+        scale_factors = self.config_reader.get_scale_factors()
+        global SCALE_TRANSLATIONAL_X, SCALE_TRANSLATIONAL_Y, SCALE_TRANSLATIONAL_Z
+        global SCALE_ROTATIONAL_X, SCALE_ROTATIONAL_Y, SCALE_ROTATIONAL_Z
+        global STICK_DEAD_ZONE
+        
+        SCALE_TRANSLATIONAL_X = scale_factors.get("translational_x", SCALE_TRANSLATIONAL_X)
+        SCALE_TRANSLATIONAL_Y = scale_factors.get("translational_y", SCALE_TRANSLATIONAL_Y)
+        SCALE_TRANSLATIONAL_Z = scale_factors.get("translational_z", SCALE_TRANSLATIONAL_Z)
+        SCALE_ROTATIONAL_X = scale_factors.get("rotational_x", SCALE_ROTATIONAL_X)
+        SCALE_ROTATIONAL_Y = scale_factors.get("rotational_y", SCALE_ROTATIONAL_Y)
+        SCALE_ROTATIONAL_Z = scale_factors.get("rotational_z", SCALE_ROTATIONAL_Z)
+        STICK_DEAD_ZONE = self.config_reader.get_dead_zone()
+        
+        trims = self.config_reader.get_trims()
+        global TRIM_X, TRIM_Y, TRIM_Z
+        TRIM_X = trims.get("x", TRIM_X)
+        TRIM_Y = trims.get("y", TRIM_Y)
+        TRIM_Z = trims.get("z", TRIM_Z)
 
-    def reconnect(self):
-        """Tries to reconnect the gamepad"""
-        reconnected = False
-        i = GAMEPAD_TIMEOUT
-        while i >= 0 and not reconnected:
-            self.get_logger().info(
-                "Gamepad disconnected, reconnect within {:2} seconds".format(i)
-            )
-            try:
-                self.init_pygame()
-                reconnected = True
-            except:
-                pygame.time.wait(1000)  # Wait 1 second
-                i -= 1
-
-        if reconnected:
-            self.get_logger().info("Controllers reconnected")
-
-        return reconnected
 
     def update(self):
         """Updates the gamepad state"""
@@ -108,23 +127,18 @@ class Controller(Node):
         for event in pygame.event.get():
             self.process_event(event)
 
+
     def correct_raw(self, raw):
         """Corrects the raw value from the gamepad to be in the range [-1.0, 1.0]"""
-        if raw > 0:
-            if raw >= STICK_DEAD_ZONE:
-                return raw
-            elif raw > 1:
-                return 1
-            else:
-                return 0
+        if abs(raw) >= STICK_DEAD_ZONE:
+            return max(-1, min(1, raw))
+        return 0
+    
 
-        if raw < 0:
-            if raw <= -STICK_DEAD_ZONE:
-                return raw
-            elif raw < -1:
-                return -1
-            else:
-                return 0
+    def handle_button_event(self, event):
+        self.get_logger().info(f"Button {event.button} {'pressed' if event.type == pygame.JOYBUTTONDOWN else 'released'}")
+        pass
+
 
     def process_event(self, event):
         """Processes a pygame event"""
@@ -132,6 +146,7 @@ class Controller(Node):
         if event.type == pygame.JOYAXISMOTION:
             self.get_logger().info(f"New JOYAXISMOTION event: {event}")
             # Check if the event is from the joystick or the throttle
+<<<<<<< Updated upstream
             if event.joy == 0:
                 self.joystick_1_axis_state[event.axis] = self.correct_raw(event.value)
             elif event.joy == 1:
@@ -169,6 +184,23 @@ class Controller(Node):
 
         # if self.joystick_button_state[1] == 0:
         #     self.change_buttom = False
+=======
+            if event.joy == self.left_joystick.get_id():
+                self.left_joystick_axis_state[event.axis] = self.correct_raw(event.value)
+            elif event.joy == self.right_joystick.get_id():
+                self.right_joystick_axis_state[event.axis] = self.correct_raw(event.value)
+
+        # Check if the event is a joybuttondown event
+        elif event.type == pygame.JOYBUTTONDOWN or event.type == pygame.JOYBUTTONUP:
+            self.handle_button_event(event)
+
+        # Check if the event is a joydeviceremoved event
+        elif event.type == pygame.JOYDEVICEREMOVED:
+            self.get_logger().Warn("Controller disconnected. Exiting...")
+            pygame.quit()
+            sys.exit(0)
+
+>>>>>>> Stashed changes
 
     def pub_data(self):
         """Publishes the data to the rov_velocity topic and the tools topic"""
@@ -179,9 +211,9 @@ class Controller(Node):
 
     def getMessage(self):
         """Returns a RovVelocityCommand message based on the current gamepad state"""
-
         t = Twist()
 
+<<<<<<< Updated upstream
         if self.mapping == 0:
             # Set linear velocities
             t.linear.x = (
@@ -234,6 +266,83 @@ class Controller(Node):
             # Set PM
             # PM_grab = self.joystick_button_state[0]
             # PM_pos = self.joystick_button_state[1]
+=======
+        # Set default values for the twist message
+        t.linear.x = t.linear.y = t.linear.z = 0.0
+        t.angular.x = t.angular.y = t.angular.z = 0.0
+        
+        # Use configuration if available
+        if self.config:
+            # Process linear axes
+            for axis_name in ["x", "y", "z"]:
+                mapping = self.config_reader.get_axis_mapping("linear", axis_name)
+                if mapping:
+                    device = mapping["device"]
+                    axis_idx = mapping["axis"]
+                    scale = mapping["scale"]
+                    invert = mapping["invert"]
+                    
+                    # Get the value from the appropriate device
+                    if device == "joystick_left":
+                        value = self.left_joystick_axis_state[axis_idx]
+                    elif device == "joystick_right":
+                        value = self.right_joystick_axis_state[axis_idx]
+                    else:
+                        self.get_logger().warn(f"Unknown device in configuration: {device}")
+                    
+                    # Apply scale and inversion
+                    value = value * scale * (-1 if invert else 1)
+                    
+                    # Apply trim
+                    if axis_name == "x":
+                        value += TRIM_X
+                    elif axis_name == "y":
+                        value += TRIM_Y
+                    elif axis_name == "z":
+                        value += TRIM_Z
+                    
+                    # Apply reverse setting
+                    value *= self.reverse
+                    
+                    # Set the value in the twist message
+                    if axis_name == "x":
+                        t.linear.x = value
+                    elif axis_name == "y":
+                        t.linear.y = value
+                    elif axis_name == "z":
+                        t.linear.z = value
+            
+            # Process angular axes
+            for axis_name in ["x", "y", "z"]:
+                mapping = self.config_reader.get_axis_mapping("angular", axis_name)
+                if mapping:
+                    device = mapping["device"]
+                    axis_idx = mapping["axis"]
+                    scale = mapping["scale"]
+                    invert = mapping["invert"]
+                    
+                    # Get the value from the appropriate device
+                    if device == "joystick_left":
+                        value = self.left_joystick_axis_state[axis_idx]
+                    elif device == "joystick_right":
+                        value = self.right_joystick_axis_state[axis_idx]
+                    else:
+                        self.get_logger().warn(f"Unknown device in configuration: {device}")
+                    
+                    # Apply scale and inversion
+                    value = value * scale * (-1 if invert else 1)
+                    
+                    # Apply reverse setting
+                    value *= self.reverse
+                    
+                    # Set the value in the twist message
+                    if axis_name == "x":
+                        t.angular.x = value
+                    elif axis_name == "y":
+                        t.angular.y = value
+                    elif axis_name == "z":
+                        t.angular.z = value
+>>>>>>> Stashed changes
 
         new_msg = RovVelocityCommand()
         new_msg.twist = t
