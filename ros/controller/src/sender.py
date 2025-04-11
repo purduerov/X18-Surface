@@ -12,38 +12,29 @@ from shared_msgs.msg import RovVelocityCommand, ToolsCommandMsg
 from geometry_msgs.msg import Twist
 
 from config import *
-from config_reader import ConfigReader
+from config_manager import ConfigManager
+from utils.heartbeat_helper import HeartbeatHelper
 
 class Controller(Node):
     def __init__(self):
-        super().__init__("gp_pub")
+        super().__init__("controller")
+        # Setup heartbeat
+        self.heartbeat_helper = HeartbeatHelper(self)
+
         # Pygame variables
-<<<<<<< Updated upstream
         self.joystick_1 = None
         self.joystick_2 = None
+
+        # Get and set the current configuration
+        self.config_reader = ConfigManager()
+        self.config = self.config_reader.load_config("default")
+        self.config_name = "default"
 
         # Joystick and throttle states
         self.joystick_1_axis_state = joystick_axis_state
         self.joystick_2_axis_state = joystick_axis_state
         self.joystick_1_button_state = joystick_button_state
         self.joystick_2_button_state = joystick_button_state
-=======
-        self.left_joystick
-        self.right_joystick
-
-        # Load configuration
-        self.config_reader = ConfigReader(logger=self.get_logger())
-        self.config = self.config_reader.load_config("default")
-        
-
-
-        # Joystick and throttle states
-        self.left_joystick_axis_state = joystick_axis_state
-        self.right_joystick_axis_state = joystick_axis_state
-
-        self.left_joystick_button_state = joystick_button_state
-        self.right_joystick_button_state = joystick_button_state
->>>>>>> Stashed changes
 
         # Pilot variables
         self.reverse = 1
@@ -54,71 +45,37 @@ class Controller(Node):
         self.pitch_lock = False
         self.tools = [0, 0, 0, 0, 0]
         
-        try:
-            self.init_pygame()
-        except:
-<<<<<<< Updated upstream
-            self.get_logger().info(
-                "Controllers not found. Please make sure both joysticks are connected"
-            )
-=======
-            self.get_logger().error("Could not initialize pygame. Exiting...")
->>>>>>> Stashed changes
+        # try:
+        #     self.init_pygame()
+        # except:
+        #     self.get_logger().error("Could not initialize pygame. Exiting...")
 
         # Create the publishers
         self.pub = self.create_publisher(RovVelocityCommand, "rov_velocity", 10)
         # self.pub_tools = self.create_publisher(ToolsCommandMsg, "tools", 10)
 
+        # Create subscriber
+        self.create_subscription(String, "controller_mapping", self.update_mapping, 10)
+
         # Create the timers
         self.data_thread = self.create_timer(0.1, self.pub_data)
-        self.gamepad_thread = self.create_timer(0.001, self.update)
+        # self.gamepad_thread = self.create_timer(0.001, self.update)
         self.get_logger().info("Controllers initialized")
+
 
     def init_pygame(self):
         """Initializes pygame and the joystick"""
         pygame.init()
-        # There should be two identical joystick devices
         pygame.joystick.init()
-        assert pygame.joystick.get_count() == 2, "There should be two identical joystick devices"
+        # assert pygame.joystick.get_count() == 2, "There should be two identical joystick devices"
         self.joystick_1 = pygame.joystick.Joystick(0)
         self.joystick_2 = pygame.joystick.Joystick(1)
 
-        
-        # # Determine left from right joystick
-        # if (pygame.joystick.Joystick(0).get_button(10) == 1 and
-        #     pygame.joystick.Joystick(0).get_button(11) == 1):
-        #     self.left_joystick = pygame.joystick.Joystick(0)
-        #     self.right_joystick = pygame.joystick.Joystick(1)
-        # elif (pygame.joystick.Joystick(1).get_button(10) == 1 and
-        #         pygame.joystick.Joystick(1).get_button(11) == 1):
-        #     self.left_joystick = pygame.joystick.Joystick(1)
-        #     self.right_joystick = pygame.joystick.Joystick(0)
-        # else:
-        #     self.get_logger().error("Could not determine left and right joysticks."
-        #     " Please check the controller configuration.")
-        #     # Exit the program
-        #     pygame.quit()
-        #     sys.exit(0)
 
-    def apply_config(self, config):
-        scale_factors = self.config_reader.get_scale_factors()
-        global SCALE_TRANSLATIONAL_X, SCALE_TRANSLATIONAL_Y, SCALE_TRANSLATIONAL_Z
-        global SCALE_ROTATIONAL_X, SCALE_ROTATIONAL_Y, SCALE_ROTATIONAL_Z
-        global STICK_DEAD_ZONE
-        
-        SCALE_TRANSLATIONAL_X = scale_factors.get("translational_x", SCALE_TRANSLATIONAL_X)
-        SCALE_TRANSLATIONAL_Y = scale_factors.get("translational_y", SCALE_TRANSLATIONAL_Y)
-        SCALE_TRANSLATIONAL_Z = scale_factors.get("translational_z", SCALE_TRANSLATIONAL_Z)
-        SCALE_ROTATIONAL_X = scale_factors.get("rotational_x", SCALE_ROTATIONAL_X)
-        SCALE_ROTATIONAL_Y = scale_factors.get("rotational_y", SCALE_ROTATIONAL_Y)
-        SCALE_ROTATIONAL_Z = scale_factors.get("rotational_z", SCALE_ROTATIONAL_Z)
-        STICK_DEAD_ZONE = self.config_reader.get_dead_zone()
-        
-        trims = self.config_reader.get_trims()
-        global TRIM_X, TRIM_Y, TRIM_Z
-        TRIM_X = trims.get("x", TRIM_X)
-        TRIM_Y = trims.get("y", TRIM_Y)
-        TRIM_Z = trims.get("z", TRIM_Z)
+    def update_mapping(self, msg):
+        """Updates the controller mapping"""
+        self.config = self.config_reader.load_config(msg.data)
+        self.config_name = msg.data
 
 
     def update(self):
@@ -146,45 +103,6 @@ class Controller(Node):
         if event.type == pygame.JOYAXISMOTION:
             self.get_logger().info(f"New JOYAXISMOTION event: {event}")
             # Check if the event is from the joystick or the throttle
-<<<<<<< Updated upstream
-            if event.joy == 0:
-                self.joystick_1_axis_state[event.axis] = self.correct_raw(event.value)
-            elif event.joy == 1:
-                self.joystick_2_axis_state[event.axis] = self.correct_raw(event.value)
-
-        # Check if the event is a joybuttondown event
-        # elif event.type == pygame.JOYBUTTONDOWN:
-        #     # Check if the event is from the joystick or the throttle
-        #     if event.joy == self.joystick_id:
-        #         self.joystick_button_state[event.button] = 1
-
-        #     elif event.joy == self.throttle_id:
-        #         self.throttle_button_state[event.button] = 1
-
-        # Check if the event is a joybuttonup event
-        # elif event.type == pygame.JOYBUTTONUP:
-        #     # Check if the event is from the joystick or the throttle
-        #     if event.joy == self.joystick_id:
-        #         self.joystick_button_state[event.button] = 0
-        #     elif event.joy == self.throttle_id:
-        #         self.throttle_button_state[event.button] = 0
-
-        # self.changed_trigger = False
-        # if self.joystick_button_state[0] == 1 and self.changed_trigger == False:
-        #     self.tools[0] = not self.tools[0]
-        #     self.changed_trigger = True
-
-        # if self.joystick_button_state[0] == 0:
-        #     self.changed_trigger = False
-
-        # self.change_buttom = False
-        # if self.joystick_button_state[1] == 1 and self.change_buttom == False:
-        #     self.tools[2] = not self.tools[2]
-        #     self.change_buttom = True
-
-        # if self.joystick_button_state[1] == 0:
-        #     self.change_buttom = False
-=======
             if event.joy == self.left_joystick.get_id():
                 self.left_joystick_axis_state[event.axis] = self.correct_raw(event.value)
             elif event.joy == self.right_joystick.get_id():
@@ -194,13 +112,6 @@ class Controller(Node):
         elif event.type == pygame.JOYBUTTONDOWN or event.type == pygame.JOYBUTTONUP:
             self.handle_button_event(event)
 
-        # Check if the event is a joydeviceremoved event
-        elif event.type == pygame.JOYDEVICEREMOVED:
-            self.get_logger().Warn("Controller disconnected. Exiting...")
-            pygame.quit()
-            sys.exit(0)
-
->>>>>>> Stashed changes
 
     def pub_data(self):
         """Publishes the data to the rov_velocity topic and the tools topic"""
@@ -213,66 +124,15 @@ class Controller(Node):
         """Returns a RovVelocityCommand message based on the current gamepad state"""
         t = Twist()
 
-<<<<<<< Updated upstream
-        if self.mapping == 0:
-            # Set linear velocities
-            t.linear.x = (
-                -(self.throttle_axis_state[2] * SCALE_TRANSLATIONAL_X + TRIM_X)
-                * self.reverse
-            )
-            t.linear.y = (
-                -(self.throttle_axis_state[5] * SCALE_TRANSLATIONAL_Y + TRIM_Y)
-                * self.reverse
-            )
-            t.linear.z = (
-                -(self.throttle_axis_state[1] * SCALE_TRANSLATIONAL_Y + TRIM_Y)
-                * self.reverse
-            )
-
-            # Set angular velocities
-            t.angular.x = (
-                -(self.joystick_axis_state[1] * SCALE_ROTATIONAL_X) * self.reverse
-            )
-            t.angular.y = (
-                -(self.joystick_axis_state[0] * SCALE_ROTATIONAL_Y) * self.reverse
-            )
-            t.angular.z = (
-                -(self.joystick_axis_state[2] * SCALE_ROTATIONAL_Z) * self.reverse
-            )
-
-            # Set PM
-            # PM_grab = self.joystick_button_state[0]
-            # PM_pos = self.joystick_button_state[1]
-
-        else:
-            # Set linear velocities
-            t.linear.x = (
-                -(self.joystick_1_axis_state[1] * SCALE_TRANSLATIONAL_X + TRIM_X)
-                * self.reverse
-            )
-            t.linear.y = (
-                self.joystick_1_axis_state[0] * SCALE_TRANSLATIONAL_Y + TRIM_Y
-            ) * self.reverse
-            t.linear.z = (
-                -(self.joystick_2_axis_state[2] * SCALE_TRANSLATIONAL_Y + TRIM_Y)
-                * self.reverse
-            )
-
-            # Set angular velocities
-            t.angular.x = 0.0  # no pitch
-            t.angular.y = 0.0  # no roll
-            t.angular.z = 0.0  # no yaw
-
-            # Set PM
-            # PM_grab = self.joystick_button_state[0]
-            # PM_pos = self.joystick_button_state[1]
-=======
         # Set default values for the twist message
         t.linear.x = t.linear.y = t.linear.z = 0.0
         t.angular.x = t.angular.y = t.angular.z = 0.0
         
         # Use configuration if available
         if self.config:
+            # Get scale factors and trims from the configuration
+            trims = self.config_reader.get_trims()
+
             # Process linear axes
             for axis_name in ["x", "y", "z"]:
                 mapping = self.config_reader.get_axis_mapping("linear", axis_name)
@@ -294,12 +154,7 @@ class Controller(Node):
                     value = value * scale * (-1 if invert else 1)
                     
                     # Apply trim
-                    if axis_name == "x":
-                        value += TRIM_X
-                    elif axis_name == "y":
-                        value += TRIM_Y
-                    elif axis_name == "z":
-                        value += TRIM_Z
+                    value += trims[axis_name]
                     
                     # Apply reverse setting
                     value *= self.reverse
@@ -342,7 +197,6 @@ class Controller(Node):
                         t.angular.y = value
                     elif axis_name == "z":
                         t.angular.z = value
->>>>>>> Stashed changes
 
         new_msg = RovVelocityCommand()
         new_msg.twist = t
@@ -350,6 +204,7 @@ class Controller(Node):
         new_msg.is_pool_centric = self.is_pool_centric
         new_msg.depth_lock = self.depth_lock
         new_msg.pitch_lock = self.pitch_lock
+        new_msg.current_config = self.config_name
 
         return new_msg
 

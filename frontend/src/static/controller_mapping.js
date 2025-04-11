@@ -1,25 +1,153 @@
+/**
+ * Controller Mapping Interface
+ * Handles configuration, status monitoring, and UI for ROV controller mappings
+ */
+
+// Global state variables
+let socket = io();
+let lastHeartbeat = 0;
+let checkStatusInterval;
+let activeMappingName = 'None';
 let currentConfig = null;
 let currentConfigName = null;
 let configurations = {};
 
-// Load configurations when the page loads
+// Initialize
 document.addEventListener('DOMContentLoaded', function() {
     loadConfigurations();
+    checkStatusInterval = setInterval(checkControllerStatus, 2000);
 });
 
-// Load all configurations from the server
+// -------------------- Socket Event Handlers --------------------
+
+socket.on('connect', function() {
+    // Log
+    console.log("Socket connected");
+});
+
+socket.on('disconnect', function() {
+    // Log
+    console.log("Socket disconnected");
+    updateControllerStatus('disconnected');
+    
+    // Clear active mapping when disconnected
+    activeMappingName = 'None';
+    document.getElementById('active-mapping-name').textContent = 'None';
+    highlightActiveMapping(''); // Clear any active highlights
+    
+    if (checkStatusInterval) {
+        clearInterval(checkStatusInterval);
+    }
+});
+
+socket.on('rov_velocity', function(data) {
+    data = typeof data === 'string' ? JSON.parse(data) : data;
+
+    if (data.current_config !== activeMappingName) {
+        highlightActiveMapping(data.current_config);
+        activeMappingName = data.current_config;
+        document.getElementById('active-mapping-name').textContent = activeMappingName;
+    }
+});
+
+socket.on('heartbeat', function(msg) {
+    try {
+        const data = typeof msg === 'string' ? JSON.parse(msg) : msg;
+        
+        if (data.node === 'controller' && data.status === 'active') {
+            lastHeartbeat = Date.now();
+            updateControllerStatus('connected');
+        }
+    } catch (err) {
+        console.error('Error handling heartbeat:', err);
+    }
+});
+
+socket.on('active-mapping-update', function(data) {
+    if (data && data.name) {
+        activeMappingName = data.name;
+        document.getElementById('active-mapping-name').textContent = activeMappingName;
+        highlightActiveMapping(activeMappingName);
+    }
+});
+
+// -------------------- Status Monitoring Functions --------------------
+
+function checkControllerStatus() {
+    const now = Date.now();
+    const timeSinceHeartbeat = now - lastHeartbeat;
+    
+    if (lastHeartbeat === 0) {
+        updateControllerStatus('disconnected');
+    } else if (timeSinceHeartbeat > 10000) {
+        updateControllerStatus('disconnected');
+    } else if (timeSinceHeartbeat > 5000) {
+        updateControllerStatus('stale');
+    } else {
+        updateControllerStatus('connected');
+    }
+}
+
+function updateControllerStatus(status) {
+    const indicator = document.getElementById('controller-status-indicator');
+    const text = document.getElementById('controller-status-text');
+    
+    if (status === 'connected') {
+        indicator.className = 'status-indicator status-connected';
+        text.textContent = 'Connected';
+    } else if (status === 'stale') {
+        indicator.className = 'status-indicator status-stale';
+        text.textContent = 'Stale';
+    } else {
+        indicator.className = 'status-indicator status-disconnected';
+        text.textContent = 'Disconnected';
+    }
+}
+
+function highlightActiveMapping(mappingName) {
+    const configItems = document.querySelectorAll('.config-item');
+    configItems.forEach(item => {
+        item.classList.remove('active-mapping');
+        
+        const namePart = item.querySelector('.config-name') || item;
+        const nameText = namePart.textContent.replace('Active', '').trim();
+        
+        // Remove any existing badges
+        const existingBadge = namePart.querySelector('.badge');
+        if (existingBadge) existingBadge.remove();
+        
+        // Add badge if this is the active mapping
+        if (nameText === mappingName) {
+            const badge = document.createElement('span');
+            badge.className = 'badge bg-success ms-2';
+            badge.textContent = 'Active';
+            namePart.appendChild(badge);
+        }
+    });
+    
+    // Update activate button state
+    if (currentConfigName === mappingName) {
+        document.getElementById('activateConfigBtn').textContent = 'Active';
+        document.getElementById('activateConfigBtn').classList.add('active');
+    } else {
+        document.getElementById('activateConfigBtn').textContent = 'Activate';
+        document.getElementById('activateConfigBtn').classList.remove('active');
+    }
+}
+
+// -------------------- Configuration Management Functions --------------------
+
 function loadConfigurations() {
     fetch('/api/controller/configs')
         .then(response => response.json())
         .then(data => {
             configurations = data;
             renderConfigList();
-            if (currentConfigName) {
+            
+            if (currentConfigName && configurations.includes(currentConfigName)) {
                 loadConfigForEditing(currentConfigName);
-            }
-            const firstConfig = configurations[0];
-            if (firstConfig) {
-                loadConfigForEditing(firstConfig);
+            } else if (configurations.length > 0) {
+                loadConfigForEditing(configurations[0]);
             }
         })
         .catch(error => {
@@ -28,7 +156,6 @@ function loadConfigurations() {
         });
 }
 
-// Render the list of configurations
 function renderConfigList() {
     const configList = document.getElementById('configList');
     configList.innerHTML = '';
@@ -36,23 +163,28 @@ function renderConfigList() {
     configurations.forEach(configName => {
         const div = document.createElement('div');
         div.className = `config-item ${configName === currentConfigName ? 'active' : ''}`;
-        div.textContent = configName;
+        
+        const nameSpan = document.createElement('span');
+        nameSpan.className = 'config-name';
+        nameSpan.textContent = configName;
+        div.appendChild(nameSpan);
+        
         div.onclick = () => loadConfigForEditing(configName);
         configList.appendChild(div);
     });
+    
+    // Highlight active mapping after rendering the list
+    highlightActiveMapping(activeMappingName);
 }
 
-// Load a configuration into the editor
 function loadConfigForEditing(configName) {
-    // Fetch the configuration from the server
     fetch(`/api/controller/configs/${configName}`)
     .then(response => response.json())
     .then(config => {
         currentConfig = config;
         currentConfigName = configName;
-        console.log('Configuration loaded:', config);
-
-        // Update the config name in the input field
+        
+        // Update form with config values
         document.getElementById('configName').value = configName;
         
         // Load linear axes
@@ -73,14 +205,12 @@ function loadConfigForEditing(configName) {
             document.getElementById(`angular-${axis}-invert`).checked = angularConfig.invert;
         });
         
-        // Load button mappings
-        // renderButtonMappings(config.buttons.tool_toggle);
-        
         // Load other settings
         document.getElementById('deadZone').value = config.dead_zone;
         
         // Update UI
         renderConfigList();
+        highlightActiveMapping(activeMappingName);
     })
     .catch(error => {
         console.error('Error loading configuration:', error);
@@ -88,11 +218,10 @@ function loadConfigForEditing(configName) {
     });
 }
 
-// Save the current configuration
-function saveCurrentConfig(saveName) {
+function saveCurrentConfig(callback) {
     if (!currentConfig) return;
     
-    // const newName = document.getElementById('configName').value.trim();
+    const saveName = document.getElementById('configName').value.trim();
     if (!saveName) {
         alert('Configuration name cannot be empty.');
         return;
@@ -101,6 +230,8 @@ function saveCurrentConfig(saveName) {
         alert('Configuration name cannot contain spaces.');
         return;
     }
+    
+    // Build config object from form values
     const config = {
         joystick: {
             linear: {},
@@ -110,7 +241,7 @@ function saveCurrentConfig(saveName) {
             tool_toggle: []
         },
         trims: { x: 0.0, y: 0.0, z: 0.0 },
-        dead_zone: parseFloat(document.getElementById('deadZone').value),
+        dead_zone: parseFloat(document.getElementById('deadZone').value) || 0.09,
         scale_factors: {
             translational_x: 1.0,
             translational_y: 1.0,
@@ -125,8 +256,8 @@ function saveCurrentConfig(saveName) {
     ['x', 'y', 'z'].forEach(axis => {
         config.joystick.linear[axis] = {
             device: document.getElementById(`linear-${axis}-device`).value,
-            axis: parseInt(document.getElementById(`linear-${axis}-axis`).value),
-            scale: parseFloat(document.getElementById(`linear-${axis}-scale`).value),
+            axis: parseInt(document.getElementById(`linear-${axis}-axis`).value) || 0,
+            scale: parseFloat(document.getElementById(`linear-${axis}-scale`).value) || 1.0,
             invert: document.getElementById(`linear-${axis}-invert`).checked
         };
     });
@@ -135,14 +266,11 @@ function saveCurrentConfig(saveName) {
     ['x', 'y', 'z'].forEach(axis => {
         config.joystick.angular[axis] = {
             device: document.getElementById(`angular-${axis}-device`).value,
-            axis: parseInt(document.getElementById(`angular-${axis}-axis`).value),
-            scale: parseFloat(document.getElementById(`angular-${axis}-scale`).value),
+            axis: parseInt(document.getElementById(`angular-${axis}-axis`).value) || 0,
+            scale: parseFloat(document.getElementById(`angular-${axis}-scale`).value) || 1.0,
             invert: document.getElementById(`angular-${axis}-invert`).checked
         };
     });
-    
-    // Gather button mappings
-    // config.buttons.tool_toggle = getButtonMappings();
     
     // Send to server
     fetch('/api/controller/configs/' + saveName, {
@@ -155,7 +283,9 @@ function saveCurrentConfig(saveName) {
     .then(response => {
         if (response.ok) {
             console.log('Configuration saved successfully:', saveName);
+            currentConfigName = saveName;
             loadConfigurations();
+            if (typeof callback === 'function') callback();
         } else {
             console.error('Failed to save configuration:', response.statusText);
             alert('Failed to save configuration');
@@ -167,10 +297,9 @@ function saveCurrentConfig(saveName) {
     });
 }
 
-// Create a new configuration
 function createNewConfig() {
     const name = prompt('Enter a name for the new configuration:');
-    if (!name) return;
+    if (!name || !name.trim()) return;
     
     const defaultConfig = {
         joystick: {
@@ -202,14 +331,14 @@ function createNewConfig() {
 
     currentConfig = defaultConfig;
     currentConfigName = name;
-    saveCurrentConfig(currentConfigName);
-    console.log('New configuration created:', name);
-    loadConfigForEditing(currentConfigName);
+    document.getElementById('configName').value = name;
+    saveCurrentConfig();
 }
 
-// Delete the current configuration
 function deleteCurrentConfig() {
-    if (!currentConfigName || !confirm(`Are you sure you want to delete the "${currentConfigName}" configuration?`)) {
+    if (!currentConfigName) return;
+    
+    if (!confirm(`Are you sure you want to delete the "${currentConfigName}" configuration?`)) {
         return;
     }
 
@@ -219,7 +348,8 @@ function deleteCurrentConfig() {
     .then(response => {
         if (response.ok) {
             console.log(`Configuration "${currentConfigName}" deleted successfully.`);
-            delete configurations[currentConfigName];
+            
+            // Clear selection and reload
             currentConfig = null;
             currentConfigName = null;
             loadConfigurations();
@@ -234,82 +364,22 @@ function deleteCurrentConfig() {
     });
 }
 
-// Helper functions for button mappings
-function renderButtonMappings(mappings) {
-    const container = document.getElementById('buttonMappings');
-    container.innerHTML = '';
-    
-    mappings.forEach((mapping, index) => {
-        container.appendChild(createButtonMappingElement(mapping, index));
-    });
-}
+// -------------------- Action Functions --------------------
 
-function createButtonMappingElement(mapping, index) {
-    const div = document.createElement('div');
-    div.className = 'mb-3 p-2 border border-secondary rounded';
-    div.innerHTML = `
-        <div class="row">
-            <div class="col">
-                <label class="form-label">Device</label>
-                <select class="form-select" id="button-${index}-device">
-                    <option value="joystick_left">Left Joystick</option>
-                    <option value="joystick_right">Right Joystick</option>
-                </select>
-            </div>
-            <div class="col">
-                <label class="form-label">Button</label>
-                <input type="number" class="form-control" id="button-${index}-button" value="${mapping.button}">
-            </div>
-            <div class="col">
-                <label class="form-label">Action</label>
-                <select class="form-select" id="button-${index}-action">
-                    <option value="toggle" ${mapping.action === 'toggle' ? 'selected' : ''}>Toggle</option>
-                    <option value="hold" ${mapping.action === 'hold' ? 'selected' : ''}>Hold</option>
-                </select>
-            </div>
-            <div class="col">
-                <label class="form-label">Tool ID</label>
-                <input type="number" class="form-control" id="button-${index}-tool" value="${mapping.tool_id}">
-            </div>
-            <div class="col-auto d-flex align-items-end">
-                <button type="button" class="btn btn-danger" onclick="removeButtonMapping(${index})">
-                    <i class="bi bi-trash"></i>
-                </button>
-            </div>
-        </div>
-    `;
-    return div;
-}
-
-function getButtonMappings() {
-    const mappings = [];
-    const container = document.getElementById('buttonMappings');
-    const mappingElements = container.children;
-    
-    for (let i = 0; i < mappingElements.length; i++) {
-        mappings.push({
-            device: document.getElementById(`button-${i}-device`).value,
-            button: parseInt(document.getElementById(`button-${i}-button`).value),
-            action: document.getElementById(`button-${i}-action`).value,
-            tool_id: parseInt(document.getElementById(`button-${i}-tool`).value)
-        });
+function activateCurrentConfig() {
+    const configName = document.getElementById('configName').value;
+    if (!configName) {
+        alert('Please save the configuration before activating it.');
+        return;
     }
     
-    return mappings;
-}
-
-function addButtonMapping() {
-    const container = document.getElementById('buttonMappings');
-    const newMapping = {
-        device: 'joystick_left',
-        button: 0,
-        action: 'toggle',
-        tool_id: 0
-    };
-    container.appendChild(createButtonMappingElement(newMapping, container.children.length));
-}
-
-function removeButtonMapping(index) {
-    const container = document.getElementById('buttonMappings');
-    container.removeChild(container.children[index]);
+    // Save first to ensure latest changes are activated
+    saveCurrentConfig(() => {
+        // Emit event to activate the mapping
+        socket.emit('frontend-updateControllerMapping', { name: configName });
+        
+        // Update UI state
+        activeMappingName = configName;
+        document.getElementById('active-mapping-name').textContent = configName;
+    });
 }

@@ -7,10 +7,11 @@ import os
 from jsonschema import validate, ValidationError
 import logging
 
-class ConfigReader:
+class ConfigManager:
     def __init__(self, logger=None):
         self.logger = logger
         self.config = None
+        self.config_name = ""
         self.config_path = os.path.join(
             os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
             "src",
@@ -75,7 +76,7 @@ class ConfigReader:
                         "z": {"type": "number"}
                     },
                     "required": ["x", "y", "z"],
-                    "additionalProperties": false
+                    "additionalProperties": False
                     },
                     "dead_zone": {"type": "number"},
                     "scale_factors": {
@@ -103,11 +104,12 @@ class ConfigReader:
         """Load the controller mapping configuration from JSON file"""
         try:
             with open(self.config_path, 'r') as f:
-                self.config = json.load(f)
+                configs = json.load(f)
                 self.logger.info(f"Loaded configuration file: {self.config_path}")
                 # Get the requested mapping from the configs collection
-                if "configs" in self.config and mapping_name in self.config["configs"]:
-                    self.config = self.config["configs"][mapping_name]
+                if mapping_name in configs:
+                    self.config = self.config[mapping_name]
+                    self.config_name = mapping_name
                 else:
                     error_msg = f"Mapping '{mapping_name}' not found in configuration file"
                     if self.logger:
@@ -206,6 +208,10 @@ class ConfigReader:
             
         return self.config.get("trims", {})
     
+    def get_config_name(self):
+        """Get the name of the loaded configuration"""
+        return self.config_name
+    
 
 # Main function for testing
 def main():
@@ -216,7 +222,7 @@ def main():
     handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
     logger.addHandler(handler)
     
-    config_reader = ConfigReader(logger=logger)
+    config_reader = ConfigManager(logger=logger)
     config_reader.load_config("default")
 
     # Validate the configuration
@@ -224,6 +230,7 @@ def main():
         logger.info("Configuration is valid.")
     else:
         logger.error("Configuration is invalid.")
+
 
 if __name__ == "__main__":
     main()

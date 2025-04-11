@@ -12,10 +12,19 @@ class ControllerRoutes:
     def load_configs(self):
         """Load controller configurations from file"""
         try:
-            self.logger.info(f"Loading controller config from {self.config_file}")
+            # Only log at debug level for routine operations
+            self.logger.debug(f"Loading controller configurations from {self.config_file}")
             with open(self.config_file, 'r') as f:
-                return json.load(f)
-        except (FileNotFoundError, json.JSONDecodeError):
+                configs = json.load(f)
+                # Log config names at debug level
+                config_names = list(configs.keys())
+                self.logger.debug(f"Loaded {len(config_names)} configurations: {config_names}")
+                return configs
+        except FileNotFoundError:
+            self.logger.warning(f"Configuration file not found: {self.config_file}")
+            return {}
+        except json.JSONDecodeError:
+            self.logger.error(f"Invalid JSON in configuration file: {self.config_file}")
             return {}
 
     def save_config(self, mapping):
@@ -44,7 +53,7 @@ class ControllerRoutes:
             configs = self.load_configs()
             config = configs.get(config_name)
             if config:
-                self.logger.info(f"Config for {config_name}: {config}")
+                # self.logger.info(f"Config for {config_name}: {config}")
                 return jsonify(config)
             else:
                 return jsonify({'error': 'Config not found'}), 404

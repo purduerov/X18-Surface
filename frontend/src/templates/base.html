@@ -54,11 +54,29 @@
                         </ul>
                     </li>
                     
-                    <li class="nav-item">
-                        <a class="nav-link {% if active_page == 'thruster-testing' %}active{% endif %}" href="/thruster-testing">
-                            <i class="bi bi-gear-fill"></i> Thruster Testing
+                    <!-- Controls Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle {% if active_page in ['thruster-testing', 'controller-mapping'] %}active{% endif %}" 
+                           href="#" id="controlsDropdown" role="button" 
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-joystick"></i> Controls
                         </a>
+                        <ul class="dropdown-menu" aria-labelledby="controlsDropdown">
+                            <li>
+                                <a class="dropdown-item {% if active_page == 'thruster-testing' %}active{% endif %}" 
+                                   href="/thruster-testing">
+                                   <i class="bi bi-gear-fill"></i> Thruster Testing
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item {% if active_page == 'controller-mapping' %}active{% endif %}" 
+                                   href="/controller-mapping">
+                                   <i class="bi bi-controller"></i> Controller Mapping
+                                </a>
+                            </li>
+                        </ul>
                     </li>
+                    
                     <li class="nav-item">
                         <a class="nav-link {% if active_page == 'node-status' %}active{% endif %}" href="/node-status">
                             <i class="bi bi-activity"></i> Node Status

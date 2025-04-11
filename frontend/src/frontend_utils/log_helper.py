@@ -186,6 +186,9 @@ class LogHelper:
                 # Send each log entry
                 for entry in logs:
                     self.socketio.emit('log_message', entry)
+                    
+                # Only log at debug level since this is a routine operation
+                self.logger.debug(f"Sent {len(logs)} log entries to client")
             except Exception as e:
                 self.logger.error(f"Error handling log request: {e}")
         
@@ -193,3 +196,4 @@ class LogHelper:
         def handle_clear_logs():
             # This only clears the client view, not the actual log files
             self.socketio.emit('logs_cleared')
+            self.logger.debug("Client requested log view clearing")
