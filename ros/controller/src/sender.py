@@ -26,7 +26,7 @@ class Controller(Node):
         self.joystick_2 = None
 
         # Get and set the current configuration
-        self.config_reader = ConfigManager()
+        self.config_reader = ConfigManager(self.get_logger())
         self.config = self.config_reader.load_config("default")
         self.config_name = "default"
 
@@ -45,10 +45,10 @@ class Controller(Node):
         self.pitch_lock = False
         self.tools = [0, 0, 0, 0, 0]
         
-        # try:
-        #     self.init_pygame()
-        # except:
-        #     self.get_logger().error("Could not initialize pygame. Exiting...")
+        try:
+            self.init_pygame()
+        except:
+            self.get_logger().error("Could not initialize pygame. Exiting...")
 
         # Create the publishers
         self.pub = self.create_publisher(RovVelocityCommand, "rov_velocity", 10)
@@ -59,7 +59,7 @@ class Controller(Node):
 
         # Create the timers
         self.data_thread = self.create_timer(0.1, self.pub_data)
-        # self.gamepad_thread = self.create_timer(0.001, self.update)
+        self.gamepad_thread = self.create_timer(0.001, self.update)
         self.get_logger().info("Controllers initialized")
 
 
@@ -87,6 +87,7 @@ class Controller(Node):
 
     def correct_raw(self, raw):
         """Corrects the raw value from the gamepad to be in the range [-1.0, 1.0]"""
+        raw = float(raw)
         if abs(raw) >= STICK_DEAD_ZONE:
             return max(-1, min(1, raw))
         return 0
@@ -101,12 +102,12 @@ class Controller(Node):
         """Processes a pygame event"""
         # Check if the event is a joyaxismotion event
         if event.type == pygame.JOYAXISMOTION:
-            self.get_logger().info(f"New JOYAXISMOTION event: {event}")
+            # self.get_logger().info(f"New JOYAXISMOTION event: {event}")
             # Check if the event is from the joystick or the throttle
-            if event.joy == self.left_joystick.get_id():
-                self.left_joystick_axis_state[event.axis] = self.correct_raw(event.value)
-            elif event.joy == self.right_joystick.get_id():
-                self.right_joystick_axis_state[event.axis] = self.correct_raw(event.value)
+            if event.joy == self.joystick_1.get_id():
+                self.joystick_1_axis_state[event.axis] = self.correct_raw(event.value)
+            elif event.joy == self.joystick_2.get_id():
+                self.joystick_2_axis_state[event.axis] = self.correct_raw(event.value)
 
         # Check if the event is a joybuttondown event
         elif event.type == pygame.JOYBUTTONDOWN or event.type == pygame.JOYBUTTONUP:
@@ -129,7 +130,7 @@ class Controller(Node):
         t.angular.x = t.angular.y = t.angular.z = 0.0
         
         # Use configuration if available
-        if self.config:
+        if True:
             # Get scale factors and trims from the configuration
             trims = self.config_reader.get_trims()
 
@@ -141,12 +142,13 @@ class Controller(Node):
                     axis_idx = mapping["axis"]
                     scale = mapping["scale"]
                     invert = mapping["invert"]
+                    self.get_logger().info(f"Linear axis {axis_name} mapped to {device} on axis: {axis_idx}")
                     
                     # Get the value from the appropriate device
                     if device == "joystick_left":
-                        value = self.left_joystick_axis_state[axis_idx]
+                        value = float(self.joystick_1_axis_state[axis_idx])
                     elif device == "joystick_right":
-                        value = self.right_joystick_axis_state[axis_idx]
+                        value = float(self.joystick_2_axis_state[axis_idx])
                     else:
                         self.get_logger().warn(f"Unknown device in configuration: {device}")
                     
@@ -171,6 +173,7 @@ class Controller(Node):
             for axis_name in ["x", "y", "z"]:
                 mapping = self.config_reader.get_axis_mapping("angular", axis_name)
                 if mapping:
+                    self.get_logger().info(f"Angular axis {axis_name} mapped to {device} on axis: {axis_idx}")
                     device = mapping["device"]
                     axis_idx = mapping["axis"]
                     scale = mapping["scale"]
@@ -178,9 +181,9 @@ class Controller(Node):
                     
                     # Get the value from the appropriate device
                     if device == "joystick_left":
-                        value = self.left_joystick_axis_state[axis_idx]
+                        value = float(self.joystick_1_axis_state[axis_idx])
                     elif device == "joystick_right":
-                        value = self.right_joystick_axis_state[axis_idx]
+                        value = float(self.joystick_2_axis_state[axis_idx])
                     else:
                         self.get_logger().warn(f"Unknown device in configuration: {device}")
                     
@@ -215,6 +218,11 @@ class Controller(Node):
         tm.tools = [i for i in self.tools]
 
         return tm
+
+    def normalize_controller_val(self, val, max_val=255.0):
+        val = float(val)
+        val /= float(max_val)
+        return val
 
 
 def main():

@@ -4,13 +4,13 @@
       "linear": {
         "x": {
           "device": "joystick_left",
-          "axis": 1,
+          "axis": 0,
           "scale": 1,
           "invert": true
         },
         "y": {
-          "device": "joystick_right",
-          "axis": 0,
+          "device": "joystick_left",
+          "axis": 1,
           "scale": 1,
           "invert": false
         },
@@ -24,13 +24,13 @@
       "angular": {
         "x": {
           "device": "joystick_right",
-          "axis": 1,
+          "axis": 0,
           "scale": 1,
           "invert": true
         },
         "y": {
-          "device": "joystick_left",
-          "axis": 0,
+          "device": "joystick_right",
+          "axis": 1,
           "scale": 1,
           "invert": true
         },

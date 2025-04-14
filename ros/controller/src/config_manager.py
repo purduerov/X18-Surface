@@ -12,11 +12,7 @@ class ConfigManager:
         self.logger = logger
         self.config = None
         self.config_name = ""
-        self.config_path = os.path.join(
-            os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-            "src",
-            "mapping.json"
-        )
+        self.config_path = os.path.join(os.getcwd(), "ros", "controller", "src", "mappings.json")
         self.schema = {
             "type": "object",
             "properties": {
@@ -108,7 +104,7 @@ class ConfigManager:
                 self.logger.info(f"Loaded configuration file: {self.config_path}")
                 # Get the requested mapping from the configs collection
                 if mapping_name in configs:
-                    self.config = self.config[mapping_name]
+                    self.config = configs[mapping_name]
                     self.config_name = mapping_name
                 else:
                     error_msg = f"Mapping '{mapping_name}' not found in configuration file"
@@ -117,6 +113,7 @@ class ConfigManager:
                     raise ValueError(error_msg)
                 if self.logger:
                     self.logger.info(f"Loaded controller configuration: {mapping_name}")
+                    self.logger.info(f"{self.config}")
                 return self.config
 
         except FileNotFoundError:
