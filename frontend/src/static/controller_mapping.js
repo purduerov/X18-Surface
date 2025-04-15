@@ -294,6 +294,9 @@ function saveCurrentConfig(callback) {
         return;
     }
     
+    // Check if this config is currently active
+    const isActive = (saveName === activeMappingName);
+    
     // Build config object from form values
     const config = {
         joystick: {
@@ -348,6 +351,13 @@ function saveCurrentConfig(callback) {
             console.log('Configuration saved successfully:', saveName);
             currentConfigName = saveName;
             loadConfigurations();
+            
+            // If this was the active configuration, re-activate it to apply changes
+            if (isActive) {
+                console.log('Re-activating configuration after save:', saveName);
+                socket.emit('frontend-updateControllerMapping', { name: saveName });
+            }
+            
             if (typeof callback === 'function') callback();
         } else {
             console.error('Failed to save configuration:', response.statusText);
