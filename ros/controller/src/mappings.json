@@ -6,7 +6,7 @@
           "device": "joystick_left",
           "axis": 0,
           "scale": 1,
-          "invert": true
+          "invert": false
         },
         "y": {
           "device": "joystick_left",
@@ -18,7 +18,7 @@
           "device": "joystick_left",
           "axis": 2,
           "scale": 1,
-          "invert": true
+          "invert": false
         }
       },
       "angular": {
@@ -26,19 +26,19 @@
           "device": "joystick_right",
           "axis": 0,
           "scale": 1,
-          "invert": true
+          "invert": false
         },
         "y": {
           "device": "joystick_right",
           "axis": 1,
           "scale": 1,
-          "invert": true
+          "invert": false
         },
         "z": {
           "device": "joystick_right",
           "axis": 2,
           "scale": 1,
-          "invert": true
+          "invert": false
         }
       }
     },
@@ -73,7 +73,7 @@
           "device": "joystick_left",
           "axis": 1,
           "scale": 1,
-          "invert": true
+          "invert": false
         },
         "z": {
           "device": "joystick_left",
@@ -87,7 +87,7 @@
           "device": "joystick_right",
           "axis": 0,
           "scale": 1,
-          "invert": true
+          "invert": false
         },
         "y": {
           "device": "joystick_right",
@@ -99,7 +99,7 @@
           "device": "joystick_right",
           "axis": 2,
           "scale": 1,
-          "invert": true
+          "invert": false
         }
       }
     },
@@ -111,7 +111,7 @@
       "y": 0,
       "z": 0
     },
-    "dead_zone": 0.1,
+    "dead_zone": 0.09,
     "scale_factors": {
       "translational_x": 1,
       "translational_y": 1,

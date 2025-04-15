@@ -150,8 +150,12 @@ class ConfigManager:
             
         if not self.config:
             return None
+        
+        # self.logger.info(f"Getting mapping for {movement_type}.{axis}")
             
         try:
+            # mapping = self.config["joystick"][movement_type][axis]
+            # self.logger.info(f"Mapping found: {mapping}")
             return self.config["joystick"][movement_type][axis]
         except KeyError:
             if self.logger:

@@ -31,10 +31,10 @@ class Controller(Node):
         self.config_name = "default"
 
         # Joystick and throttle states
-        self.joystick_1_axis_state = joystick_axis_state
-        self.joystick_2_axis_state = joystick_axis_state
-        self.joystick_1_button_state = joystick_button_state
-        self.joystick_2_button_state = joystick_button_state
+        self.joystick_1_axis_state = joystick_axis_state.copy()
+        self.joystick_2_axis_state = joystick_axis_state.copy()
+        self.joystick_1_button_state = joystick_button_state.copy()
+        self.joystick_2_button_state = joystick_button_state.copy()
 
         # Pilot variables
         self.reverse = 1
@@ -67,9 +67,47 @@ class Controller(Node):
         """Initializes pygame and the joystick"""
         pygame.init()
         pygame.joystick.init()
-        # assert pygame.joystick.get_count() == 2, "There should be two identical joystick devices"
-        self.joystick_1 = pygame.joystick.Joystick(0)
-        self.joystick_2 = pygame.joystick.Joystick(1)
+        
+        # Make sure we have joysticks connected
+        if pygame.joystick.get_count() < 1:
+            self.get_logger().error("No joystick devices found!")
+            raise Exception("No joystick devices found!")
+        
+        # Print information about all connected joysticks
+        for i in range(pygame.joystick.get_count()):
+            joy = pygame.joystick.Joystick(i)
+            joy.init()
+            self.get_logger().info(f"Found joystick {i}: {joy.get_name()}")
+            self.get_logger().info(f"  - Number of axes: {joy.get_numaxes()}")
+            self.get_logger().info(f"  - Number of buttons: {joy.get_numbuttons()}")
+        
+        # Initialize the joysticks and identify them by name
+        if pygame.joystick.get_count() >= 2:
+            joy1 = pygame.joystick.Joystick(0)
+            joy2 = pygame.joystick.Joystick(1)
+            joy1.init()
+            joy2.init()
+            
+            # Identify which joystick is which based on name
+            if JOYSTICK_NAME in joy1.get_name():
+                self.joystick_1 = joy1
+                self.joystick_2 = joy2
+                self.get_logger().info(f"Joystick 1 is {joy1.get_name()}, Joystick 2 is {joy2.get_name()}")
+            elif JOYSTICK_NAME in joy2.get_name():
+                self.joystick_1 = joy2
+                self.joystick_2 = joy1
+                self.get_logger().info(f"Joystick 1 is {joy2.get_name()}, Joystick 2 is {joy1.get_name()}")
+            else:
+                # If neither matches the expected name, use default order
+                self.joystick_1 = joy1
+                self.joystick_2 = joy2
+                self.get_logger().warn(f"Could not identify joysticks by name. Using default order.")
+        else:
+            # If only one joystick, use it as joystick_1
+            self.joystick_1 = pygame.joystick.Joystick(0)
+            self.joystick_1.init()
+            self.joystick_2 = None
+            self.get_logger().warn("Only one joystick detected!")
 
 
     def update_mapping(self, msg):
@@ -102,12 +140,18 @@ class Controller(Node):
         """Processes a pygame event"""
         # Check if the event is a joyaxismotion event
         if event.type == pygame.JOYAXISMOTION:
-            # self.get_logger().info(f"New JOYAXISMOTION event: {event}")
-            # Check if the event is from the joystick or the throttle
-            if event.joy == self.joystick_1.get_id():
+            # Get the joystick instance that generated this event
+            joy_instance = pygame.joystick.Joystick(event.joy)
+            
+            # Determine if this is joystick_1 or joystick_2
+            if self.joystick_1 and joy_instance.get_id() == self.joystick_1.get_id():
                 self.joystick_1_axis_state[event.axis] = self.correct_raw(event.value)
-            elif event.joy == self.joystick_2.get_id():
+                self.get_logger().debug(f"Joystick 1 axis {event.axis} = {self.joystick_1_axis_state[event.axis]}")
+            elif self.joystick_2 and joy_instance.get_id() == self.joystick_2.get_id():
                 self.joystick_2_axis_state[event.axis] = self.correct_raw(event.value)
+                self.get_logger().debug(f"Joystick 2 axis {event.axis} = {self.joystick_2_axis_state[event.axis]}")
+            else:
+                self.get_logger().warn(f"Event from unknown joystick {event.joy}")
 
         # Check if the event is a joybuttondown event
         elif event.type == pygame.JOYBUTTONDOWN or event.type == pygame.JOYBUTTONUP:
@@ -134,7 +178,7 @@ class Controller(Node):
             # Get scale factors and trims from the configuration
             trims = self.config_reader.get_trims()
 
-            # Process linear axes
+            # Process linear axes with their own local variables
             for axis_name in ["x", "y", "z"]:
                 mapping = self.config_reader.get_axis_mapping("linear", axis_name)
                 if mapping:
@@ -142,64 +186,64 @@ class Controller(Node):
                     axis_idx = mapping["axis"]
                     scale = mapping["scale"]
                     invert = mapping["invert"]
-                    self.get_logger().info(f"Linear axis {axis_name} mapped to {device} on axis: {axis_idx}")
                     
                     # Get the value from the appropriate device
-                    if device == "joystick_left":
-                        value = float(self.joystick_1_axis_state[axis_idx])
-                    elif device == "joystick_right":
-                        value = float(self.joystick_2_axis_state[axis_idx])
+                    linear_value = 0.0
+                    if device == "joystick_left" and self.joystick_1:
+                        linear_value = float(self.joystick_1_axis_state[axis_idx])
+                    elif device == "joystick_right" and self.joystick_2:
+                        linear_value = float(self.joystick_2_axis_state[axis_idx])
                     else:
-                        self.get_logger().warn(f"Unknown device in configuration: {device}")
+                        self.get_logger().warn(f"Unknown device in configuration for linear.{axis_name}: {device}")
                     
                     # Apply scale and inversion
-                    value = value * scale * (-1 if invert else 1)
+                    linear_value = linear_value * scale * (-1 if invert else 1)
                     
                     # Apply trim
-                    value += trims[axis_name]
+                    linear_value += trims[axis_name]
                     
                     # Apply reverse setting
-                    value *= self.reverse
+                    linear_value *= self.reverse
                     
                     # Set the value in the twist message
                     if axis_name == "x":
-                        t.linear.x = value
+                        t.linear.x = linear_value
                     elif axis_name == "y":
-                        t.linear.y = value
+                        t.linear.y = linear_value
                     elif axis_name == "z":
-                        t.linear.z = value
+                        t.linear.z = linear_value
             
-            # Process angular axes
+            # Process angular axes with their own local variables
             for axis_name in ["x", "y", "z"]:
                 mapping = self.config_reader.get_axis_mapping("angular", axis_name)
                 if mapping:
-                    self.get_logger().info(f"Angular axis {axis_name} mapped to {device} on axis: {axis_idx}")
                     device = mapping["device"]
                     axis_idx = mapping["axis"]
                     scale = mapping["scale"]
                     invert = mapping["invert"]
                     
                     # Get the value from the appropriate device
-                    if device == "joystick_left":
-                        value = float(self.joystick_1_axis_state[axis_idx])
-                    elif device == "joystick_right":
-                        value = float(self.joystick_2_axis_state[axis_idx])
+                    angular_value = 0.0
+                    if device == "joystick_left" and self.joystick_1:
+                        angular_value = float(self.joystick_1_axis_state[axis_idx])
+                    elif device == "joystick_right" and self.joystick_2:
+                        angular_value = float(self.joystick_2_axis_state[axis_idx])
                     else:
-                        self.get_logger().warn(f"Unknown device in configuration: {device}")
+                        self.get_logger().warn(f"Unknown device in configuration for angular.{axis_name}: {device}")
                     
                     # Apply scale and inversion
-                    value = value * scale * (-1 if invert else 1)
+                    angular_value = angular_value * scale * (-1 if invert else 1)
                     
                     # Apply reverse setting
-                    value *= self.reverse
+                    angular_value *= self.reverse
                     
                     # Set the value in the twist message
                     if axis_name == "x":
-                        t.angular.x = value
+                        t.angular.x = angular_value
                     elif axis_name == "y":
-                        t.angular.y = value
+                        t.angular.y = angular_value
                     elif axis_name == "z":
-                        t.angular.z = value
+                        t.angular.z = angular_value
 
         new_msg = RovVelocityCommand()
         new_msg.twist = t
