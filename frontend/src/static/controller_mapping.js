@@ -48,7 +48,70 @@ socket.on('rov_velocity', function(data) {
         activeMappingName = data.current_config;
         document.getElementById('active-mapping-name').textContent = activeMappingName;
     }
+    
+    // Update velocity display card
+    updateVelocityDisplay(data);
 });
+
+// Function to update the velocity display card
+function updateVelocityDisplay(data) {
+    const velocityCard = document.getElementById('velocity-display');
+    if (!velocityCard) return;
+    
+    // Format linear values
+    const linear = data.twist.linear;
+    const linearHTML = `
+        <div class="mb-2">
+            <strong>Linear:</strong>
+            <div class="ms-3">
+                X: <span class="badge bg-primary">${linear.x.toFixed(2)}</span>
+                Y: <span class="badge bg-primary">${linear.y.toFixed(2)}</span>
+                Z: <span class="badge bg-primary">${linear.z.toFixed(2)}</span>
+            </div>
+        </div>
+    `;
+    
+    // Format angular values
+    const angular = data.twist.angular;
+    const angularHTML = `
+        <div class="mb-2">
+            <strong>Angular:</strong>
+            <div class="ms-3">
+                X (Pitch): <span class="badge bg-info">${angular.x.toFixed(2)}</span>
+                Y (Roll): <span class="badge bg-info">${angular.y.toFixed(2)}</span>
+                Z (Yaw): <span class="badge bg-info">${angular.z.toFixed(2)}</span>
+            </div>
+        </div>
+    `;
+    
+    // Format other properties
+    const otherPropsHTML = `
+        <div>
+            <strong>Settings:</strong>
+            <div class="ms-3">
+                Fine Mode: <span class="badge ${data.is_fine ? 'bg-success' : 'bg-secondary'}">${data.is_fine ? 'ON' : 'OFF'}</span>
+                Pool Centric: <span class="badge ${data.is_pool_centric ? 'bg-success' : 'bg-secondary'}">${data.is_pool_centric ? 'ON' : 'OFF'}</span>
+                Depth Lock: <span class="badge ${data.depth_lock ? 'bg-success' : 'bg-secondary'}">${data.depth_lock ? 'ON' : 'OFF'}</span>
+                Pitch Lock: <span class="badge ${data.pitch_lock ? 'bg-success' : 'bg-secondary'}">${data.pitch_lock ? 'ON' : 'OFF'}</span>
+            </div>
+        </div>
+    `;
+    
+    // Update the card content
+    velocityCard.innerHTML = `
+        <div class="card-header bg-dark text-white">
+            Live ROV Velocity Data
+        </div>
+        <div class="card-body">
+            ${linearHTML}
+            ${angularHTML}
+            ${otherPropsHTML}
+            <div class="text-muted mt-3 small">
+                Last updated: ${new Date().toLocaleTimeString()}
+            </div>
+        </div>
+    `;
+}
 
 socket.on('heartbeat', function(msg) {
     try {
