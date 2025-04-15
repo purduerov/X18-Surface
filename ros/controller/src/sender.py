@@ -3,6 +3,7 @@
 import pygame
 import sys
 import time
+import signal  # Add signal module import
 
 # ROS
 import rclpy
@@ -18,6 +19,9 @@ from utils.heartbeat_helper import HeartbeatHelper
 class Controller(Node):
     def __init__(self):
         super().__init__("controller")
+        # Add a flag to track shutdown state
+        self.shutting_down = False
+        
         # Setup heartbeat
         self.heartbeat_helper = HeartbeatHelper(self)
 
@@ -59,7 +63,7 @@ class Controller(Node):
 
         # Create the timers
         self.data_thread = self.create_timer(0.1, self.pub_data)
-        self.gamepad_thread = self.create_timer(0.001, self.update)
+        self.controller_thread = self.create_timer(0.001, self.update)
         self.get_logger().info("Controllers initialized")
 
 
@@ -116,15 +120,19 @@ class Controller(Node):
         self.config_name = msg.data
 
 
+    # Modify the update method to check for shutdown state
     def update(self):
-        """Updates the gamepad state"""
+        """Updates the controller state"""
+        if self.shutting_down:
+            return
+            
         # Get all the events from pygame and process them
         for event in pygame.event.get():
             self.process_event(event)
 
 
     def correct_raw(self, raw):
-        """Corrects the raw value from the gamepad to be in the range [-1.0, 1.0]"""
+        """Corrects the raw value from the controller to be in the range [-1.0, 1.0]"""
         raw = float(raw)
         if abs(raw) >= STICK_DEAD_ZONE:
             return max(-1, min(1, raw))
@@ -158,15 +166,19 @@ class Controller(Node):
             self.handle_button_event(event)
 
 
+    # Modify the pub_data method to check for shutdown state
     def pub_data(self):
         """Publishes the data to the rov_velocity topic and the tools topic"""
+        if self.shutting_down:
+            return
+            
         # Get a message to publish for the rov_velocity topic
         self.pub.publish(self.getMessage())
         # Get a message to publish for the tools topic
         # self.pub_tools.publish(self.getTools())
 
     def getMessage(self):
-        """Returns a RovVelocityCommand message based on the current gamepad state"""
+        """Returns a RovVelocityCommand message based on the current controller state"""
         t = Twist()
 
         # Set default values for the twist message
@@ -256,7 +268,7 @@ class Controller(Node):
         return new_msg
 
     def getTools(self):
-        """Returns a ToolsCommandMsg message based on the current gamepad state"""
+        """Returns a ToolsCommandMsg message based on the current controller state"""
 
         tm = ToolsCommandMsg()
         tm.tools = [i for i in self.tools]
@@ -268,14 +280,52 @@ class Controller(Node):
         val /= float(max_val)
         return val
 
+    # Add a cleanup method for graceful shutdown
+    def cleanup(self):
+        """Clean shutdown logic"""
+        if self.shutting_down:
+            return
+            
+        self.shutting_down = True
+        
+        # Clean up pygame resources
+        if pygame.get_init():
+            pygame.joystick.quit()
+            pygame.quit()
+            
+        # Stop all timers
+        if hasattr(self, 'data_thread'):
+            self.data_thread.cancel()
+        if hasattr(self, 'controller_thread'):
+            self.controller_thread.cancel()
+
 
 def main():
     rclpy.init(args=None)
     controller = Controller()
-    rclpy.spin(controller)
-    controller.destroy_node()
-    rclpy.shutdown()
+    
+    # Set up signal handler for graceful shutdown
+    def signal_handler(sig, frame):
+        controller.get_logger().info(f"Received signal {sig}, shutting down...")
+        controller.cleanup()
+        # Exit the program
+        sys.exit(0)
 
+    # Register signal handlers
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
+    
+    try:
+        rclpy.spin(controller)
+    except KeyboardInterrupt:
+        # This should be caught by the signal handler, but just in case
+        pass
+    finally:
+        # Clean up resources
+        controller.cleanup()
+        controller.destroy_node()
+        rclpy.shutdown()
+        sys.exit(0)
 
 if __name__ == "__main__":
     main()
