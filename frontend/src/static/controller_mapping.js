@@ -89,7 +89,7 @@ function updateVelocityDisplay(data) {
         <div>
             <strong>Settings:</strong>
             <div class="ms-3">
-                Fine Mode: <span class="badge ${data.is_fine ? 'bg-success' : 'bg-secondary'}">${data.is_fine ? 'ON' : 'OFF'}</span>
+                Fine Mode: <span class="badge ${data.is_fine ? 'bg-success' : 'bg-secondary'}">${data.is_fine}</span>
                 Pool Centric: <span class="badge ${data.is_pool_centric ? 'bg-success' : 'bg-secondary'}">${data.is_pool_centric ? 'ON' : 'OFF'}</span>
                 Depth Lock: <span class="badge ${data.depth_lock ? 'bg-success' : 'bg-secondary'}">${data.depth_lock ? 'ON' : 'OFF'}</span>
                 Pitch Lock: <span class="badge ${data.pitch_lock ? 'bg-success' : 'bg-secondary'}">${data.pitch_lock ? 'ON' : 'OFF'}</span>

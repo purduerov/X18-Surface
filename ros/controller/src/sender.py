@@ -140,8 +140,15 @@ class Controller(Node):
     
 
     def handle_button_event(self, event):
-        self.get_logger().info(f"Button {event.button} {'pressed' if event.type == pygame.JOYBUTTONDOWN else 'released'}")
-        pass
+        if event.type == pygame.JOYBUTTONDOWN:
+            if event.button == 3:
+                self.is_fine += 1
+                if self.is_fine > 3:
+                    self.is_fine = 0
+            elif event.button == 2:
+                self.is_fine -= 1
+                if self.is_fine < 0:
+                    self.is_fine = 3
 
 
     def process_event(self, event):
@@ -164,6 +171,7 @@ class Controller(Node):
         # Check if the event is a joybuttondown event
         elif event.type == pygame.JOYBUTTONDOWN or event.type == pygame.JOYBUTTONUP:
             self.handle_button_event(event)
+
 
 
     # Modify the pub_data method to check for shutdown state
