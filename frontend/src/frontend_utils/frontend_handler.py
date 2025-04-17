@@ -1,4 +1,4 @@
-from std_msgs.msg import String
+from std_msgs.msg import String, Bool
 from shared_msgs.msg import FinalThrustMsg
 import json
 
@@ -47,7 +47,18 @@ def handle_frontend_event(node, event, data):
         controller_mapping = String()
         controller_mapping.data = mapping_name
         node.controller_mapping_pub.publish(controller_mapping)
-    
+
+    elif event == "frontend-resetThrusters": 
+        if not hasattr(node, 'reset_thrust_pub') or node.reset_thrust_pub is None:
+            node.reset_thrust_pub = node.create_publisher(Bool, "reset_thrusters", 10)
+            node.get_logger().debug("Created reset_thrusters publisher")
+
+        reset_msg = Bool()
+        reset_msg.data = True
+        node.reset_thrust_pub.publish(reset_msg)
+        # Log reset event at debug level
+        node.get_logger().debug("Reset thrusters command sent")
+        
     # Add a generic handler for other events
     else:
         # Only log unhandled events at debug level

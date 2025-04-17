@@ -456,3 +456,26 @@ function activateCurrentConfig() {
         document.getElementById('active-mapping-name').textContent = configName;
     });
 }
+
+/**
+ * Sends a reset command to all thrusters
+ */
+function resetThrusters() {
+    console.log("Sending reset thrusters command");
+    
+    // Send the reset thrusters event
+    socket.emit('frontend-resetThrusters');
+    
+    // Provide visual feedback
+    const resetBtn = document.getElementById('reset-thrusters-btn');
+    const originalText = resetBtn.textContent;
+    
+    resetBtn.textContent = "Resetting...";
+    resetBtn.disabled = true;
+    
+    // Re-enable the button after a short delay
+    setTimeout(() => {
+        resetBtn.textContent = originalText;
+        resetBtn.disabled = false;
+    }, 1000);
+}
