@@ -8,12 +8,16 @@ import socket
 import os
 import subprocess
 import threading
+import sys
+import signal
 
 
 # Create a publisher node that will publish a message counting up and down from 100 repeatedly
 class MediaMTXNode(Node):
     def __init__(self):
         super().__init__("mediamtx_node")
+
+        self.shutting_down = False
 
         # Setup heartbeat
         self.heartbeat_helper = HeartbeatHelper(self)
@@ -23,9 +27,6 @@ class MediaMTXNode(Node):
         self.timer = self.create_timer(1.0, self.publish_ip_address)
         self.ip_pub_count = 0
         self.ip_pub_count_max = 10
-
-        # Create a subscriber to listen to the topic /surface_ip
-        self.create_subscription(String, "surface_ip", self.ip_callback, 10)
 
         # Start the MediaMTX server process and monitor the process and watch for certain events and messages
         self.start_mediamtx_server()
@@ -52,11 +53,6 @@ class MediaMTXNode(Node):
         except Exception as e:
             return f"Error getting local IP: {e}"
 
-    def ip_callback(self, msg):
-        # Check if "STOP" was received, if so stop publishing the ip address
-        if msg.data == "STOP":
-            self.timer.cancel()
-            self.get_logger().info("Stopped publishing IP address")
 
     def start_mediamtx_server(self):
         def start_server():
@@ -82,25 +78,56 @@ class MediaMTXNode(Node):
             )
 
             while True:
-                for line in self.process.stdout:
-                    self.get_logger().info(line.strip())
-                for line in self.process.stderr:
-                    self.get_logger().error(line.strip())
-                if self.process.poll() is not None:
-                    self.get_logger().info("MediaMTX server process has terminated")
-                    break
+                if not self.shutting_down:
+                    for line in self.process.stdout:
+                        self.get_logger().info(line.strip())
+                    for line in self.process.stderr:
+                        self.get_logger().error(line.strip())
+                    if self.process.poll() is not None:
+                        self.get_logger().info("MediaMTX server process has terminated")
+                        break
 
         # Start the server in a separate thread
         server_thread = threading.Thread(target=start_server)
         server_thread.start()
 
+    def cleanup(self):
+        """Clean shutdown logic"""
+        if self.shutting_down:
+            return
+            
+        self.shutting_down = True
+
+        # Kill the MediaMTX server process if it exists
+        if hasattr(self, 'process'):
+            self.process.terminate()
+            self.process.wait()
+
 
 def main():
     rclpy.init()
     publisher_node = MediaMTXNode()
-    rclpy.spin(publisher_node)
-    publisher_node.destroy_node()
-    rclpy.shutdown()
+
+    # Set up signal handler for graceful shutdown
+    def signal_handler(sig, frame):
+        publisher_node.cleanup()
+        # Exit the program
+        sys.exit(0)
+
+    # Register signal handlers
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
+
+    try:
+        rclpy.spin(publisher_node)
+    except KeyboardInterrupt:
+        # This should be caught by the signal handler, but just in case
+        pass
+    finally:
+        # Clean up resources
+        publisher_node.cleanup()
+        sys.exit(0)
+
 
 
 if __name__ == "__main__":

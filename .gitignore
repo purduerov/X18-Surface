@@ -1,6 +1,7 @@
 __pycache__/
 ui/__pycache__
 log/
+logs/
 .env
 build
 install
@@ -9,3 +10,4 @@ install
 .idea/
 .DS_Store
 ros/mediamtx_node/src/mediamtx
+videos/

@@ -29,6 +29,7 @@ install(PROGRAMS
 install(DIRECTORY
   src/templates
   src/static
+  src/frontend_utils
   DESTINATION lib/${PROJECT_NAME}
 )
 

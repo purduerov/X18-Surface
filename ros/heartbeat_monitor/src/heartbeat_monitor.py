@@ -5,8 +5,8 @@ from rclpy.node import Node
 from std_msgs.msg import Header
 import socketio
 import json
-import os
 from dotenv import load_dotenv
+import os, signal, sys
 
 sio = socketio.Client()
 
@@ -20,6 +20,8 @@ class HeartbeatMonitor(Node):
             2.0, self.emit_heartbeats
         )  # Check every 2 seconds
 
+        self.shutting_down = False
+
         # Expected node names dictionary (node name: last seen timestamp)
         self.expected_surface_nodes = {
             "frontend": 0,
@@ -30,10 +32,13 @@ class HeartbeatMonitor(Node):
         self.expected_core_nodes = {
             "ROV_main": 0,
             "thrust_control": 0,
-            "thrust_to_spi": 0,
+            "thrust_to_uart": 0,
         }
 
     def heartbeat_callback(self, msg):
+        if self.shutting_down:
+            return
+        
         node_name = msg.frame_id  # The node's unique identifier
         timestamp = self.get_clock().now().nanoseconds  # Current time
         self.heartbeat_status[node_name] = timestamp  # Update last seen time
@@ -51,6 +56,9 @@ class HeartbeatMonitor(Node):
         # self.get_logger().info(f'Heartbeat received from {node_name}')
 
     def emit_heartbeats(self):
+        if self.shutting_down:
+            return
+        
         current_time = self.get_clock().now().nanoseconds
         timeout = 5 * 1e9  # 5 seconds in nanoseconds
         # Emit the heartbeat status for each surface node
@@ -88,6 +96,13 @@ class HeartbeatMonitor(Node):
                     ),
                 )
 
+    def cleanup(self):
+        """Clean shutdown logic"""
+        if self.shutting_down:
+            return
+            
+        self.shutting_down = True
+
 
 def main(args=None):
     rclpy.init(args=args)
@@ -98,9 +113,26 @@ def main(args=None):
     port = str(os.getenv("FLASK_PORT", 5013))
     sio.connect("http://127.0.0.1:" + port)  # Adjust the URL if necessary
 
-    rclpy.spin(monitor)
-    monitor.destroy_node()
-    rclpy.shutdown()
+    # Set up signal handler for graceful shutdown
+    def signal_handler(sig, frame):
+        sio.disconnect()
+        monitor.cleanup()
+        sys.exit(0)
+
+    # Register signal handlers
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
+
+    try:
+        rclpy.spin(monitor)
+    except KeyboardInterrupt:
+        # This should be caught by the signal handler, but just in case
+        pass
+    finally:
+        # Clean up resources
+        sio.disconnect()
+        monitor.cleanup()
+        sys.exit(0)
 
 
 if __name__ == "__main__":

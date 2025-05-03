@@ -1,0 +1,72 @@
+{
+  "configs": {
+      "default": {
+          "joystick": {
+              "linear": {
+                  "x": {"device": "joystick_left", "axis": 1, "scale": 1.0, "invert": true},
+                  "y": {"device": "joystick_right", "axis": 0, "scale": 1.0, "invert": false},
+                  "z": {"device": "joystick_left", "axis": 2, "scale": 1.0, "invert": true}
+              },
+              "angular": {
+                  "x": {"device": "joystick_right", "axis": 1, "scale": 1.0, "invert": false},
+                  "y": {"device": "joystick_left", "axis": 0, "scale": 1.0, "invert": false},
+                  "z": {"device": "joystick_right", "axis": 2, "scale": 1.0, "invert": true}
+              }
+          },
+          "buttons": {
+              "tool_toggle": [
+                  {"device": "joystick", "button": 0, "action": "toggle", "tool_id": 0},
+                  {"device": "joystick", "button": 1, "action": "hold", "tool_id": 2}
+              ]
+          },
+          "trims": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+          },
+          "dead_zone": 0.09,
+          "scale_factors": {
+              "translational_x": 1.0,
+              "translational_y": 1.0,
+              "translational_z": 1.0,
+              "rotational_x": 1.0,
+              "rotational_y": 1.0,
+              "rotational_z": 1.0
+          }
+      },
+      "alternate": {
+          "joystick": {
+              "linear": {
+                  "x": {"device": "joystick_right", "axis": 0, "scale": 1.0, "invert": false},
+                  "y": {"device": "joystick_left", "axis": 1, "scale": 1.0, "invert": true},
+                  "z": {"device": "joystick_right", "axis": 2, "scale": 1.0, "invert": false}
+              },
+              "angular": {
+                  "x": {"device": "joystick_left", "axis": 0, "scale": 1.0, "invert": true},
+                  "y": {"device": "joystick_right", "axis": 1, "scale": 1.0, "invert": false},
+                  "z": {"device": "joystick_left", "axis": 2, "scale": 1.0, "invert": true}
+              }
+          },
+          "buttons": {
+              "tool_toggle": [
+                  {"device": "joystick", "button": 2, "action": "toggle", "tool_id": 1},
+                  {"device": "joystick", "button": 3, "action": "hold", "tool_id": 3}
+              ]
+          },
+          "trims": {
+              "x": 0.1,
+              "y": 0.1,
+              "z": 0.1
+          },
+          "dead_zone": 0.1,
+          "scale_factors": {
+              "translational_x": 0.9,
+              "translational_y": 0.9,
+              "translational_z": 0.9,
+              "rotational_x": 0.9,
+              "rotational_y": 0.9,
+              "rotational_z": 0.9
+          }
+      }
+  }
+}
