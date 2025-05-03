@@ -17,6 +17,7 @@ ament_python_install_package(${PROJECT_NAME})
 install(PROGRAMS
   src/config.py
   src/sender.py
+  src/config_manager.py
   DESTINATION lib/${PROJECT_NAME}
 )
 # uncomment the following section in order to fill in

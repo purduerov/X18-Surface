@@ -19,6 +19,7 @@ from utils.heartbeat_helper import HeartbeatHelper
 from frontend_utils.frontend_handler import handle_frontend_event
 from frontend_utils.log_helper import LogHelper
 from frontend_utils.recording_api import RecordingRoutes  # Import the new module
+from frontend_utils.controller_api import ControllerRoutes  # Import the new module
 
 class Frontend(Node):
     def __init__(self):
@@ -52,6 +53,7 @@ class Frontend(Node):
         ### ----- ROUTE SETUP ----- ###
         self.setup_routes()
         self.recording_routes = RecordingRoutes(self.app, self.get_logger())
+        self.controller_routes = ControllerRoutes(self.app, self.get_logger())
 
         ### ----- SOCKETIO SETUP ----- ###
         self.setup_socketio_events()
@@ -116,33 +118,42 @@ class Frontend(Node):
         @self.app.route("/recordings")
         def recordings_page():
             return render_template("recordings.html", active_page='recordings')
-                
+        
+        @self.app.route("/controller-mapping")
+        def controller_mapping():
+            return render_template("controller_mapping.html", active_page='controller-mapping')
+
     # Function to setup the socketio events
     def setup_socketio_events(self):
         @self.socketio.on("connect")
         def connect():
-            self.get_logger().info("SocketIO connected")
+            # Only log first connection in a session, not reconnects
+            if not hasattr(self, '_session_started'):
+                self.get_logger().info("SocketIO client connected")
+                self._session_started = True
 
         @self.socketio.on("disconnect")
         def disconnect():
-            self.get_logger().info("SocketIO disconnected")
+            # Disconnects are expected during page navigation, so debug level is sufficient
+            self.get_logger().debug("SocketIO client disconnected")
 
         # General-purpose event handler
         @self.socketio.on("*")  # Using '*' to catch all events
         def handle_all_events(event, data=None):
             # Handle frontend events
             if event.startswith("frontend-"):
-                # self.get_logger().info(f"Handling frontend event: {event}, data: {data}")
+                # Don't log high-frequency events like thruster values
+                if not event.startswith("frontend-sendThrusterValues"):
+                    self.get_logger().debug(f"Frontend event: {event}")
                 # Handle the event
                 handle_frontend_event(self, event, data)
             
-            # Ignore heartbeat events
+            # Silently handle log-related events
             elif event.startswith("request_logs") or event.startswith("clear_logs"):
-                # self.get_logger().info(f"Ignoring event: {event}, data: {data}")
-                return
+                pass
+                
             # Forward all other events
             else:
-                # self.get_logger().info(f"Unhandled event: {event}, data: {data}")
                 self.socketio.emit(event, data)
 
 def main():
