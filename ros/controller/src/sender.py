@@ -9,7 +9,7 @@ import signal  # Add signal module import
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String, Bool, Empty
-from shared_msgs.msg import RovVelocityCommand, ToolsCommandMsg
+from shared_msgs.msg import RovVelocityCommand, ToolsMotorMsg
 from geometry_msgs.msg import Twist
 
 from config import *
@@ -47,7 +47,7 @@ class Controller(Node):
         self.is_pool_centric = False
         self.depth_lock = False
         self.pitch_lock = False
-        self.tools = [0, 0, 0, 0, 0]
+        self.tools = [0] * 7
         
         try:
             self.init_pygame()
@@ -56,14 +56,14 @@ class Controller(Node):
 
         # Create the publishers
         self.pub = self.create_publisher(RovVelocityCommand, "rov_velocity", 10)
-        # self.pub_tools = self.create_publisher(ToolsCommandMsg, "tools", 10)
+        self.pub_tools = self.create_publisher(ToolsMotorMsg, "tools_motor", 10)
 
         # Create subscriber
         self.create_subscription(String, "controller_mapping", self.update_mapping, 10)
 
         # Create the timers
         self.data_thread = self.create_timer(0.1, self.pub_data)
-        self.controller_thread = self.create_timer(0.001, self.update)
+        self.controller_thread = self.create_timer(1.0 / 15.0, self.update)
         self.get_logger().info("Controllers initialized")
 
 
@@ -141,6 +141,7 @@ class Controller(Node):
 
     def handle_button_event(self, event):
         if event.type == pygame.JOYBUTTONDOWN:
+            # joystick top left/right buttons for fine control
             if event.button == 3:
                 self.is_fine += 1
                 if self.is_fine > 3:
@@ -149,6 +150,17 @@ class Controller(Node):
                 self.is_fine -= 1
                 if self.is_fine < 0:
                     self.is_fine = 3
+
+            # joystick top bottom button / trigger for PM
+            elif event.button == 0:
+                self.tools[0] ^= 1
+
+            elif event.button == 1:
+                self.tools[0] ^= 2
+                self.tools[0] ^= 4
+
+    def handle_joy_hat_event(self, event):
+        pass
 
 
     def process_event(self, event):
@@ -172,7 +184,8 @@ class Controller(Node):
         elif event.type == pygame.JOYBUTTONDOWN or event.type == pygame.JOYBUTTONUP:
             self.handle_button_event(event)
 
-
+        elif event.type == pygame.JOYHATMOTION:
+            self.handle_joy_hat_event(event)
 
     # Modify the pub_data method to check for shutdown state
     def pub_data(self):
@@ -183,7 +196,7 @@ class Controller(Node):
         # Get a message to publish for the rov_velocity topic
         self.pub.publish(self.getMessage())
         # Get a message to publish for the tools topic
-        # self.pub_tools.publish(self.getTools())
+        self.pub_tools.publish(self.getTools())
 
     def getMessage(self):
         """Returns a RovVelocityCommand message based on the current controller state"""
@@ -278,8 +291,10 @@ class Controller(Node):
     def getTools(self):
         """Returns a ToolsCommandMsg message based on the current controller state"""
 
-        tm = ToolsCommandMsg()
-        tm.tools = [i for i in self.tools]
+        tm = ToolsMotorMsg()
+        tm.tools = self.tools
+        # self.get_logger().info("TOOLS: " + str(list(tm.tools)))
+        # joystick_2_button_state[0]
 
         return tm
 
@@ -327,9 +342,11 @@ def main():
         rclpy.spin(controller)
     except KeyboardInterrupt:
         # This should be caught by the signal handler, but just in case
+        print("KEYBOARD")
         pass
     finally:
         # Clean up resources
+        print("FINALLY")
         controller.cleanup()
         controller.destroy_node()
         rclpy.shutdown()
