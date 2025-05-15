@@ -153,18 +153,23 @@ class Controller(Node):
 
             # joystick top bottom button / trigger for PM
             elif event.button == 0:
-                self.tools[0] ^= 1
+                self.tools[0] ^= 2 ** 0
 
             elif event.button == 1:
-                self.tools[0] ^= 2
-                self.tools[0] ^= 4
+                self.tools[0] ^= 2 ** 2
+                self.tools[0] ^= 2 ** 3
 
     def handle_joy_hat_event(self, event):
-        pass
+        if event.hat == 0:
+            if event.value == (-1, 0):
+                self.tools[0] ^= 2 ** 2
+            elif event.value == (1, 0):
+                self.tools[0] ^= 2 ** 3
 
 
     def process_event(self, event):
-        """Processes a pygame event"""
+        """Processes a pygame event"""        # if event.hat == 0:
+        #     if event.value == 
         # Check if the event is a joyaxismotion event
         if event.type == pygame.JOYAXISMOTION:
             # Get the joystick instance that generated this event
