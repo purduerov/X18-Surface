@@ -1,5 +1,5 @@
 {
-    "name": "X17-Surface Dev Container",
+    "name": "X18-Surface Dev Container",
     "build": {
         "dockerfile": "Dockerfile",
         "context": ".."
