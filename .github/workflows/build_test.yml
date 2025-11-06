@@ -14,32 +14,38 @@ on:
 jobs:
   build:
     # The type of runner that the job will run on
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
 
     steps:
+
       - name: Checkout code
         uses: actions/checkout@v4
+
       # Set up ROS 2 (Jazzy)
       - name: Set up ROS 2
         uses: ros-tooling/setup-ros@v0.7
-       with:
-          required-ros-distributions: jazzy
+        with:
+          required-ros-distributions: humble
+
       # Install dependencies from requirements.txt
       - name: Install dependencies
         run: |
           sudo apt-get update && sudo apt-get install -y python3-pip
           sudo pip3 install -r requirements.txt
           sudo apt-get update && sudo apt-get install -y wget
+
       # Run the install MediaMTX script
       - name: Install MediaMTX
         run: |
           chmod +x scripts/install_mediamtx.sh
           scripts/install_mediamtx.sh
+
       # Build the ROS workspace
       - name: Build workspace
         run: |
           chmod +x scripts/build.sh
           scripts/build.sh
+
       # Run the build script
       - name: Start and check ROS 2 nodes
         run: |
@@ -52,3 +58,6 @@ jobs:
 
       - name: Success
         run: echo "Success!"
+
+
+
