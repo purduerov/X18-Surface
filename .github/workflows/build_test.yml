@@ -11,60 +11,71 @@ on:
       - master
   workflow_dispatch:
 
-jobs:
-  build:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-22.04
-    container:
-      image: ros:humble
-    steps:
+    jobs:
+      build:
+        # The type of runner that the job will run on
+        runs-on: ubuntu-22.04
+      steps:
 
-      - name: Checkout code
-        uses: actions/checkout@v4
+        - name: Checkout code
+          uses: actions/checkout@v4
 
-      # Set up ROS 2 (Jazzy)
-      - name: Set up ROS 2
-        uses: ros-tooling/setup-ros@v0.7
-        with:
-          required-ros-distributions: humble
+          # Set up ROS 2 (Jazzy)
+        - name: Set up ROS 2
+          uses: ros-tooling/setup-ros@v0.7
+          with:
+            required-ros-distributions: jazzy
+        - name: Setup ROS Jazzy
+          run: |
+            sudo apt update
+            sudo apt install -y software-properties-common
+            sudo add-apt-repository universe
+            sudo apt update
+            sudo apt install -y curl gnupg2 lsb-release
+            sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
+            echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
+            sudo apt update
+            sudo apt install -y ros-jazzy-desktop
+            echo "source /opt/ros/jazzy/setup.bash" >> ~/.bashrc
+            source /opt/ros/jazzy/setup.bash
 
-      # Install dependencies from requirements.txt
-      - name: Install dependencies
-        run: |
-          sudo apt-get update && sudo apt-get install -y python3-pip
-          sudo pip3 install -r requirements.txt
-          sudo apt-get update && sudo apt-get install -y wget
+            # Install dependencies from requirements.txt
+        - name: Install dependencies
+          run: |
+            sudo apt-get update && sudo apt-get install -y python3-pip
+            sudo pip3 install -r requirements.txt
+            sudo apt-get update && sudo apt-get install -y wget
 
-      # Run the install MediaMTX script
-      - name: Install MediaMTX
-        run: |
-          chmod +x scripts/install_mediamtx.sh
-          scripts/install_mediamtx.sh
+            # Run the install MediaMTX script
+        - name: Install MediaMTX
+          run: |
+            chmod +x scripts/install_mediamtx.sh
+            scripts/install_mediamtx.sh
 
-      # Build the ROS workspace
-      - name: Build workspace
-        run: |
-          chmod +x scripts/build.sh
-          scripts/build.sh
+            # Build the ROS workspace
+        - name: Build workspace
+          run: |
+            chmod +x scripts/build.sh
+            scripts/build.sh
 
-      # Run the build script
-      - name: Start and check ROS 2 nodes
-        run: |
-          chmod +x scripts/run.sh
-          scripts/run.sh &
-          sleep 15  # Give nodes time to start
- 
-          source /opt/ros/jazzy/setup.bash
-          EXPECTED_NODES="/heartbeat_monitor.py"
-          NODE_LIST=$(ros2 node list)
-          echo NODE_LIST
-          for NODE in $EXPECTED_NODES; do
+            # Run the build script
+        - name: Start and check ROS 2 nodes
+          run: |
+            chmod +x scripts/run.sh
+            scripts/run.sh &
+            sleep 15  # Give nodes time to start
+
+            source /opt/ros/jazzy/setup.bash
+            EXPECTED_NODES="/heartbeat_monitor.py"
+            NODE_LIST=$(ros2 node list)
+            echo NODE_LIST
+            for NODE in $EXPECTED_NODES; do
             if [[ ! "$NODE_LIST" =~ "$NODE" ]]; then
-              echo "ERROR: $NODE node not found"
-              # Kill background process before exiting
-              pkill -f run.sh || true
-              exit 1
-            fi
+          echo "ERROR: $NODE node not found"
+          # Kill background process before exiting
+          pkill -f run.sh || true
+          exit 1
+          fi
           done
 
           echo "All nodes successfully launched."
@@ -72,6 +83,6 @@ jobs:
           echo "Killing ROS 2 nodes:"
           pkill -f ros2 || true    # Success message
 
-      - name: Success
-        run: echo "Success!"
+        - name: Success
+          run: echo "Success!"
 
