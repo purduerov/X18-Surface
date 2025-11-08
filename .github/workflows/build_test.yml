@@ -40,7 +40,8 @@ jobs:  # ✅ jobs must be at the top level (no indentation under "on:")
       - name: Install dependencies
         run: |
           sudo apt-get update && sudo apt-get install -y python3-pip wget
-          sudo pip3 install -r requirements.txt
+          python3 -m pip install --upgrade pip setuptools
+          pip install --break-system-packages -r requirements.txt
 
       - name: Install MediaMTX
         run: |
