@@ -52,7 +52,7 @@ jobs:
           chmod +x scripts/run.sh
           scripts/run.sh &
           sleep 15  # Give nodes time to start
-
+ 
           source /opt/ros/jazzy/setup.bash
           EXPECTED_NODES="/heartbeat_monitor.py"
           NODE_LIST=$(ros2 node list)
@@ -73,6 +73,4 @@ jobs:
 
       - name: Success
         run: echo "Success!"
-
-
 
