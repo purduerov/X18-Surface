@@ -52,6 +52,21 @@ jobs:
           chmod +x scripts/run.sh
           scripts/run.sh &
           sleep 15  # Give nodes time to start
+
+          source /opt/ros/jazzy/setup.bash
+          EXPECTED_NODES="/heartbeat_monitor.py"
+          NODE_LIST=$(ros2 node list)
+          echo NODE_LIST
+          for NODE in $EXPECTED_NODES; do
+            if [[ ! "$NODE_LIST" =~ "$NODE" ]]; then
+              echo "ERROR: $NODE node not found"
+              # Kill background process before exiting
+              pkill -f run.sh || true
+              exit 1
+            fi
+          done
+
+          echo "All nodes successfully launched."
           # Kill ROS 2 nodes
           echo "Killing ROS 2 nodes:"
           pkill -f ros2 || true    # Success message
