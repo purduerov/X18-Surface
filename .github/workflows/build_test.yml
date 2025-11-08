@@ -55,27 +55,34 @@ jobs:  # ✅ jobs must be at the top level (no indentation under "on:")
 
       - name: Start and check ROS 2 nodes
         run: |
+          set -e
+          source /opt/ros/jazzy/setup.bash
+
+          echo "Starting ROS 2 nodes..."
           chmod +x scripts/run.sh
           ./scripts/run.sh &
+          RUN_PID=$!
+
+          # Wait for nodes to start
           sleep 15
 
-          source /opt/ros/jazzy/setup.bash
-          EXPECTED_NODES="/heartbeat_monitor.py"
-          NODE_LIST=$(ros2 node list)
+          echo "Checking running nodes..."
+          NODE_LIST=$(ros2 node list || true)
           echo "$NODE_LIST"
+
+          EXPECTED_NODES="/heartbeat_monitor.py"
 
           for NODE in $EXPECTED_NODES; do
             if [[ ! "$NODE_LIST" =~ "$NODE" ]]; then
-              echo "ERROR: $NODE node not found"
-              pkill -f run.sh || true
+              echo "❌ ERROR: $NODE node not found"
+              kill $RUN_PID || true
               exit 1
             fi
           done
 
           echo "✅ All nodes successfully launched."
-          echo "Killing ROS 2 nodes..."
-          pkill -f ros2 || true
-
+          kill $RUN_PID || true
+      
       - name: Success
         run: echo "✅ Success!"
 
