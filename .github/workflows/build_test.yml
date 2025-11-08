@@ -16,7 +16,7 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-22.04
     container:
-      image: ros:jazzy
+      image: ros:humble
     steps:
 
       - name: Checkout code
