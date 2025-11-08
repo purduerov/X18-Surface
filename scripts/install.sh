@@ -46,7 +46,7 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-a
 # Install ROS 2 Packages
 sudo apt update
 sudo apt upgrade -y
-sudo apt install -y ros-humble-desktop
+sudo apt install -y ros-jazzy-desktop
 echo "ROS 2 - Humble successfully installed"
 
 #### INSTALL PYTHON DEPENDENCIES ####
