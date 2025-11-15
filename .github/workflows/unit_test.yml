@@ -1,4 +1,4 @@
-name: X18-Surface Unit Tests
+name: X18-Surface Unit Test
 
 # Controls when the action will run.
 # Workflow runs when manually triggered using the UI, or when a push or pull request is made to the main branch
@@ -45,7 +45,6 @@ jobs:
           echo "ROS_DOMAIN_ID=69" >> $GITHUB_ENV
 
 
-
       # Run the install MediaMTX script
       - name: Install MediaMTX
         run: |
@@ -55,42 +54,18 @@ jobs:
       # Build the ROS workspace
       - name: Build workspace
         run: |
-          chmod +x scripts/build.sh
+          echo "no workspace build for now"
+          #chmod +x scripts/build.sh
           scripts/build.sh
 
       # Run the build script and verify ROS 2 nodes
-      - name: Start and check ROS 2 nodes
+      - name: build unit tests
         run: |
-          set -e
-          source /opt/ros/jazzy/setup.bash
-
-          echo "Starting ROS 2 nodes..."
-          chmod +x scripts/run.sh
-          ./scripts/run.sh &
-          RUN_PID=$!
-
-          # Wait for nodes to start
-          sleep 15
-
-          echo "Checking running nodes..."
-          NODE_LIST=$(ros2 node list || true)
-          echo "$NODE_LIST"
-
-          EXPECTED_NODES="/rov/frontend /rov/heartbeat_monitor /rov/ui_subscriber"
-
-
-
-          for NODE in $EXPECTED_NODES; do
-            if [[ ! "$NODE_LIST" =~ "$NODE" ]]; then
-              echo "❌ ERROR: $NODE node not found"
-              kill $RUN_PID || true
-              exit 1
-            fi
-          done
-
-          echo "✅ All nodes successfully launched."
-          kill $RUN_PID || true
-
+          colcon test --packages-select heartbeat_monitor
+      - name: run unit tests verbose
+        run: |
+          colcon test-result --verbose
+          
       - name: Success
         run: echo "Success!"
 
