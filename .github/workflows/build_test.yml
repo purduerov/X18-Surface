@@ -1,8 +1,6 @@
 
 name: X17-Surface Build Test
 
-# Controls when the action will run.
-# Workflow runs when manually triggered using the UI, or when a push or pull request is made to the main branch
 on:
   push:
     branches:
@@ -14,27 +12,20 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-22.04   # Humble is for Ubuntu 22.04
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Set up ROS 2 (Jazzy)
-      - name: Set up ROS 2
+      # Install ROS 2 Humble (correct for Ubuntu 22.04)
+      - name: Set up ROS 2 Humble
         uses: ros-tooling/setup-ros@v0.7
         with:
           required-ros-distributions: humble
 
-      # Install dependencies from requirements.txt
-      - name: Install dependencies
-        run: |
-          sudo apt-get update && sudo apt-get install -y python3-pip
-          sudo pip3 install -r requirements.txt
-          sudo apt-get update && sudo apt-get install -y wget
-
-
-      - name: Install core system dependencies (Dockerfile equivalent)
+      # Dockerfile: Install system dependencies
+      - name: Install system dependencies
         run: |
           sudo apt-get update && sudo apt-get install -y \
             python3-pip \
@@ -43,44 +34,46 @@ jobs:
             wget \
             build-essential
 
-      - name: Allow pip to break system packages (Dockerfile ENV)
+      # Match Dockerfile: pip break system pkgs
+      - name: Allow pip to break system packages
         run: echo "PIP_BREAK_SYSTEM_PACKAGES=1" >> $GITHUB_ENV
 
-      - name: Install compatible setuptools (matches Dockerfile)
+      # CRITICAL: Fix setuptools version (prevents canonicalize_version bug)
+      - name: Force safe setuptools version for ROS builds
         run: |
-          pip3 install --upgrade "setuptools>=68.2.0,<70.0.0"
+          pip3 uninstall -y setuptools || true
+          sudo pip3 uninstall -y setuptools || true
+          pip3 install --force-reinstall "setuptools==69.5.1"
 
-      - name: Install Python dependencies (Dockerfile COPY + pip install)
+      - name: Verify setuptools version
+        run: python3 - << 'EOF'
+import setuptools
+print("Using setuptools version:", setuptools.__version__)
+EOF
+
+      # Install Python dependencies
+      - name: Install Python dependencies
         run: |
           pip3 install --no-cache-dir -r requirements.txt
 
-      - name: Set up ROS Jazzy (matches base image)
-        uses: ros-tooling/setup-ros@v0.7
-        with:
-          required-ros-distributions: jazzy
-
-      - name: Add ROS setup to bashrc (Dockerfile RUN echo)
-        run: |
-          echo 'source /opt/ros/jazzy/setup.bash' >> ~/.bashrc
-
-      - name: Export ROS_DOMAIN_ID (devcontainer.json env)
+      # ROS_DOMAIN_ID (from devcontainer.json)
+      - name: Export ROS_DOMAIN_ID
         run: echo "ROS_DOMAIN_ID=69" >> $GITHUB_ENV
 
-
-
-      # Run the install MediaMTX script
+      # Install MediaMTX
       - name: Install MediaMTX
         run: |
           chmod +x scripts/install_mediamtx.sh
           scripts/install_mediamtx.sh
 
-      # Build the ROS workspace
+      # Build ROS workspace (your script)
       - name: Build workspace
         run: |
+          source /opt/ros/humble/setup.bash
           chmod +x scripts/build.sh
           scripts/build.sh
 
-      # Run the build script and verify ROS 2 nodes
+      # Run nodes + check heartbeat_monitor
       - name: Start and check ROS 2 nodes
         run: |
           set -e
@@ -91,7 +84,6 @@ jobs:
           ./scripts/run.sh &
           RUN_PID=$!
 
-          # Wait for nodes to start
           sleep 15
 
           echo "Checking running nodes..."
