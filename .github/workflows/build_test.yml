@@ -66,16 +66,15 @@ on:
           EXPECTED_NODES="/heartbeat_monitor.py"
 
           for NODE in $EXPECTED_NODES; do
-          if [[ ! "$NODE_LIST" =~ "$NODE" ]]; then
-        echo "❌ ERROR: $NODE node not found"
-        kill $RUN_PID || true
-        exit 1
-        fi
-        done
+            if [[ ! "$NODE_LIST" =~ "$NODE" ]]; then
+              echo "❌ ERROR: $NODE node not found"
+              kill $RUN_PID || true
+              exit 1
+            fi
+          done
 
-        echo "✅ All nodes successfully launched."
-        kill $RUN_PID || true
-
+          echo "✅ All nodes successfully launched."
+          kill $RUN_PID || true
       - name: Success
         run: echo "Success!"
 
