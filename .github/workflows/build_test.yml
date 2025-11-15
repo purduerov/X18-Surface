@@ -1,6 +1,7 @@
+
 name: X17-Surface Build Test
 
-# Controls when the action will run. 
+# Controls when the action will run.
 # Workflow runs when manually triggered using the UI, or when a push or pull request is made to the main branch
 on:
   push:
@@ -11,41 +12,40 @@ on:
       - master
   workflow_dispatch:
 
-    jobs:
-      build:
-        runs-on: ubuntu-22.04
+jobs:
+  build:
+    runs-on: ubuntu-22.04
 
     steps:
-
       - name: Checkout code
         uses: actions/checkout@v4
 
-        # Set up ROS 2 (Jazzy)
+      # Set up ROS 2 (Jazzy)
       - name: Set up ROS 2
         uses: ros-tooling/setup-ros@v0.7
         with:
           required-ros-distributions: humble
 
-          # Install dependencies from requirements.txt
+      # Install dependencies from requirements.txt
       - name: Install dependencies
         run: |
           sudo apt-get update && sudo apt-get install -y python3-pip
           sudo pip3 install -r requirements.txt
           sudo apt-get update && sudo apt-get install -y wget
 
-          # Run the install MediaMTX script
+      # Run the install MediaMTX script
       - name: Install MediaMTX
         run: |
           chmod +x scripts/install_mediamtx.sh
           scripts/install_mediamtx.sh
 
-          # Build the ROS workspace
+      # Build the ROS workspace
       - name: Build workspace
         run: |
           chmod +x scripts/build.sh
           scripts/build.sh
 
-          # Run the build script
+      # Run the build script and verify ROS 2 nodes
       - name: Start and check ROS 2 nodes
         run: |
           set -e
@@ -75,6 +75,7 @@ on:
 
           echo "✅ All nodes successfully launched."
           kill $RUN_PID || true
+
       - name: Success
         run: echo "Success!"
 
