@@ -78,7 +78,7 @@ jobs:
       - name: Start and check ROS 2 nodes
         run: |
           set -e
-          source /opt/ros/humble/setup.bash
+          source /opt/ros/jazzy/setup.bash
 
           echo "Starting ROS 2 nodes..."
           chmod +x scripts/run.sh
