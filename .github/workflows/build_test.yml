@@ -1,39 +1,53 @@
-name: X18-Surface Build Test
+name: X17-Surface Build Test
 
+# Controls when the action will run. 
+# Workflow runs when manually triggered using the UI, or when a push or pull request is made to the main branch
 on:
   push:
     branches:
-      - ci-cd:
+      - ci-cd
   pull_request:
     branches:
       - master
-  workflow_dispatch
+  workflow_dispatch:
 
-jobs: # general build and node verification test
+jobs:
   build:
-    using: 'docker'
-    image: Dockerfile
+    # The type of runner that the job will run on
+    runs-on: ubuntu-22.04
+
     steps:
+
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # Set up ROS 2 (Jazzy)
+      - name: Set up ROS 2
+        uses: ros-tooling/setup-ros@v0.7
+        with:
+          required-ros-distributions: humble
+
+      # Install dependencies from requirements.txt
       - name: Install dependencies
         run: |
-          sudo apt-get update && sudo apt-get install -y python3-pip wget
-          python3 -m pip install --upgrade pip setuptools
-          pip install --break-system-packages -r requirements.txt
+          sudo apt-get update && sudo apt-get install -y python3-pip
+          sudo pip3 install -r requirements.txt
+          sudo apt-get update && sudo apt-get install -y wget
 
+      # Run the install MediaMTX script
       - name: Install MediaMTX
         run: |
           chmod +x scripts/install_mediamtx.sh
           scripts/install_mediamtx.sh
 
+      # Build the ROS workspace
       - name: Build workspace
         run: |
           chmod +x scripts/build.sh
           scripts/build.sh
 
-      - name: Start and check ROS 2 nodes
+      # Run the build script
+     - name: Start and check ROS 2 nodes
         run: |
           set -e
           source /opt/ros/jazzy/setup.bash
@@ -62,7 +76,7 @@ jobs: # general build and node verification test
 
           echo "✅ All nodes successfully launched."
           kill $RUN_PID || true
-      
+ 
       - name: Success
-        run: echo "✅ Success!"
+        run: echo "Success!"
 

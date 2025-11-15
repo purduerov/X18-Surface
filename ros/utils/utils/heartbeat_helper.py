@@ -14,7 +14,6 @@ class HeartbeatHelper:
         """Publish a heartbeat message on the topic"""
         # self.node.get_logger().info("Publishing heartbeat from {}".format(self.node.get_name()))
         msg = Header()
-        print(msg);
         msg.stamp = self.node.get_clock().now().to_msg()
         msg.frame_id = self.node.get_name()
         self.publisher.publish(msg)
