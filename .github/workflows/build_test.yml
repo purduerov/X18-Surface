@@ -84,7 +84,9 @@ jobs:
           NODE_LIST=$(ros2 node list || true)
           echo "$NODE_LIST"
 
-          EXPECTED_NODES="/heartbeat_monitor.py"
+          EXPECTED_NODES="/rov/frontend /rov/heartbeat_monitor /rov/ui_subscriber"
+
+
 
           for NODE in $EXPECTED_NODES; do
             if [[ ! "$NODE_LIST" =~ "$NODE" ]]; then
