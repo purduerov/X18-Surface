@@ -11,42 +11,42 @@ on:
       - master
   workflow_dispatch:
 
-jobs:
-  build:
-    runs-on: ubuntu-22.04
+    jobs:
+      build:
+        runs-on: ubuntu-22.04
 
     steps:
 
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Set up ROS 2 (Jazzy)
+        # Set up ROS 2 (Jazzy)
       - name: Set up ROS 2
         uses: ros-tooling/setup-ros@v0.7
         with:
           required-ros-distributions: humble
 
-      # Install dependencies from requirements.txt
+          # Install dependencies from requirements.txt
       - name: Install dependencies
         run: |
           sudo apt-get update && sudo apt-get install -y python3-pip
           sudo pip3 install -r requirements.txt
           sudo apt-get update && sudo apt-get install -y wget
 
-      # Run the install MediaMTX script
+          # Run the install MediaMTX script
       - name: Install MediaMTX
         run: |
           chmod +x scripts/install_mediamtx.sh
           scripts/install_mediamtx.sh
 
-      # Build the ROS workspace
+          # Build the ROS workspace
       - name: Build workspace
         run: |
           chmod +x scripts/build.sh
           scripts/build.sh
 
-      # Run the build script
-     - name: Start and check ROS 2 nodes
+          # Run the build script
+      - name: Start and check ROS 2 nodes
         run: |
           set -e
           source /opt/ros/jazzy/setup.bash
@@ -66,16 +66,16 @@ jobs:
           EXPECTED_NODES="/heartbeat_monitor.py"
 
           for NODE in $EXPECTED_NODES; do
-            if [[ ! "$NODE_LIST" =~ "$NODE" ]]; then
-              echo "❌ ERROR: $NODE node not found"
-              kill $RUN_PID || true
-              exit 1
-            fi
-          done
+          if [[ ! "$NODE_LIST" =~ "$NODE" ]]; then
+        echo "❌ ERROR: $NODE node not found"
+        kill $RUN_PID || true
+        exit 1
+        fi
+        done
 
-          echo "✅ All nodes successfully launched."
-          kill $RUN_PID || true
- 
+        echo "✅ All nodes successfully launched."
+        kill $RUN_PID || true
+
       - name: Success
         run: echo "Success!"
 
