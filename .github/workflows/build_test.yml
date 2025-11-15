@@ -20,20 +20,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Set up ROS 2 (Jazzy)
-      - name: Set up ROS 2
-        uses: ros-tooling/setup-ros@v0.7
-        with:
-          required-ros-distributions: jazzy
-
-      # Install dependencies from requirements.txt
-      - name: Install dependencies
-        run: |
-          sudo apt-get update && sudo apt-get install -y python3-pip
-          sudo pip3 install -r requirements.txt
-          sudo apt-get update && sudo apt-get install -y wget
-
-
       - name: Install core system dependencies (Dockerfile equivalent)
         run: |
           sudo apt-get update && sudo apt-get install -y \
@@ -54,7 +40,7 @@ jobs:
         run: |
           pip3 install --no-cache-dir -r requirements.txt
 
-      - name: Set up ROS Jazzy (matches base image)
+      - name: Set up ROS Jazzy
         uses: ros-tooling/setup-ros@v0.7
         with:
           required-ros-distributions: jazzy
