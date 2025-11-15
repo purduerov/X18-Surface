@@ -33,6 +33,41 @@ jobs:
           sudo pip3 install -r requirements.txt
           sudo apt-get update && sudo apt-get install -y wget
 
+
+      - name: Install core system dependencies (Dockerfile equivalent)
+        run: |
+          sudo apt-get update && sudo apt-get install -y \
+            python3-pip \
+            python3-venv \
+            python3-dev \
+            wget \
+            build-essential
+
+      - name: Allow pip to break system packages (Dockerfile ENV)
+        run: echo "PIP_BREAK_SYSTEM_PACKAGES=1" >> $GITHUB_ENV
+
+      - name: Install compatible setuptools (matches Dockerfile)
+        run: |
+          pip3 install --upgrade "setuptools>=68.2.0,<70.0.0"
+
+      - name: Install Python dependencies (Dockerfile COPY + pip install)
+        run: |
+          pip3 install --no-cache-dir -r requirements.txt
+
+      - name: Set up ROS Jazzy (matches base image)
+        uses: ros-tooling/setup-ros@v0.7
+        with:
+          required-ros-distributions: jazzy
+
+      - name: Add ROS setup to bashrc (Dockerfile RUN echo)
+        run: |
+          echo 'source /opt/ros/jazzy/setup.bash' >> ~/.bashrc
+
+      - name: Export ROS_DOMAIN_ID (devcontainer.json env)
+        run: echo "ROS_DOMAIN_ID=69" >> $GITHUB_ENV
+
+
+
       # Run the install MediaMTX script
       - name: Install MediaMTX
         run: |
