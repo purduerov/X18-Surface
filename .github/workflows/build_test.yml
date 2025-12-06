@@ -26,7 +26,9 @@ jobs:
             python3-venv \
             python3-dev \
             wget \
-            build-essential
+            build-essential \
+            ros-jazzy-ament-cmake-pytest
+            
       - name: Allow pip to break system packages (Dockerfile ENV)
         run: echo "PIP_BREAK_SYSTEM_PACKAGES=1" >> $GITHUB_ENV
 

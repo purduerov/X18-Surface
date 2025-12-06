@@ -45,6 +45,7 @@ source /opt/ros/jazzy/setup.bash
 
 
 
-colcon build --cmake-args -DBUILD_TESTING=OFF
+colcon build 
+#--cmake-args -DBUILD_TESTING=OFF
 . install/setup.bash
 export ROS_DOMAIN_ID=69
