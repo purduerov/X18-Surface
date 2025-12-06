@@ -5,15 +5,10 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-# find dependencies
+# Dependencies
 find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_python REQUIRED)
 find_package(rclpy REQUIRED)
-find_package(ament_cmake_pytest REQUIRED)
-
-# uncomment the following section in order to fill in
-# further dependencies manually.
-# find_package(<dependency> REQUIRED)
 
 ament_python_install_package(${PROJECT_NAME})
 
@@ -21,6 +16,11 @@ install(PROGRAMS
   src/heartbeat_monitor.py
   DESTINATION lib/${PROJECT_NAME}
 )
+
+# -----------------------------
+# Tests
+# -----------------------------
+
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -34,13 +34,21 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
+
 if(BUILD_TESTING)
   find_package(ament_cmake_pytest REQUIRED)
+
   ament_add_pytest_tests(
-    heartbeat_monitor_tests
-    tests
+    TESTNAME heartbeat_monitor_tests
+    TEST_PATH test
     TIMEOUT 60
   )
+
+  find_package(ament_lint_auto REQUIRED)
+  set(ament_cmake_copyright_FOUND TRUE)
+  set(ament_cmake_cpplint_FOUND TRUE)
+  ament_lint_auto_find_test_dependencies()
 endif()
+
 ament_package()
 
