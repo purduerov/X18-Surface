@@ -13,7 +13,7 @@
 
 
   <depend>rclpy</depend>
-  <depend>ament_cmake_pytest</depend>
+  <build_depend>ament_cmake_pytest</build_depend>
 
   
   <exec_depend>builtin_interfaces</exec_depend>
