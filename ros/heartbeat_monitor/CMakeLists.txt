@@ -42,8 +42,8 @@ if(BUILD_TESTING)
   find_package(ament_cmake_pytest REQUIRED)
 
   ament_add_pytest_tests(
-    TESTNAME heartbeat_monitor_tests
-    TEST_PATH test
+    heartbeat_monitor_tests
+    test
     TIMEOUT 60
   )
 
@@ -52,6 +52,7 @@ if(BUILD_TESTING)
   set(ament_cmake_cpplint_FOUND TRUE)
   ament_lint_auto_find_test_dependencies()
 endif()
+
 
 ament_package()
 
