@@ -1,0 +1,446 @@
+diff --git a/.github/workflows/build_test.yml b/.github/workflows/build_test.yml
+index 8ba830b..af8600a 100644
+--- a/.github/workflows/build_test.yml
++++ b/.github/workflows/build_test.yml
+@@ -1,5 +1,4 @@
+-
+-name: X17-Surface Build Test
++name: X18-Surface Build Test
+ 
+ # Controls when the action will run.
+ # Workflow runs when manually triggered using the UI, or when a push or pull request is made to the main branch
+@@ -28,18 +27,15 @@ jobs:
+             python3-dev \
+             wget \
+             build-essential
+-
+       - name: Allow pip to break system packages (Dockerfile ENV)
+         run: echo "PIP_BREAK_SYSTEM_PACKAGES=1" >> $GITHUB_ENV
+ 
+       - name: Install compatible setuptools (matches Dockerfile)
+         run: |
+           pip3 install --upgrade "setuptools>=68.2.0,<70.0.0"
+-
+       - name: Install Python dependencies (Dockerfile COPY + pip install)
+         run: |
+           pip3 install --no-cache-dir -r requirements.txt
+-
+       - name: Set up ROS Jazzy
+         uses: ros-tooling/setup-ros@v0.7
+         with:
+@@ -48,7 +44,6 @@ jobs:
+       - name: Add ROS setup to bashrc (Dockerfile RUN echo)
+         run: |
+           echo 'source /opt/ros/jazzy/setup.bash' >> ~/.bashrc
+-
+       - name: Export ROS_DOMAIN_ID (devcontainer.json env)
+         run: echo "ROS_DOMAIN_ID=69" >> $GITHUB_ENV
+ 
+@@ -59,35 +54,26 @@ jobs:
+         run: |
+           chmod +x scripts/install_mediamtx.sh
+           scripts/install_mediamtx.sh
+-
+       # Build the ROS workspace
+       - name: Build workspace
+         run: |
+           chmod +x scripts/build.sh
+           scripts/build.sh
+-
+       # Run the build script and verify ROS 2 nodes
+       - name: Start and check ROS 2 nodes
+         run: |
+           set -e
+           source /opt/ros/jazzy/setup.bash
+-
+           echo "Starting ROS 2 nodes..."
+           chmod +x scripts/run.sh
+           ./scripts/run.sh &
+           RUN_PID=$!
+-
+           # Wait for nodes to start
+           sleep 15
+-
+           echo "Checking running nodes..."
+           NODE_LIST=$(ros2 node list || true)
+           echo "$NODE_LIST"
+-
+           EXPECTED_NODES="/rov/frontend /rov/heartbeat_monitor /rov/ui_subscriber"
+-
+-
+-
+           for NODE in $EXPECTED_NODES; do
+             if [[ ! "$NODE_LIST" =~ "$NODE" ]]; then
+               echo "❌ ERROR: $NODE node not found"
+@@ -95,10 +81,7 @@ jobs:
+               exit 1
+             fi
+           done
+-
+           echo "✅ All nodes successfully launched."
+           kill $RUN_PID || true
+-
+       - name: Success
+         run: echo "Success!"
+-
+diff --git a/.github/workflows/build_test_old.txt b/.github/workflows/build_test_old.txt
+deleted file mode 100644
+index 08b218a..0000000
+--- a/.github/workflows/build_test_old.txt
++++ /dev/null
+@@ -1,93 +0,0 @@
+-
+-
+-
+-
+-
+-name: X17-Surface Build Test
+-
+-on:
+-  push:
+-    branches:
+-      - master
+-  pull_request:
+-    branches:
+-      - master
+-  workflow_dispatch:
+-
+-jobs:  # ✅ jobs must be at the top level (no indentation under "on:")
+-  build:
+-    runs-on: ubuntu-24.04
+-
+-    steps:
+-      - name: Checkout code
+-        uses: actions/checkout@v4
+-
+-      # Set up ROS 2 (Jazzy)
+-      - name: Set up ROS 2
+-        uses: ros-tooling/setup-ros@v0.7
+-        with:
+-          required-ros-distributions: jazzy
+-
+-      - name: Setup ROS Jazzy
+-        run: |
+-          sudo apt update
+-          sudo apt install -y software-properties-common
+-          sudo add-apt-repository universe
+-          sudo apt update
+-          sudo apt install -y curl gnupg2 lsb-release
+-          sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
+-          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
+-          sudo apt update
+-          sudo apt install -y ros-jazzy-desktop
+-          echo "source /opt/ros/jazzy/setup.bash" >> ~/.bashrc
+-          source /opt/ros/jazzy/setup.bash
+-
+-      - name: Install dependencies
+-        run: |
+-          sudo apt-get update && sudo apt-get install -y python3-pip wget
+-          python3 -m pip install --upgrade pip setuptools
+-          pip install --break-system-packages -r requirements.txt
+-
+-      - name: Install MediaMTX
+-        run: |
+-          chmod +x scripts/install_mediamtx.sh
+-          scripts/install_mediamtx.sh
+-
+-      - name: Build workspace
+-        run: |
+-          chmod +x scripts/build.sh
+-          scripts/build.sh
+-
+-      - name: Start and check ROS 2 nodes
+-        run: |
+-          set -e
+-          source /opt/ros/jazzy/setup.bash
+-
+-          echo "Starting ROS 2 nodes..."
+-          chmod +x scripts/run.sh
+-          ./scripts/run.sh &
+-          RUN_PID=$!
+-
+-          # Wait for nodes to start
+-          sleep 15
+-
+-          echo "Checking running nodes..."
+-          NODE_LIST=$(ros2 node list || true)
+-          echo "$NODE_LIST"
+-
+-          EXPECTED_NODES="/heartbeat_monitor.py"
+-
+-          for NODE in $EXPECTED_NODES; do
+-            if [[ ! "$NODE_LIST" =~ "$NODE" ]]; then
+-              echo "❌ ERROR: $NODE node not found"
+-              kill $RUN_PID || true
+-              exit 1
+-            fi
+-          done
+-
+-          echo "✅ All nodes successfully launched."
+-          kill $RUN_PID || true
+-      
+-      - name: Success
+-        run: echo "✅ Success!"
+-
+diff --git a/.github/workflows/build_test_working.txt b/.github/workflows/build_test_working.txt
+new file mode 100644
+index 0000000..799073c
+--- /dev/null
++++ b/.github/workflows/build_test_working.txt
+@@ -0,0 +1,103 @@
++name: X18-Surface Build Test (working version)
++
++# Controls when the action will run.
++# Workflow runs when manually triggered using the UI, or when a push or pull request is made to the main branch
++on:
++  push:
++    branches:
++      - ci-cd
++  pull_request:
++    branches:
++      - master
++  workflow_dispatch:
++
++jobs:
++  build:
++    runs-on: ubuntu-24.04
++
++    steps:
++      - name: Checkout code
++        uses: actions/checkout@v4
++
++      - name: Install core system dependencies (Dockerfile equivalent)
++        run: |
++          sudo apt-get update && sudo apt-get install -y \
++            python3-pip \
++            python3-venv \
++            python3-dev \
++            wget \
++            build-essential
++
++      - name: Allow pip to break system packages (Dockerfile ENV)
++        run: echo "PIP_BREAK_SYSTEM_PACKAGES=1" >> $GITHUB_ENV
++
++      - name: Install compatible setuptools (matches Dockerfile)
++        run: |
++          pip3 install --upgrade "setuptools>=68.2.0,<70.0.0"
++
++      - name: Install Python dependencies (Dockerfile COPY + pip install)
++        run: |
++          pip3 install --no-cache-dir -r requirements.txt
++
++      - name: Set up ROS Jazzy
++        uses: ros-tooling/setup-ros@v0.7
++        with:
++          required-ros-distributions: jazzy
++
++      - name: Add ROS setup to bashrc (Dockerfile RUN echo)
++        run: |
++          echo 'source /opt/ros/jazzy/setup.bash' >> ~/.bashrc
++
++      - name: Export ROS_DOMAIN_ID (devcontainer.json env)
++        run: echo "ROS_DOMAIN_ID=69" >> $GITHUB_ENV
++
++
++
++      # Run the install MediaMTX script
++      - name: Install MediaMTX
++        run: |
++          chmod +x scripts/install_mediamtx.sh
++          scripts/install_mediamtx.sh
++
++      # Build the ROS workspace
++      - name: Build workspace
++        run: |
++          chmod +x scripts/build.sh
++          scripts/build.sh
++
++      # Run the build script and verify ROS 2 nodes
++      - name: Start and check ROS 2 nodes
++        run: |
++          set -e
++          source /opt/ros/jazzy/setup.bash
++
++          echo "Starting ROS 2 nodes..."
++          chmod +x scripts/run.sh
++          ./scripts/run.sh &
++          RUN_PID=$!
++
++          # Wait for nodes to start
++          sleep 15
++
++          echo "Checking running nodes..."
++          NODE_LIST=$(ros2 node list || true)
++          echo "$NODE_LIST"
++
++          EXPECTED_NODES="/rov/frontend /rov/heartbeat_monitor /rov/ui_subscriber"
++
++
++
++          for NODE in $EXPECTED_NODES; do
++            if [[ ! "$NODE_LIST" =~ "$NODE" ]]; then
++              echo "❌ ERROR: $NODE node not found"
++              kill $RUN_PID || true
++              exit 1
++            fi
++          done
++
++          echo "✅ All nodes successfully launched."
++          kill $RUN_PID || true
++
++      - name: Success
++        run: echo "Success!"
++
+diff --git a/.github/workflows/unit_test.yml b/.github/workflows/unit_test.yml
+new file mode 100644
+index 0000000..0731dfe
+--- /dev/null
++++ b/.github/workflows/unit_test.yml
+@@ -0,0 +1,79 @@
++name: X18-Surface Unit Test
++
++# Controls when the action will run.
++# Workflow runs when manually triggered using the UI, or when a push or pull request is made to the main branch
++on:
++  push:
++    branches:
++      - ci-cd
++  pull_request:
++    branches:
++      - master
++  workflow_dispatch:
++
++jobs:
++  build:
++    runs-on: ubuntu-24.04
++
++    steps:
++      - name: Checkout code
++        uses: actions/checkout@v4
++
++      - name: Install core system dependencies (Dockerfile equivalent)
++        run: |
++          sudo apt-get update && sudo apt-get install -y \
++            python3-pip \
++            python3-venv \
++            python3-dev \
++            wget \
++            build-essential
++
++      - name: Allow pip to break system packages (Dockerfile ENV)
++        run: echo "PIP_BREAK_SYSTEM_PACKAGES=1" >> $GITHUB_ENV
++
++      - name: Install compatible setuptools (matches Dockerfile)
++        run: |
++          pip3 install --upgrade "setuptools>=68.2.0,<70.0.0"
++
++      - name: Install Python dependencies (Dockerfile COPY + pip install)
++        run: |
++          pip3 install --no-cache-dir -r requirements.txt
++
++      - name: Set up ROS Jazzy
++        uses: ros-tooling/setup-ros@v0.7
++        with:
++          required-ros-distributions: jazzy
++
++      - name: Add ROS setup to bashrc (Dockerfile RUN echo)
++        run: |
++          echo 'source /opt/ros/jazzy/setup.bash' >> ~/.bashrc
++
++      - name: Export ROS_DOMAIN_ID (devcontainer.json env)
++        run: echo "ROS_DOMAIN_ID=69" >> $GITHUB_ENV
++
++
++
++      # Run the install MediaMTX script
++      - name: Install MediaMTX
++        run: |
++          chmod +x scripts/install_mediamtx.sh
++          scripts/install_mediamtx.sh
++
++      # Build the ROS workspace
++      - name: Build workspace
++        run: |
++          echo "no workspace build for now"
++          #chmod +x scripts/build.sh
++          scripts/build.sh
++
++      # Run the build script and verify ROS 2 nodes
++      - name: build unit tests
++        run: |
++          colcon test --packages-select heartbeat_monitor
++      - name: run unit tests verbose
++        run: |
++          colcon test-result --verbose
++          
++      - name: Success
++        run: echo "Success!"
++
+diff --git a/ros/heartbeat_monitor/CMakeLists.txt b/ros/heartbeat_monitor/CMakeLists.txt
+index 5c8d894..8f400dc 100644
+--- a/ros/heartbeat_monitor/CMakeLists.txt
++++ b/ros/heartbeat_monitor/CMakeLists.txt
+@@ -33,4 +33,13 @@ if(BUILD_TESTING)
+   ament_lint_auto_find_test_dependencies()
+ endif()
+ 
++if(BUILD_TESTING)
++  find_package(ament_cmake_pytest REQUIRED)
++  ament_add_pytest_tests(
++    heartbeat_monitor_tests
++    tests
++    TIMEOUT 60
++  )
++endif()
+ ament_package()
++
+diff --git a/ros/heartbeat_monitor/package.xml b/ros/heartbeat_monitor/package.xml
+index 0886149..2e7423b 100644
+--- a/ros/heartbeat_monitor/package.xml
++++ b/ros/heartbeat_monitor/package.xml
+@@ -21,6 +21,8 @@
+   <test_depend>ament_lint_auto</test_depend>
+   <test_depend>ament_lint_common</test_depend>
+ 
++  <test_depend>ament_cmake_pytest</test_depend>
++  <test_depend>pytest</test_depend>
+   <export>
+     <build_type>ament_cmake</build_type>
+   </export>
+diff --git a/ros/heartbeat_monitor/tests/heartbeat_monitor_tests.py b/ros/heartbeat_monitor/tests/heartbeat_monitor_tests.py
+new file mode 100644
+index 0000000..61b50d8
+--- /dev/null
++++ b/ros/heartbeat_monitor/tests/heartbeat_monitor_tests.py
+@@ -0,0 +1,31 @@
++import pytest
++from heartbeat_monitor.heartbeat_monitor import HeartbeatMonitor
++
++# Fake ROS2 clock
++class FakeTime:
++    def __init__(self, nanoseconds):
++        self.nanoseconds = nanoseconds
++
++class FakeClock:
++    def __init__(self, value):
++        self._value = value
++    def now(self):
++        return FakeTime(self._value)
++
++# Fake ROS Header msg
++class FakeHeader:
++    def __init__(self, frame_id):
++        self.frame_id = frame_id
++
++def test_heartbeat_updates_timestamp(monkeypatch):
++    node = HeartbeatMonitor()
++
++    # Patch the clock so time is predictable
++    fake_clock = FakeClock(123 * 1e9)
++    monkeypatch.setattr(node, "get_clock", lambda: fake_clock)
++
++    # Send fake message
++    msg = FakeHeader("controller")
++    node.heartbeat_callback(msg)
++
++    assert node.expected_surface_nodes["controller"] == 123 * 1e9

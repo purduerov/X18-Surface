@@ -62,8 +62,7 @@ jobs:
       # Build the ROS workspace
       - name: Build workspace
         run: |
-          echo "no workspace build for now"
-          #chmod +x scripts/build.sh
+          chmod +x scripts/build.sh
           scripts/build.sh
 
       # Run the build script and verify ROS 2 nodes
