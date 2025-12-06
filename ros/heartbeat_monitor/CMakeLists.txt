@@ -41,6 +41,7 @@ endif()
 if(BUILD_TESTING)
   find_package(ament_cmake_pytest REQUIRED)
 
+  find_package(ament_cmake_pytest REQUIRED)
   ament_add_pytest_tests(
     heartbeat_monitor_tests
     test
