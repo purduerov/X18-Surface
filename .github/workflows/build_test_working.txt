@@ -1,4 +1,4 @@
-name: X18-Surface Build Test
+name: X18-Surface Build Test (working version)
 
 # Controls when the action will run.
 # Workflow runs when manually triggered using the UI, or when a push or pull request is made to the main branch

@@ -1,4 +1,4 @@
-name: X18-Surface Unit Tests
+name: X18-Surface Build Test
 
 # Controls when the action will run.
 # Workflow runs when manually triggered using the UI, or when a push or pull request is made to the main branch
@@ -28,10 +28,15 @@ jobs:
             wget \
             build-essential
 
-      - name: Install dependencies mirrorring dockerfile
-        run: 
-          echo "PIP_BREAK_SYSTEM_PACKAGES=1" >> $GITHUB_ENV
+      - name: Allow pip to break system packages (Dockerfile ENV)
+        run: echo "PIP_BREAK_SYSTEM_PACKAGES=1" >> $GITHUB_ENV
+
+      - name: Install compatible setuptools (matches Dockerfile)
+        run: |
           pip3 install --upgrade "setuptools>=68.2.0,<70.0.0"
+
+      - name: Install Python dependencies (Dockerfile COPY + pip install)
+        run: |
           pip3 install --no-cache-dir -r requirements.txt
 
       - name: Set up ROS Jazzy
@@ -39,10 +44,12 @@ jobs:
         with:
           required-ros-distributions: jazzy
 
-      - name: ROS finalization
+      - name: Add ROS setup to bashrc (Dockerfile RUN echo)
         run: |
           echo 'source /opt/ros/jazzy/setup.bash' >> ~/.bashrc
-          echo "ROS_DOMAIN_ID=69" >> $GITHUB_ENV
+
+      - name: Export ROS_DOMAIN_ID (devcontainer.json env)
+        run: echo "ROS_DOMAIN_ID=69" >> $GITHUB_ENV
 
 
 
