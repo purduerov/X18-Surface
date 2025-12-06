@@ -27,18 +27,15 @@ jobs:
             python3-dev \
             wget \
             build-essential
-
       - name: Allow pip to break system packages (Dockerfile ENV)
         run: echo "PIP_BREAK_SYSTEM_PACKAGES=1" >> $GITHUB_ENV
 
       - name: Install compatible setuptools (matches Dockerfile)
         run: |
           pip3 install --upgrade "setuptools>=68.2.0,<70.0.0"
-
       - name: Install Python dependencies (Dockerfile COPY + pip install)
         run: |
           pip3 install --no-cache-dir -r requirements.txt
-
       - name: Set up ROS Jazzy
         uses: ros-tooling/setup-ros@v0.7
         with:
@@ -47,7 +44,6 @@ jobs:
       - name: Add ROS setup to bashrc (Dockerfile RUN echo)
         run: |
           echo 'source /opt/ros/jazzy/setup.bash' >> ~/.bashrc
-
       - name: Export ROS_DOMAIN_ID (devcontainer.json env)
         run: echo "ROS_DOMAIN_ID=69" >> $GITHUB_ENV
 
@@ -58,35 +54,26 @@ jobs:
         run: |
           chmod +x scripts/install_mediamtx.sh
           scripts/install_mediamtx.sh
-
       # Build the ROS workspace
       - name: Build workspace
         run: |
           chmod +x scripts/build.sh
           scripts/build.sh
-
       # Run the build script and verify ROS 2 nodes
       - name: Start and check ROS 2 nodes
         run: |
           set -e
           source /opt/ros/jazzy/setup.bash
-
           echo "Starting ROS 2 nodes..."
           chmod +x scripts/run.sh
           ./scripts/run.sh &
           RUN_PID=$!
-
           # Wait for nodes to start
           sleep 15
-
           echo "Checking running nodes..."
           NODE_LIST=$(ros2 node list || true)
           echo "$NODE_LIST"
-
           EXPECTED_NODES="/rov/frontend /rov/heartbeat_monitor /rov/ui_subscriber"
-
-
-
           for NODE in $EXPECTED_NODES; do
             if [[ ! "$NODE_LIST" =~ "$NODE" ]]; then
               echo "❌ ERROR: $NODE node not found"
@@ -94,10 +81,7 @@ jobs:
               exit 1
             fi
           done
-
           echo "✅ All nodes successfully launched."
           kill $RUN_PID || true
-
       - name: Success
         run: echo "Success!"
-
