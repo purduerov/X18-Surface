@@ -44,6 +44,8 @@ jobs:
 
       - name: Add ROS setup to bashrc (Dockerfile RUN echo)
         run: |
+
+          sudo apt install ros-jazzy-ament-cmake-pytest
           echo 'source /opt/ros/jazzy/setup.bash' >> ~/.bashrc
       - name: Export ROS_DOMAIN_ID (devcontainer.json env)
         run: echo "ROS_DOMAIN_ID=69" >> $GITHUB_ENV
