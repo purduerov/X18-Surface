@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.10)
 project(heartbeat_monitor)
 
+option(BUILD_TESTING "Enable testing" ON)
+message(STATUS ">>> BUILD_TESTING = ${BUILD_TESTING}")
+
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
