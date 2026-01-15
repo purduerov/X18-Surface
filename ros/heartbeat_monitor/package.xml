@@ -13,7 +13,7 @@
 
 
   <depend>rclpy</depend>
-  <buildtool_depend>ament_cmake_gtest</buildtool_depend>
+  <depend>ament_cmake_gtest<\depend>
 
   
   <exec_depend>builtin_interfaces</exec_depend>
@@ -24,8 +24,8 @@
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
 
-  <test_depend>ament_cmake_pytest</test_depend>
-  <test_depend>pytest</test_depend>
+  <depend>ament_cmake_pytest</depend>
+  <depend>pytest</depend>
   <export>
     <build_type>ament_cmake</build_type>
   </export>
