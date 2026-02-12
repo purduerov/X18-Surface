@@ -26,7 +26,7 @@ def generate_launch_description():
 
                     Node(
                         package="LaptopPhotoStream",
-                        executable="LapPhoto.py",
+                        executable="LapPhotoSend",
                         namespace="rov",
                     ),
                     Node(
