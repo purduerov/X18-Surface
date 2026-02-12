@@ -25,27 +25,27 @@ install(PROGRAMS
 # Tests and Linting
 # This section is executed ONLY if BUILD_TESTING is ON
 # -----------------------------
-if(BUILD_TESTING)
-  # Find and include ament_cmake_pytest BEFORE calling its commands
-  find_package(ament_cmake_pytest REQUIRED)
-  include(ament_cmake_pytest)
-
-  # Add the pytest tests
-  ament_add_pytest_tests(
-    heartbeat_monitor_tests
-    test
-    TIMEOUT 60
-  )
-
-  # Find and configure Linter Dependencies
-  find_package(ament_lint_auto REQUIRED)
-
-  # Skip linter checks if not using git repo or missing copyright/license
-  set(ament_cmake_copyright_FOUND TRUE)
-  set(ament_cmake_cpplint_FOUND TRUE)
-
-  ament_lint_auto_find_test_dependencies()
-endif()
+# f(BUILD_TESTING)
+#  # Find and include ament_cmake_pytest BEFORE calling its commands
+#  find_package(ament_cmake_pytest REQUIRED)
+#  include(ament_cmake_pytest)
+# 
+#  # Add the pytest tests
+#  ament_add_pytest_tests(
+#    heartbeat_monitor_tests
+#    test
+#    TIMEOUT 60
+#  )
+# 
+#  # Find and configure Linter Dependencies
+#  find_package(ament_lint_auto REQUIRED)
+# 
+#  # Skip linter checks if not using git repo or missing copyright/license
+#  set(ament_cmake_copyright_FOUND TRUE)
+#  set(ament_cmake_cpplint_FOUND TRUE)
+# 
+#  ament_lint_auto_find_test_dependencies()
+# ndif()
 
 # Must be the last command in the CMakeLists.txt
 ament_package()

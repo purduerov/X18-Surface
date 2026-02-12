@@ -23,6 +23,12 @@ def generate_launch_description():
             TimerAction(
                 period=5.0,  # Delay for n seconds
                 actions=[
+
+                    Node(
+                        package="LaptopPhotoStream",
+                        executable="LapPhoto.py",
+                        namespace="rov",
+                    ),
                     Node(
                         package="heartbeat_monitor",
                         executable="heartbeat_monitor.py",
