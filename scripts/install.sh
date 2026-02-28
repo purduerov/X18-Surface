@@ -16,8 +16,8 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 # Make sure the current repository is X17-Surface
-if [ "$(basename "$PWD")" != "X17-Surface" ]; then
-    echo "This script must be run from the X17-Surface repository."
+if [ "$(basename "$PWD")" != "X18-Surface" ]; then
+    echo "This script must be run from the X18-Surface repository."
     exit 1
 fi
 
