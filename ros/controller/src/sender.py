@@ -44,6 +44,10 @@ class Controller(Node):
         self.joystick_2_axis_state = joystick_axis_state.copy()
         self.joystick_1_button_state = joystick_button_state.copy()
         self.joystick_2_button_state = joystick_button_state.copy()
+        self.joystick_1_hat = (0, 0)
+        self.joystick_2_hat = (0, 0)
+
+        self.get_logger().info("ROV Controller Node Initialized")
 
         # Pilot variables
         self.reverse = 1
@@ -53,9 +57,6 @@ class Controller(Node):
         self.depth_lock = False
         self.pitch_lock = False
         self.tools = [127, 127, 127, 127]
-
-        self.joystick_1_hat = (0, 0)
-        self.joystick_2_hat = (0, 0)
 
         try:
             self.init_pygame()
@@ -344,16 +345,19 @@ class Controller(Node):
         tm = ToolsCommandMsg()
 
         # Vertical (hat up/down)
-        vertical = self.hat_to_pwm(self.joystick_1_hat[1])  # up = 1, down = -1
-        vertical = self.hat_to_pwm(self.joystick_2_hat[1])  # up = 1, down = -1
+        v1 = self.hat_to_pwm(self.joystick_1_hat[1]) if self.joystick_1_hat else 127
+        v2 = self.hat_to_pwm(self.joystick_2_hat[1]) if self.joystick_2_hat else 127
+        vertical = v2 if v2 != 127 else v1  # use joystick 2 if active, else joystick 1
 
         # Horizontal (hat left/right)
-        horizontal = self.hat_to_pwm(self.joystick_1_hat[0])  # right = 1, left = -1
-        horizontal = self.hat_to_pwm(self.joystick_2_hat[0])  # right = 1, left = -1
+        h1 = self.hat_to_pwm(self.joystick_1_hat[0]) if self.joystick_1_hat else 127
+        h2 = self.hat_to_pwm(self.joystick_2_hat[0]) if self.joystick_2_hat else 127
+        horizontal = h2 if h2 != 127 else h1  # same logic
 
         # Claw (button 0)
-        claw = 255 if self.joystick_1_button_state.get(0, 0) else 127
-        claw = 255 if self.joystick_2_button_state.get(0, 0) else 127
+        c1 = 255 if self.joystick_1_button_state.get(0, 0) else 127
+        c2 = 255 if self.joystick_2_button_state.get(0, 0) else 127
+        claw = max(c1, c2)  # either joystick pressed
 
         tm.tools = [vertical, horizontal, claw, 127]
 
@@ -451,6 +455,8 @@ def main():
     try:
         #rclpy.spin(controller)
         while rclpy.ok():
+            tm = controller.getTools()  
+            controller.pub_tools.publish(tm)
             rclpy.spin_once(controller, timeout_sec=0.01)
             controller.update()
     except KeyboardInterrupt:
