@@ -97,7 +97,7 @@ class Go2rtcNode(Node):
 
         self.shutting_down = True
 
-        # Kill the MediaMTX server process if it exists
+        # Kill the go2rtc server process if it exists
         if hasattr(self, "process"):
             self.process.terminate()
             self.process.wait()

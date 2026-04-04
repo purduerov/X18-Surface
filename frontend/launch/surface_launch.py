@@ -17,7 +17,7 @@ def generate_launch_description():
                 namespace="rov",
             ),
             Node(
-                package="mediamtx_node",
+                package="go2rtc_node",
                 executable="mediamtx_node.py",
                 namespace="rov",
             ),

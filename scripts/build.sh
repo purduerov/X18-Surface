@@ -1,14 +1,14 @@
 #!/bin/bash
 
-# Check if mediamtx executable exists in /ros/mediamtx
-if [ ! -f ./ros/mediamtx_node/src/mediamtx ]; then
-    echo "mediamtx executable not found in ./ros/mediamtx_node/src"
-    # Ask the user if they would like to run the install_mediamtx.sh script
-    read -p "Would you like to run the install_mediamtx.sh script? (y/n): " run_install_mediamtx
-    if [ "$run_install_mediamtx" == "y" ]; then
-        ./scripts/install_mediamtx.sh
+# Check if go2rtc executable exists in /ros/go2rtc
+if [ ! -f ./ros/go2rtc_node/src/go2rtc ]; then
+    echo "go2rtc executable not found in ./ros/go2rtc_node/src"
+    # Ask the user if they would like to run the install_go2rtc.sh script
+    read -p "Would you like to run the install_go2rtc.sh script? (y/n): " run_install_go2rtc
+    if [ "$run_install_go2rtc" == "y" ]; then
+        ./scripts/install_go2rtc.sh
     else
-        echo "Please run scripts/install_mediamtx.sh first"
+        echo "Please run scripts/install_go2rtc.sh first"
         exit 1
     fi
 fi
