@@ -18,7 +18,7 @@ def generate_launch_description():
             ),
             Node(
                 package="go2rtc_node",
-                executable="mediamtx_node.py",
+                executable="go2rtc_node.py",
                 namespace="rov",
             ),
             TimerAction(
