@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(mediamtx_node)
+project(go2rtc_node)
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
@@ -12,9 +12,9 @@ ament_python_install_package(${PROJECT_NAME})
 
 install(
   PROGRAMS
-    src/mediamtx_node.py
-    src/mediamtx
-    src/mediamtx.yml
+    src/go2rtc_node.py
+    src/go2rtc
+    src/go2rtc.yaml
   DESTINATION lib/${PROJECT_NAME}
 )
 

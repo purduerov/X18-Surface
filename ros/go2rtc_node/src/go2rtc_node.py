@@ -13,9 +13,9 @@ import signal
 
 
 # Create a publisher node that will publish a message counting up and down from 100 repeatedly
-class MediaMTXNode(Node):
+class Go2rtcNode(Node):
     def __init__(self):
-        super().__init__("mediamtx_node")
+        super().__init__("go2rtc_node")
 
         self.shutting_down = False
 
@@ -26,10 +26,10 @@ class MediaMTXNode(Node):
         self.publisher = self.create_publisher(String, "surface_ip", 10)
         self.timer = self.create_timer(1.0, self.publish_ip_address)
         self.ip_pub_count = 0
-        self.ip_pub_count_max = 10
+        self.ip_pub_count_max = 1000
 
-        # Start the MediaMTX server process and monitor the process and watch for certain events and messages
-        self.start_mediamtx_server()
+        # Start the go2rtc server process and monitor the process and watch for certain events and messages
+        self.start_go2rtc_server()
 
     def publish_ip_address(self):
         msg = String()
@@ -53,23 +53,23 @@ class MediaMTXNode(Node):
         except Exception as e:
             return f"Error getting local IP: {e}"
 
-    def start_mediamtx_server(self):
+    def start_go2rtc_server(self):
         def start_server():
-            # Start the MediaMTX server process
-            self.get_logger().info("Starting MediaMTX server")
+            # Start the go2rtc server process
+            self.get_logger().info("Starting go2rtc server")
             # Ensure the executable is present before executing
-            if os.path.exists("install/mediamtx_node/lib/mediamtx_node/mediamtx"):
-                self.get_logger().info("MediaMTX server executable found")
+            if os.path.exists("install/go2rtc_node/lib/go2rtc_node/go2rtc"):
+                self.get_logger().info("go2rtc server executable found")
             else:
-                self.get_logger().error("MediaMTX server executable not found")
+                self.get_logger().error("go2rtc server executable not found")
                 return
 
-            # Start the MediaMTX server process
-            self.get_logger().info("Starting MediaMTX server process")
+            # Start the go2rtc server process
+            self.get_logger().info("Starting go2rtc server process")
             self.process = subprocess.Popen(
                 [
-                    "install/mediamtx_node/lib/mediamtx_node/mediamtx",
-                    "install/mediamtx_node/lib/mediamtx_node/mediamtx.yml",
+                    "install/go2rtc_node/lib/go2rtc_node/go2rtc",
+                    "-c",  "install/go2rtc_node/lib/go2rtc_node/go2rtc.yaml",
                 ],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
@@ -83,7 +83,7 @@ class MediaMTXNode(Node):
                     for line in self.process.stderr:
                         self.get_logger().error(line.strip())
                     if self.process.poll() is not None:
-                        self.get_logger().info("MediaMTX server process has terminated")
+                        self.get_logger().info("go2rtc server process has terminated")
                         break
 
         # Start the server in a separate thread
@@ -97,7 +97,7 @@ class MediaMTXNode(Node):
 
         self.shutting_down = True
 
-        # Kill the MediaMTX server process if it exists
+        # Kill the go2rtc server process if it exists
         if hasattr(self, "process"):
             self.process.terminate()
             self.process.wait()
@@ -105,7 +105,7 @@ class MediaMTXNode(Node):
 
 def main():
     rclpy.init()
-    publisher_node = MediaMTXNode()
+    publisher_node = Go2rtcNode()
 
     # Set up signal handler for graceful shutdown
     def signal_handler(sig, frame):

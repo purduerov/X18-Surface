@@ -11,14 +11,14 @@ def generate_launch_description():
                 executable="app.py",
                 namespace="rov",
             ),
+            # Node(
+            #     package="controller",
+            #     executable="sender.py",
+            #     namespace="rov",
+            # ),
             Node(
-                package="controller",
-                executable="sender.py",
-                namespace="rov",
-            ),
-            Node(
-                package="mediamtx_node",
-                executable="mediamtx_node.py",
+                package="go2rtc_node",
+                executable="go2rtc_node.py",
                 namespace="rov",
             ),
             TimerAction(
