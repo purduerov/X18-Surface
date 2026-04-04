@@ -69,7 +69,7 @@ class Go2rtcNode(Node):
             self.process = subprocess.Popen(
                 [
                     "install/go2rtc_node/lib/go2rtc_node/go2rtc",
-                    "-c install/go2rtc_node/lib/go2rtc_node/go2rtc.yaml",
+                    "-c",  "install/go2rtc_node/lib/go2rtc_node/go2rtc.yaml",
                 ],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,

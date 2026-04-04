@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(mediamtx_node)
+project(go2rtc_node)
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
