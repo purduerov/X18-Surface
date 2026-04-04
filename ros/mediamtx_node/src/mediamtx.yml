@@ -10,6 +10,8 @@ paths:
 rtspAddress: ":8554"
 webrtc: yes
 
+rtspTransports: [tcp]
+
 # Disable unused protocols
 rtmp: no
 srt: no
