@@ -12,7 +12,7 @@ paths:
 rtspAddress: ":8554"
 webrtc: yes
 
-rtspTransport: [tcp]
+#rtspTransport: [tcp]
 
 # Disable unused protocols
 rtmp: no
