@@ -11,7 +11,7 @@ from pygame import event  # Add signal module import
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String, Bool, Empty
-from shared_msgs.msg import RovVelocityCommand, ToolsCommandMsg
+from shared_msgs.msg import RovVelocityCommand, ToolsMotorMsg
 from geometry_msgs.msg import Twist
 
 from config import *
@@ -22,7 +22,7 @@ from utils.heartbeat_helper import HeartbeatHelper
 class Controller(Node):
     def __init__(self):
         super().__init__("controller")
-        self.pub_tools = self.create_publisher(ToolsCommandMsg, "tools_control", 10) # enable tools publisher
+        self.pub_tools = self.create_publisher(ToolsMotorMsg, "tools_motor", 10) # enable tools publisher
 
         # Add a flag to track shutdown state
         self.shutting_down = False
@@ -56,7 +56,7 @@ class Controller(Node):
         self.is_pool_centric = False
         self.depth_lock = False
         self.pitch_lock = False
-        self.tools = [127, 127, 127, 127]
+        self.tools = [127, 127, 127, 127, 127, 127]
 
         try:
             self.init_pygame()
@@ -342,7 +342,7 @@ class Controller(Node):
 
     def getTools(self):
         """Returns a ToolsCommandMsg message based on the current hat/button state"""
-        tm = ToolsCommandMsg()
+        tm = ToolsMotorMsg()
 
         # Vertical (hat up/down)
         v1 = self.hat_to_pwm(self.joystick_1_hat[1]) if self.joystick_1_hat else 127
@@ -359,7 +359,7 @@ class Controller(Node):
         c2 = 255 if self.joystick_2_button_state.get(0, 0) else 127
         claw = max(c1, c2)  # either joystick pressed
 
-        tm.tools = [vertical, horizontal, claw, 127]
+        tm.tools = [vertical, horizontal, claw, 127, 127, 127]
 
         self.get_logger().info(f"[TOOLS] vertical={vertical} horizontal={horizontal} claw={claw}")
         return tm
@@ -455,8 +455,8 @@ def main():
     try:
         #rclpy.spin(controller)
         while rclpy.ok():
-            tm = controller.getTools()  
-            controller.pub_tools.publish(tm)
+            #tm = controller.getTools()  
+            #controller.pub_tools.publish(tm)
             rclpy.spin_once(controller, timeout_sec=0.01)
             controller.update()
     except KeyboardInterrupt:
