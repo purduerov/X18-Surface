@@ -11,7 +11,7 @@ from pygame import event  # Add signal module import
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String, Bool, Empty
-from shared_msgs.msg import RovVelocityCommand, ToolsMotorMsg
+from shared_msgs.msg import RovVelocityCommand, ToolsCommandMsg
 from geometry_msgs.msg import Twist
 
 from config import *
@@ -22,7 +22,7 @@ from utils.heartbeat_helper import HeartbeatHelper
 class Controller(Node):
     def __init__(self):
         super().__init__("controller")
-        self.pub_tools = self.create_publisher(ToolsMotorMsg, "tools_motor", 10) # enable tools publisher
+        self.pub_tools = self.create_publisher(ToolsCommandMsg, "tools_motor", 10) # enable tools publisher
 
         # Add a flag to track shutdown state
         self.shutting_down = False
@@ -236,6 +236,10 @@ class Controller(Node):
         if self.shutting_down:
             return
 
+        tm = self.getTools()
+        self.pub_tools.publish(tm)
+        self.get_logger().info(f"Published tools: {tm.tools}")
+
         # Get a message to publish for the rov_velocity topic
         self.pub.publish(self.getMessage())
         # Get a message to publish for the tools topic
@@ -342,7 +346,7 @@ class Controller(Node):
 
     def getTools(self):
         """Returns a ToolsCommandMsg message based on the current hat/button state"""
-        tm = ToolsMotorMsg()
+        tm = ToolsCommandMsg()
 
         # Vertical (hat up/down)
         v1 = self.hat_to_pwm(self.joystick_1_hat[1]) if self.joystick_1_hat else 127
@@ -455,8 +459,8 @@ def main():
     try:
         #rclpy.spin(controller)
         while rclpy.ok():
-            #tm = controller.getTools()  
-            #controller.pub_tools.publish(tm)
+            tm = controller.getTools()
+            controller.pub_tools.publish(tm)
             rclpy.spin_once(controller, timeout_sec=0.01)
             controller.update()
     except KeyboardInterrupt:
