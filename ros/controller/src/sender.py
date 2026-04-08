@@ -363,10 +363,26 @@ class Controller(Node):
         c2 = 255 if self.joystick_2_button_state.get(0, 0) else 127
         claw = max(c1, c2)  # either joystick pressed
 
-        tm.tools = [vertical, horizontal, claw, 127, 127, 127]
+        # --- Differential wrist mapping ---
+        # Convert inputs to servo positions
+        servo1 = vertical_input + (horizontal_input - 127) // 2
+        servo2 = vertical_input - (horizontal_input - 127) // 2
 
-        self.get_logger().info(f"[TOOLS] vertical={vertical} horizontal={horizontal} claw={claw}")
+        # Clamp PWM 0-255
+        servo1 = max(0, min(255, servo1))
+        servo2 = max(0, min(255, servo2))
+
+        # Compose tools array
+        tm.tools = [servo1, servo2, claw, 127, 127, 127]  # padding to match 6 element msg
+        #tm.motor_tools = 0  # or whatever your motor_tools field is for
+
+        self.get_logger().info(f"[TOOLS] servo1={servo1} servo2={servo2} claw={claw}")
         return tm
+
+        #tm.tools = [vertical, horizontal, claw, 127, 127, 127]
+
+        #self.get_logger().info(f"[TOOLS] vertical={vertical} horizontal={horizontal} claw={claw}")
+        #return tm
     
     def _get_axis_value(self, mapping):
         device = mapping["device"]
