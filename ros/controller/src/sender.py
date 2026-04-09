@@ -4,6 +4,7 @@ import pygame
 import sys
 import time
 import signal
+import numpy as np
 
 from pygame import event  # Add signal module import
 
@@ -56,7 +57,7 @@ class Controller(Node):
         self.is_pool_centric = False
         self.depth_lock = False
         self.pitch_lock = False
-        self.tools = [127, 127, 127, 127, 127, 127]
+        self.tools = np.asarray([127, 127, 127, 127, 127, 127], dtype=np.uint8)
 
         try:
             self.init_pygame()
@@ -339,41 +340,45 @@ class Controller(Node):
 
         return new_msg
 
-    @staticmethod
-    def hat_to_pwm(hat_val):
+    #@staticmethod
+    def hat_to_pwm(self, hat_val):
         # hat_val is -1, 0, or 1
-        return 127 + int(hat_val * 127)
+        temp = self.tools
+        self.tools = max(0, min(255, self.tools_last + hat_val))
+        self.tools_last = temp
+        return self.tools
 
     def getTools(self):
         """Returns a ToolsCommandMsg message based on the current hat/button state"""
         tm = ToolsCommandMsg()
 
-        # Vertical (hat up/down)
-        v1 = self.hat_to_pwm(self.joystick_1_hat[1]) if self.joystick_1_hat else 127
-        v2 = self.hat_to_pwm(self.joystick_2_hat[1]) if self.joystick_2_hat else 127
-        vertical = v2 if v2 != 127 else v1  # use joystick 2 if active, else joystick 1
+        # Wrist (hat up/down)
+        w1 = self.joystick_1_hat[1]
+        w2 = self.joystick_2_hat[1]
+        wrist = w2 if w2 != 0 else w1  # use joystick 2 if active, else joystick 1
 
-        # Horizontal (hat left/right)
-        h1 = self.hat_to_pwm(self.joystick_1_hat[0]) if self.joystick_1_hat else 127
-        h2 = self.hat_to_pwm(self.joystick_2_hat[0]) if self.joystick_2_hat else 127
-        horizontal = h2 if h2 != 127 else h1  # same logic
+        # Pitch (hat left/right)
+        p1 = self.joystick_1_hat[0]
+        p2 = self.joystick_2_hat[0]
+        pitch = w2 if w2 != 0 else w1  # same logic
 
         # Claw (button 0)
-        c1 = 255 if self.joystick_1_button_state.get(0, 0) else 127
-        c2 = 255 if self.joystick_2_button_state.get(0, 0) else 127
+        c1 = 1 if self.joystick_1_button_state.get(0, 0) else 0
+        c2 = 1 if self.joystick_2_button_state.get(0, 0) else 0
         claw = max(c1, c2)  # either joystick pressed
 
         # --- Differential wrist mapping ---
         # Convert inputs to servo positions
-        servo1 = vertical_input + (horizontal_input - 127) // 2
-        servo2 = vertical_input - (horizontal_input - 127) // 2
-
+        servo1 = wrist + pitch
+        servo2 = wrist - pitch
         # Clamp PWM 0-255
-        servo1 = max(0, min(255, servo1))
-        servo2 = max(0, min(255, servo2))
+        change = np.asarray([servo1, servo2, claw, 127, 127, 127], dtype=np.uint8)
+
+     
+        self.tools = np.clip(self.tools + change, 0, 255)
 
         # Compose tools array
-        tm.tools = [servo1, servo2, claw, 127, 127, 127]  # padding to match 6 element msg
+        tm.tools = self.tools  # padding to match 6 element msg
         #tm.motor_tools = 0  # or whatever your motor_tools field is for
 
         self.get_logger().info(f"[TOOLS] servo1={servo1} servo2={servo2} claw={claw}")
