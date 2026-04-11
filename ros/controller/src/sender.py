@@ -57,7 +57,7 @@ class Controller(Node):
         self.is_pool_centric = False
         self.depth_lock = False
         self.pitch_lock = False
-        self.tools = np.asarray([127, 127, 127, 127, 127, 127], dtype=np.uint8)
+        self.tools = np.asarray([127, 127, 127, 127, 127, 127], dtype=np.int16)
 
         try:
             self.init_pygame()
@@ -237,14 +237,16 @@ class Controller(Node):
         if self.shutting_down:
             return
 
-        tm = self.getTools()
-        self.pub_tools.publish(tm)
-        self.get_logger().info(f"Published tools: {tm.tools}")
+        message = ToolsCommandMsg()
+        self.getTools()
+        message.tools = self.tools.astype(np.uint8)  # Convert to list of uint8 for ROS message
+        self.pub_tools.publish(message)
+        #self.get_logger().info(f"Published tools: {message.tools}")
 
         # Get a message to publish for the rov_velocity topic
         self.pub.publish(self.getMessage())
         # Get a message to publish for the tools topic
-        self.pub_tools.publish(self.getTools())
+        #self.pub_tools.publish(self.getTools())
 
     def getMessage(self):
         """Returns a RovVelocityCommand message based on the current controller state"""
@@ -340,17 +342,10 @@ class Controller(Node):
 
         return new_msg
 
-    #@staticmethod
-    def hat_to_pwm(self, hat_val):
-        # hat_val is -1, 0, or 1
-        temp = self.tools
-        self.tools = max(0, min(255, self.tools_last + hat_val))
-        self.tools_last = temp
-        return self.tools
 
     def getTools(self):
         """Returns a ToolsCommandMsg message based on the current hat/button state"""
-        tm = ToolsCommandMsg()
+        # tm = ToolsCommandMsg()
 
         # Wrist (hat up/down)
         w1 = self.joystick_1_hat[1]
@@ -360,29 +355,33 @@ class Controller(Node):
         # Pitch (hat left/right)
         p1 = self.joystick_1_hat[0]
         p2 = self.joystick_2_hat[0]
-        pitch = w2 if w2 != 0 else w1  # same logic
+        pitch = p2 if p2 != 0 else p1  # same logic
 
         # Claw (button 0)
         c1 = 1 if self.joystick_1_button_state.get(0, 0) else 0
         c2 = 1 if self.joystick_2_button_state.get(0, 0) else 0
-        claw = max(c1, c2)  # either joystick pressed
+        claw = 10 * (c1 - c2)  # either joystick pressed
 
         # --- Differential wrist mapping ---
         # Convert inputs to servo positions
-        servo1 = wrist + pitch
-        servo2 = wrist - pitch
+        # self.get_logger().info(f"[TOOLS] wrist input: {wrist}, pitch input: {pitch}, claw input: {claw}")
+        servo1 = 2 * (wrist + pitch)
+        servo2 = 2 * (wrist - pitch)
         # Clamp PWM 0-255
-        change = np.asarray([servo1, servo2, claw, 127, 127, 127], dtype=np.uint8)
+        change = np.asarray([servo1, servo2, claw, 0, 0, 0], dtype=np.int16)
+        # self.get_logger().info(f"[TOOLS] Raw change: {change}")
 
-     
+        
         self.tools = np.clip(self.tools + change, 0, 255)
+        
 
         # Compose tools array
-        tm.tools = self.tools  # padding to match 6 element msg
+        # padding to match 6 element msg
         #tm.motor_tools = 0  # or whatever your motor_tools field is for
 
-        self.get_logger().info(f"[TOOLS] servo1={servo1} servo2={servo2} claw={claw}")
-        return tm
+        #self.get_logger().info(f"[TOOLS] servo1={servo1} servo2={servo2} claw={claw}")
+        #self.get_logger().info(tm)
+        # return tm
 
         #tm.tools = [vertical, horizontal, claw, 127, 127, 127]
 
@@ -478,12 +477,12 @@ def main():
     signal.signal(signal.SIGTERM, signal_handler)
 
     try:
-        #rclpy.spin(controller)
-        while rclpy.ok():
-            tm = controller.getTools()
-            controller.pub_tools.publish(tm)
-            rclpy.spin_once(controller, timeout_sec=0.01)
-            controller.update()
+        rclpy.spin(controller)
+        #while rclpy.ok():
+            #tm = controller.getTools()
+            #controller.pub_tools.publish(tm)
+            #rclpy.spin_once(controller, timeout_sec=0.01)
+            #controller.update()
     except KeyboardInterrupt:
         # This should be caught by the signal handler, but just in case
         pass
