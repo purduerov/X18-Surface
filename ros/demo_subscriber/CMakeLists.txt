@@ -13,6 +13,7 @@ ament_python_install_package(${PROJECT_NAME})
 install(
   PROGRAMS
     src/demo_subscriber.py
+    src/pi_temp_subscriber.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
