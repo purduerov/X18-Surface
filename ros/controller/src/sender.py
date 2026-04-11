@@ -3,7 +3,10 @@
 import pygame
 import sys
 import time
-import signal  # Add signal module import
+import signal
+import numpy as np
+
+from pygame import event  # Add signal module import
 
 # ROS
 import rclpy
@@ -20,6 +23,8 @@ from utils.heartbeat_helper import HeartbeatHelper
 class Controller(Node):
     def __init__(self):
         super().__init__("controller")
+        self.pub_tools = self.create_publisher(ToolsCommandMsg, "tools_motor", 10) # enable tools publisher
+
         # Add a flag to track shutdown state
         self.shutting_down = False
 
@@ -40,6 +45,10 @@ class Controller(Node):
         self.joystick_2_axis_state = joystick_axis_state.copy()
         self.joystick_1_button_state = joystick_button_state.copy()
         self.joystick_2_button_state = joystick_button_state.copy()
+        self.joystick_1_hat = (0, 0)
+        self.joystick_2_hat = (0, 0)
+
+        self.get_logger().info("ROV Controller Node Initialized")
 
         # Pilot variables
         self.reverse = 1
@@ -48,7 +57,7 @@ class Controller(Node):
         self.is_pool_centric = False
         self.depth_lock = False
         self.pitch_lock = False
-        self.tools = [0, 0, 0, 0, 0]
+        self.tools = np.asarray([127, 127, 127, 127, 127, 127], dtype=np.int16)
 
         try:
             self.init_pygame()
@@ -64,7 +73,8 @@ class Controller(Node):
 
         # Create the timers
         self.data_thread = self.create_timer(0.1, self.pub_data)
-        self.controller_thread = self.create_timer(0.001, self.update)
+        #self.controller_thread = self.create_timer(0.001, self.update)
+        self.controller_thread = self.create_timer(0.02, self.update)  # 50 Hz
         self.get_logger().info("Controllers initialized")
 
     def init_pygame(self):
@@ -130,6 +140,30 @@ class Controller(Node):
         if self.shutting_down:
             return
 
+        pygame.event.pump() 
+        print("UPDATE RUNNING")
+
+        if self.joystick_1:
+            self.joystick_1_hat = self.joystick_1.get_hat(0)
+            #self.get_logger().info(f"[HAT1] {self.joystick_1_hat}")
+
+        if self.joystick_2:
+            self.joystick_2_hat = self.joystick_2.get_hat(0)
+            #self.get_logger().info(f"[HAT2] {self.joystick_2_hat}")
+
+        # DEBUG: poll axes directly
+        # if self.joystick_1:
+        #     for i in range(self.joystick_1.get_numaxes()):
+        #         val = self.joystick_1.get_axis(i)
+        #         if abs(val) > 0.1:
+        #             print(f"[POLL] Joy1 Axis {i} = {val:.3f}")
+
+        # if self.joystick_2:
+        #     for i in range(self.joystick_2.get_numaxes()):
+        #         val = self.joystick_2.get_axis(i)
+        #         if abs(val) > 0.1:
+        #             print(f"[POLL] Joy2 Axis {i} = {val:.3f}")
+
         # Get all the events from pygame and process them
         for event in pygame.event.get():
             self.process_event(event)
@@ -159,6 +193,9 @@ class Controller(Node):
             # Get the joystick instance that generated this event
             joy_instance = pygame.joystick.Joystick(event.joy)
 
+            # DEBUGGING - print for tools
+            print(f"[AXIS] Joystick {event.joy} | Axis {event.axis} = {event.value:.3f}")
+
             # Determine if this is joystick_1 or joystick_2
             if self.joystick_1 and joy_instance.get_id() == self.joystick_1.get_id():
                 self.joystick_1_axis_state[event.axis] = self.correct_raw(event.value)
@@ -174,8 +211,25 @@ class Controller(Node):
                 self.get_logger().warn(f"Event from unknown joystick {event.joy}")
 
         # Check if the event is a joybuttondown event
-        elif event.type == pygame.JOYBUTTONDOWN or event.type == pygame.JOYBUTTONUP:
-            self.handle_button_event(event)
+        # elif event.type == pygame.JOYBUTTONDOWN or event.type == pygame.JOYBUTTONUP:
+        #     self.handle_button_event(event)
+
+        # DEBUGGING - print button events for tools
+        elif event.type == pygame.JOYBUTTONDOWN:
+            print(f"[BUTTON DOWN] Joystick {event.joy} | Button {event.button}")
+
+            if self.joystick_1 and event.joy == self.joystick_1.get_id():
+                self.joystick_1_button_state[event.button] = 1
+            elif self.joystick_2 and event.joy == self.joystick_2.get_id():
+                self.joystick_2_button_state[event.button] = 1
+
+        elif event.type == pygame.JOYBUTTONUP:
+            print(f"[BUTTON UP] Joystick {event.joy} | Button {event.button}")
+
+            if self.joystick_1 and event.joy == self.joystick_1.get_id():
+                self.joystick_1_button_state[event.button] = 0
+            elif self.joystick_2 and event.joy == self.joystick_2.get_id():
+                self.joystick_2_button_state[event.button] = 0
 
     # Modify the pub_data method to check for shutdown state
     def pub_data(self):
@@ -183,10 +237,16 @@ class Controller(Node):
         if self.shutting_down:
             return
 
+        message = ToolsCommandMsg()
+        self.getTools()
+        message.tools = self.tools.astype(np.uint8)  # Convert to list of uint8 for ROS message
+        self.pub_tools.publish(message)
+        #self.get_logger().info(f"Published tools: {message.tools}")
+
         # Get a message to publish for the rov_velocity topic
         self.pub.publish(self.getMessage())
         # Get a message to publish for the tools topic
-        # self.pub_tools.publish(self.getTools())
+        #self.pub_tools.publish(self.getTools())
 
     def getMessage(self):
         """Returns a RovVelocityCommand message based on the current controller state"""
@@ -282,13 +342,99 @@ class Controller(Node):
 
         return new_msg
 
+
     def getTools(self):
-        """Returns a ToolsCommandMsg message based on the current controller state"""
+        """Returns a ToolsCommandMsg message based on the current hat/button state"""
+        # tm = ToolsCommandMsg()
 
-        tm = ToolsCommandMsg()
-        tm.tools = [i for i in self.tools]
+        # Wrist (hat up/down)
+        w1 = self.joystick_1_hat[1]
+        w2 = self.joystick_2_hat[1]
+        wrist = w2 if w2 != 0 else w1  # use joystick 2 if active, else joystick 1
 
-        return tm
+        # Pitch (hat left/right)
+        p1 = self.joystick_1_hat[0]
+        p2 = self.joystick_2_hat[0]
+        pitch = p2 if p2 != 0 else p1  # same logic
+
+        # Claw (button 0)
+        c1 = 1 if self.joystick_1_button_state.get(0, 0) else 0
+        c2 = 1 if self.joystick_2_button_state.get(0, 0) else 0
+        claw = 10 * (c1 - c2)  # either joystick pressed
+
+        # --- Differential wrist mapping ---
+        # Convert inputs to servo positions
+        # self.get_logger().info(f"[TOOLS] wrist input: {wrist}, pitch input: {pitch}, claw input: {claw}")
+        servo1 = 2 * (wrist + pitch)
+        servo2 = 2 * (wrist - pitch)
+        # Clamp PWM 0-255
+        change = np.asarray([servo1, servo2, claw, 0, 0, 0], dtype=np.int16)
+        # self.get_logger().info(f"[TOOLS] Raw change: {change}")
+
+        
+        self.tools = np.clip(self.tools + change, 0, 255)
+        
+
+        # Compose tools array
+        # padding to match 6 element msg
+        #tm.motor_tools = 0  # or whatever your motor_tools field is for
+
+        #self.get_logger().info(f"[TOOLS] servo1={servo1} servo2={servo2} claw={claw}")
+        #self.get_logger().info(tm)
+        # return tm
+
+        #tm.tools = [vertical, horizontal, claw, 127, 127, 127]
+
+        #self.get_logger().info(f"[TOOLS] vertical={vertical} horizontal={horizontal} claw={claw}")
+        #return tm
+    
+    def _get_axis_value(self, mapping):
+        device = mapping["device"]
+        axis = mapping["axis"]
+
+        if device == "joystick_left" and self.joystick_1:
+            return self.joystick_1_axis_state[axis]
+
+        elif device == "joystick_right" and self.joystick_2:
+            return self.joystick_2_axis_state[axis]
+
+        elif device == "both":
+            val1 = self.joystick_1_axis_state[axis] if self.joystick_1 else 0.0
+            val2 = self.joystick_2_axis_state[axis] if self.joystick_2 else 0.0
+
+            # Return whichever has stronger input (avoids conflict)
+            return val1 if abs(val1) > abs(val2) else val2
+
+        return 0.0
+
+
+    def _get_button_value(self, mapping):
+        device = mapping["device"]
+        button = mapping["button"]
+
+        if device == "joystick_left" and self.joystick_1:
+            return self.joystick_1_button_state[button]
+
+        elif device == "joystick_right" and self.joystick_2:
+            return self.joystick_2_button_state[button]
+
+        elif device == "both":
+            val1 = self.joystick_1_button_state[button] if self.joystick_1 else 0
+            val2 = self.joystick_2_button_state[button] if self.joystick_2 else 0
+            return val1 or val2  # pressed if either is pressed
+
+        return 0
+    
+    def _get_hat_value(self, mapping):
+        device = mapping["device"]
+
+        hat = (0, 0)
+        if device == "joystick_left" and self.joystick_1:
+            hat = self.joystick_1_hat
+        elif device == "joystick_right" and self.joystick_2:
+            hat = self.joystick_2_hat
+
+        return hat
 
     def normalize_controller_val(self, val, max_val=255.0):
         val = float(val)
@@ -332,6 +478,11 @@ def main():
 
     try:
         rclpy.spin(controller)
+        #while rclpy.ok():
+            #tm = controller.getTools()
+            #controller.pub_tools.publish(tm)
+            #rclpy.spin_once(controller, timeout_sec=0.01)
+            #controller.update()
     except KeyboardInterrupt:
         # This should be caught by the signal handler, but just in case
         pass

@@ -41,7 +41,6 @@ for i in "${!env_vars[@]}"; do
 done
 
 # Build the ROS 2 workspace
-#source /opt/ros/humble/setup.bash
 source /opt/ros/jazzy/setup.bash
 colcon build
 . install/setup.bash

@@ -1,2 +1,1 @@
-int8[5] tools
-uint8 motor_tools
+uint8[6] tools
