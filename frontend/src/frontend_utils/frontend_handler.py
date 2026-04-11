@@ -24,6 +24,7 @@ def handle_frontend_event(node, event, data):
         # Create and publish thrust message
         thrust_msg = FinalThrustMsg()
         thrust_msg.thrusters = list(data.values())
+        #node.get_logger().info(f"Publishing thrust values: {thrust_msg.thrusters}")
         node.final_thrust_pub.publish(thrust_msg)
         # Don't log every thrust command as they're too frequent
 

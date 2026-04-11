@@ -6,9 +6,21 @@
 <div class="dashboard-main">
 
     <div class="left-container">
-        <div class="stream-wrapper"><iframe id="stream1" src="{{ camera_urls.camera1|safe }}" scrolling="no"></iframe></div>
-        <div class="stream-wrapper"><iframe id="stream2" src="{{ camera_urls.camera2|safe }}" scrolling="no"></iframe></div>
-        <div class="stream-wrapper"><iframe id="stream3" src="{{ camera_urls.camera3|safe }}" scrolling="no"></iframe></div>
+        <div class="stream-wrapper">
+            <iframe id="stream1" src="{{ camera_urls.cv_camera|safe }}" scrolling="no">
+                <button class="photo-button" data-camera="cv_camera">📸</button>
+            </iframe>
+        </div>
+        <div class="stream-wrapper">
+            <iframe id="stream2" src="{{ camera_urls.camera1|safe }}" scrolling="no">
+                <button class="photo-button" data-camera="camera1">📸</button>
+            </iframe>
+        </div>
+        <div class="stream-wrapper">
+            <iframe id="stream3" src="{{ camera_urls.camera2|safe }}" scrolling="no">
+                <button class="photo-button" data-camera="camera2">📸</button>
+            </iframe>
+        </div>
     </div>
 
     <div class="middle-container">

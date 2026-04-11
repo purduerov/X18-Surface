@@ -7,10 +7,10 @@ paths:
 
   camera_4:
 
+  cv_camera:
+
 rtspAddress: ":8554"
 webrtc: yes
-
-rtspTransports: [tcp]
 
 # Disable unused protocols
 rtmp: no
