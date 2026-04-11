@@ -58,6 +58,25 @@
       "rotational_x": 1,
       "rotational_y": 1,
       "rotational_z": 1
+    },
+
+    "tools": {
+      "vertical": {
+        "device": "both",
+        "axis": 2,
+        "scale": 1.0,
+        "invert": true
+      },
+      "horizontal": {
+        "device": "both",
+        "axis": 3,
+        "scale": 1.0,
+        "invert": false
+      },
+      "claw": {
+        "device": "both",
+        "button": 0
+      }
     }
   },
   "alternate": {
