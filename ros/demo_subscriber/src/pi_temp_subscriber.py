@@ -31,11 +31,12 @@ class PiTempSubscriber(Node):
 
     def rov_pi_temp_callback(self, msg):
         msg_dict = rosmsg_to_dict(msg)
-        self.get_logger().info(f'test')
+        #self.get_logger().info(f'test')
         msg_json = json.dumps(msg_dict)
-        self.get_logger().info(f'Received from pi_temp topic: "{msg}"')
+        #self.get_logger().info(f'Received from pi_temp topic: "{msg}"')
         if sio.connected:
             sio.emit('pi_temp', msg_json)
+            self.get_logger().info(f'Emitted pi_temp data to SocketIO: {msg_json}')
         else:
             self.get_logger().warn("SocketIO not connected, skipping emit")
 
