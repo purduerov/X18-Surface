@@ -52,10 +52,18 @@ socket.on('leak_sensor', function(msg){
     // Log the message to the browser console
     // console.log("New message received:", msg);
     // Parse the message into json
-    msg = JSON.parse(msg);
+    console.log("TYPE:", typeof msg);
+    //msg = JSON.parse(msg);
+    console.log("RAW SOCKET DATA:", msg);
+   
+    const el = document.getElementById("leak-data");
 
-    // Insert the following x: 0<br>y: 0<br>z: 0 into the HTLM div with id linear-command
-    document.getElementById("leak-data").innerHTML = `${msg.data.toFixed(2)}`;
+    if (!el) {
+        console.warn("pi-temp element not found in DOM");
+        return;
+    }
+
+    el.innerHTML = msg.data + " °C";
 });
 
 
