@@ -14,6 +14,7 @@ install(
   PROGRAMS
     src/demo_subscriber.py
     src/pi_temp_subscriber.py
+    src/leak_subscriber.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

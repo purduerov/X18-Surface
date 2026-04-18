@@ -3,8 +3,7 @@
 # Import necessary libraries
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import String
-from shared_msgs.msg import Bool
+from std_msgs.msg import String, Bool
 import socketio
 import json
 
@@ -20,12 +19,13 @@ class LeakSubscriberNode(Node):
     def rov_leak_callback(self, msg):
         msg_json = json.dumps({"leak_sensor": msg.data})
         sio.emit("leak_sensor", msg_json)
+        self.get_logger().info(f"Received leak sensor data: {msg.data}, emitted to SocketIO: {msg_json}")
 
 
 def main():
     rclpy.init()
 
-    sio.connect("http://127.0.0.1:5000")
+    sio.connect("http://127.0.0.1:5013")
 
     leak_subscriber_node = LeakSubscriberNode()
     rclpy.spin(leak_subscriber_node)

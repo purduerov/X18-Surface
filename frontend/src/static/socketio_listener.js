@@ -24,7 +24,7 @@ socket.on('rov_velocity', function(msg) {
 // console.log("New message received:", msg);
 
 // Update the HTML element with the new message
-document.getElementById('count-data').innerText = msg;
+//document.getElementById('count-data').innerText = msg;
 
 socket.on('surface_imu', function(msg) {
     // Log the message to the browser console
@@ -45,8 +45,19 @@ socket.on('pi_temp', function(msg){
     msg = JSON.parse(msg);
 
     // Insert the following x: 0<br>y: 0<br>z: 0 into the HTLM div with id linear-command
-    document.getElementById("pi-temp").innerHTML = "0.2"//`${msg.temperature.toFixed(2)} °C`;
+    document.getElementById("pi-temp").innerHTML = `${msg.data.toFixed(2)} °C`;
 });
+
+socket.on('leak_sensor', function(msg){
+    // Log the message to the browser console
+    // console.log("New message received:", msg);
+    // Parse the message into json
+    msg = JSON.parse(msg);
+
+    // Insert the following x: 0<br>y: 0<br>z: 0 into the HTLM div with id linear-command
+    document.getElementById("leak-data").innerHTML = `${msg.data.toFixed(2)}`;
+});
+
 
 // Handle socket connection and disconnection events
 socket.on('connect', function() {

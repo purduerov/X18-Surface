@@ -29,6 +29,11 @@ def generate_launch_description():
                         executable="pi_temp_subscriber.py",
                         namespace="rov",
                     ),
+                    Node(
+                        package="demo_subscriber",
+                        executable="leak_subscriber.py",
+                        namespace="rov",
+                    ),
                     # Node(
                     #     package="heartbeat_monitor",
                     #     executable="heartbeat_monitor.py",
