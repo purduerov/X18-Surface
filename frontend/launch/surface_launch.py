@@ -34,6 +34,16 @@ def generate_launch_description():
                         executable="leak_subscriber.py",
                         namespace="rov",
                     ),
+                    Node(
+                        package="demo_subscriber",
+                        executable="depth_subscriber.py",
+                        namespace="rov",
+                    ),
+                     Node(
+                        package="demo_subscriber",
+                        executable="hat_temp_subscriber.py",
+                        namespace="rov",
+                    ),
                     # Node(
                     #     package="heartbeat_monitor",
                     #     executable="heartbeat_monitor.py",
