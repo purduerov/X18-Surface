@@ -17,26 +17,26 @@ sio = socketio.Client()
 
 
 # Create a subscriber node that will listen to multiple ROS topics
-class PiTempSubscriber(Node):
+class HatTempSubscriber(Node):
     def __init__(self):
-        super().__init__("pi_temp_subscriber")
+        super().__init__("hat_temp_subscriber")
 
         # Dictionary to map topic names to their corresponding callback functions
         self.topics = {
-            "pi_temp": self.rov_pi_temp_callback,
+            "hat_temp": self.rov_hat_temp_callback,
         }
 
         # Subscribe to each topic in the topics dictionary
-        self.create_subscription(Float32, "pi_temp", self.rov_pi_temp_callback, 10)
+        self.create_subscription(Float32, "hat_temp", self.rov_hat_temp_callback, 10)
 
-    def rov_pi_temp_callback(self, msg):
+    def rov_hat_temp_callback(self, msg):
         msg_dict = rosmsg_to_dict(msg)
         #self.get_logger().info(f'test')
         msg_json = json.dumps(msg_dict)
-        #self.get_logger().info(f'Received from pi_temp topic: "{msg}"')
+        #self.get_logger().info(f'Received from hat_temp topic: "{msg}"')
         if sio.connected:
-            sio.emit('pi_temp', msg_json)
-            self.get_logger().info(f'Emitted pi_temp data to SocketIO: {msg_json}')
+            sio.emit('hat_temp', msg_json)
+            self.get_logger().info(f'Emitted hat_temp data to SocketIO: {msg_json}')
         else:
             self.get_logger().warn("SocketIO not connected, skipping emit")
 
@@ -70,18 +70,18 @@ def rosmsg_to_dict(msg):
 
 def main():
     rclpy.init()
-    pi_temp_subscriber_node = PiTempSubscriber()
+    hat_temp_subscriber_node = HatTempSubscriber()
 
     port = str(os.getenv("FLASK_PORT", 5013))
 
     try:
         sio.connect("http://127.0.0.1:" + port)
-        pi_temp_subscriber_node.get_logger().info(f"Connected to SocketIO server at port {port}")
+        hat_temp_subscriber_node.get_logger().info(f"Connected to SocketIO server at port {port}")
     except Exception as e:
-        pi_temp_subscriber_node.get_logger().error(f"Failed to connect to SocketIO server: {e}")
+        hat_temp_subscriber_node.get_logger().error(f"Failed to connect to SocketIO server: {e}")
 
-    rclpy.spin(pi_temp_subscriber_node)
-    pi_temp_subscriber_node.destroy_node()
+    rclpy.spin(hat_temp_subscriber_node)
+    hat_temp_subscriber_node.destroy_node()
     rclpy.shutdown()
 
 

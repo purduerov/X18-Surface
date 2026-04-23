@@ -148,10 +148,10 @@ socket.on('depth', function(msg) {
   document.getElementById("depth-data").innerHTML = "Depth : " + msg.data.toFixed(2);
 });
 
-socket.on('pi_temp', function(msg) {
-  msg = JSON.parse(msg);
-  document.getElementById("temp-data").innerHTML = "Temperature: <br>" + msg.data.toFixed(2) + "&deg C";
-});
+ socket.on('pi_temp', function(msg) {
+   msg = JSON.parse(msg);
+   document.getElementById("pi-temp").innerHTML = "Temperature: <br>" + msg.data.toFixed(2) + "&deg C";
+ });
 
 socket.on('leak_sensor', function(msg){
   msg = JSON.parse(msg);

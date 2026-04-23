@@ -13,6 +13,10 @@ ament_python_install_package(${PROJECT_NAME})
 install(
   PROGRAMS
     src/demo_subscriber.py
+    src/pi_temp_subscriber.py
+    src/leak_subscriber.py
+    src/depth_subscriber.py
+    src/hat_temp_subscriber.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

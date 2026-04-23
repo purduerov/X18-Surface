@@ -51,8 +51,8 @@
                 <button id="openTasks" class="task-open-btn">Tasks</button>
             </div>
             <div id="internal-data" class="data-container data-group">
-                <div class="data-item"><span class="label">Pres</span><span class="value">0.0 psi</span></div>
-                <div class="data-item"><span class="label">Temp</span><span class="value">0.0&deg;C</span></div>
+                <div class="data-item"><span class="label">Pres</span><span id="hat-temp"class="value">0.0 psi</span></div>
+                <div class="data-item"><span class="label">Temp</span><span id="pi-temp" class="value">0.0&deg;C</span></div>
                 <div class="data-item"><span class="label">Hum</span><span class="value">50%</span></div>
             </div>
         </div>
@@ -63,12 +63,12 @@
         </div>
 
         <div id="inertial-data" class="data-container data-group">
-            <div class="data-item"><span class="label">Accel</span><span class="value">&lt;0, 0, 0&gt;</span></div>
+            <div class="data-item"><span class="label" >Leak</span><span id ="leak-data" class="value">&lt;30&gt;</span></div>
             <div class="data-item"><span class="label">Gyro</span><span class="value">&lt;0, 0, 0&gt;</span></div>
         </div>
 
         <div id="external-data" class="data-container data-group">
-            <div class="data-item"><span class="label">Depth</span><span class="value">00.00 m</span></div>
+            <div class="data-item"><span class="label">Depth</span><span id ="depth-data" class="value">00.00 m</span></div>
         </div>
     </div>
 </div>
@@ -144,7 +144,10 @@
         if (event.target === modal) { modal.style.display = "none"; }
     }
 </script>
+<!-- <script src="/static/socketio_listener.js"></script> -->
+
 {% endblock %}
+
 
 {% block styles %}
 <style>
